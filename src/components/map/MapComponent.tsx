@@ -1,38 +1,62 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 interface MapComponentProps {
   showDashboard?: boolean;
 }
 
+const LOCATIONS: Record<
+  string,
+  { center: [number, number]; zoom: number; pitch?: number; bearing?: number }
+> = {
+  hero: { center: [30, 25], zoom: 1.5, pitch: 0, bearing: 0 },
+  california: { center: [-119.4179, 36.7783], zoom: 5.5, pitch: 45, bearing: 0 },
+  himalayas: { center: [85, 28], zoom: 6, pitch: 45, bearing: 0 },
+  delta: { center: [31.0, 30.5], zoom: 6, pitch: 40, bearing: 0 },
+};
+
+function SpinningEarthFallback() {
+  return (
+    <div
+      className="w-full h-full bg-black flex items-center justify-center overflow-hidden"
+      aria-hidden="true"
+    >
+      <div className="earth-fallback" />
+    </div>
+  );
+}
+
 export default function MapComponent({ showDashboard = false }: MapComponentProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
-
-  const LOCATIONS: Record<string, { center: [number, number]; zoom: number; pitch?: number; bearing?: number }> = {
-    hero: { center: [30, 25], zoom: 1.5, pitch: 0, bearing: 0 },
-    california: { center: [-119.4179, 36.7783], zoom: 5.5, pitch: 45, bearing: 0 },
-    himalayas: { center: [85, 28], zoom: 6, pitch: 45, bearing: 0 },
-    delta: { center: [31.0, 30.5], zoom: 6, pitch: 40, bearing: 0 },
-  };
+  const [mapFailed, setMapFailed] = useState(false);
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    if (!mapContainerRef.current || !mapboxToken || mapFailed) return;
 
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: LOCATIONS.hero.center,
-      zoom: LOCATIONS.hero.zoom,
-      pitch: LOCATIONS.hero.pitch,
-      bearing: LOCATIONS.hero.bearing,
-      projection: 'globe',
-    });
+    mapboxgl.accessToken = mapboxToken;
+    let map: mapboxgl.Map;
+    try {
+      map = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: LOCATIONS.hero.center,
+        zoom: LOCATIONS.hero.zoom,
+        pitch: LOCATIONS.hero.pitch,
+        bearing: LOCATIONS.hero.bearing,
+        projection: 'globe',
+      });
+    } catch {
+      window.setTimeout(() => setMapFailed(true), 0);
+      return;
+    }
 
     mapRef.current = map;
+    map.on('error', () => {
+      window.setTimeout(() => setMapFailed(true), 0);
+    });
 
     map.on('style.load', () => {
       map.setFog({
@@ -63,7 +87,7 @@ export default function MapComponent({ showDashboard = false }: MapComponentProp
       window.removeEventListener('flyToLocation', handleFlyTo);
       map.remove();
     };
-  }, []);
+  }, [mapboxToken, mapFailed]);
 
   // ✅ تصحيح: تفعيل/تعطيل التفاعل بناءً على الـ Dashboard
   useEffect(() => {
@@ -85,6 +109,10 @@ export default function MapComponent({ showDashboard = false }: MapComponentProp
       }
     }
   }, [showDashboard]);
+
+  if (!mapboxToken || mapFailed) {
+    return <SpinningEarthFallback />;
+  }
 
   return <div ref={mapContainerRef} className="w-full h-full" />;
 }
