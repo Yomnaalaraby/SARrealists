@@ -39,7 +39,7 @@ export default function HeroSection() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
   };
 
   return (
@@ -102,7 +102,7 @@ export default function HeroSection() {
               '0 0 25px rgba(59,130,246,0.6)',
               '0 0 10px rgba(59,130,246,0.2)',
             ]}}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' as const }}
             className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent"
           >
             But NISAR sees the Earth's pulse.
