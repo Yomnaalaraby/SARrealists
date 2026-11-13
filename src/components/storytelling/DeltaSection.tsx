@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import DialogueSystem, { DialogueLine } from './DialogueSystem';
 import Timeline from './Timeline';
+import { plotUrl, prettyDate } from '@/lib/nisarData';
 
 const DELTA_DIALOGUE: DialogueLine[] = [
   { speaker: 'resident', text: "The soil here used to be rich, but now we struggle with water scarcity and salt creeping in from the sea." },
@@ -17,58 +18,17 @@ const DELTA_DIALOGUE: DialogueLine[] = [
 
 // ===== Agriculture Timeline =====
 const AGRICULTURE_TIMELINE = [
-  {
-    month: 'November 2023',
-    label: 'Pre-Season Soil Prep',
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80',
-    description: 'Bare soil moisture mapped before planting. Irrigation planning.',
-  },
-  {
-    month: 'February 2024',
-    label: 'Crop Emergence',
-    imageUrl: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=600&q=80',
-    description: 'Crop phenology tracked via HV polarization. Healthy vegetation signature.',
-  },
-  {
-    month: 'May 2024',
-    label: 'Peak Growing Season',
-    imageUrl: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=600&q=80',
-    description: 'Water stress detection. Flooded rice fields show distinctive signature.',
-  },
-  {
-    month: 'August 2024',
-    label: 'Harvest & Urban Sprawl',
-    imageUrl: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80',
-    description: 'Yield estimation. Agricultural land loss to urban expansion mapped.',
-  },
+  { month: prettyDate('20251216'), label: 'Winter Wheat', imageUrl: plotUrl('nile', 'hv_db', '20251216'), description: '...' },
+  { month: prettyDate('20260626'), label: 'Summer Prep', imageUrl: plotUrl('nile', 'soil_moisture', '20260626'), description: '...' },
+  { month: prettyDate('20260825'), label: 'Peak Irrigation', imageUrl: plotUrl('nile', 'soil_moisture', '20260825'), description: '...' },
+  { month: prettyDate('20261024'), label: 'Harvest Season', imageUrl: plotUrl('nile', 'rgb_composite', '20261024'), description: '...' },
 ];
 
-// ===== Coastal Subsidence Timeline =====
 const COASTAL_SUBSIDENCE_TIMELINE = [
-  {
-    month: 'January 2020',
-    label: 'Baseline Measurement',
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80',
-    description: 'Initial coastal elevation baseline. No significant subsidence.',
-  },
-  {
-    month: 'January 2021',
-    label: 'Early Subsidence',
-    imageUrl: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=600&q=80',
-    description: 'Groundwater extraction begins. Minor subsidence detected (-8mm).',
-  },
-  {
-    month: 'January 2022',
-    label: 'Accelerated Sinking',
-    imageUrl: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=600&q=80',
-    description: 'Rapid subsidence (-25mm). Saltwater intrusion risk increases.',
-  },
-  {
-    month: 'January 2023',
-    label: 'Critical Level',
-    imageUrl: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80',
-    description: 'Peak subsidence (-32mm). Coastal flooding risk critical.',
-  },
+  { month: prettyDate('20260626'), label: 'Baseline', imageUrl: plotUrl('nile', 'vert_disp_mm', '20260626'), description: '...' },
+  { month: prettyDate('20260708'), label: 'Early Sinking', imageUrl: plotUrl('nile', 'vert_disp_mm', '20260708'), description: '...' },
+  { month: prettyDate('20260813'), label: 'Accelerating', imageUrl: plotUrl('nile', 'vert_disp_mm', '20260813'), description: '...' },
+  { month: prettyDate('20260906'), label: 'Critical', imageUrl: plotUrl('nile', 'vert_disp_mm', '20260906'), description: '...' },
 ];
 
 export default function DeltaSection() {

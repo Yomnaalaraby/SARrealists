@@ -3,6 +3,8 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useInView, motion, AnimatePresence } from 'framer-motion';
 import { Flame, Mountain, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { plotUrl, prettyDate, SITES } from '@/lib/nisarData';
+
 
 import DialogueSystem, { DialogueLine } from './DialogueSystem';
 import Timeline from './Timeline';
@@ -16,58 +18,60 @@ const CALIFORNIA_DIALOGUE: DialogueLine[] = [
 ];
 
 // ===== Wildfire Timeline =====
+
 const WILDFIRE_TIMELINE = [
   {
-    month: 'January 2024',
+    month: prettyDate('20251124'),
     label: 'Pre-Fire Baseline',
-    imageUrl: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=600&q=80',
+    imageUrl: plotUrl('california', 'hv_db', '20251124'),
     description: 'Healthy forest canopy - high HV backscatter from volume scattering.',
   },
   {
-    month: 'March 2024',
-    label: 'Drought Stress',
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80',
-    description: 'Soil moisture drops, vegetation stress visible in L-band.',
+    month: prettyDate('20260228'),
+    label: 'Eaton Fire Event',
+    imageUrl: plotUrl('california', 'rgb_composite', '20260228'),
+    description: 'Radar penetrates smoke to map the fire perimeter.',
   },
   {
-    month: 'June 2024',
-    label: 'Fire Event',
-    imageUrl: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=600&q=80',
-    description: 'Optical blinded by smoke. NISAR penetrates to map fire perimeter.',
-  },
-  {
-    month: 'August 2024',
+    month: prettyDate('20260628'),
     label: 'Post-Fire Assessment',
-    imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
-    description: 'Burn severity mapped via coherence change. HH spike from double-bounce.',
+    imageUrl: plotUrl('california', 'hv_db', '20260628'),
+    description: 'Burn severity mapped via HV drop. HH spike from double-bounce.',
+  },
+  {
+    month: 'Nov 24 → Oct 26',
+    label: 'Burn Change Map',
+    imageUrl: plotUrl('california', 'hv_db_change', '20251124_20261026'),  // 🔥 الأهم!
+    description: 'RED = burned canopy loss. The definitive burn severity map.',
   },
 ];
 
 // ===== Subsidence Timeline =====
+// ===== Subsidence Timeline (حقيقي من NISAR) =====
 const SUBSIDENCE_TIMELINE = [
   {
-    month: 'January 2020',
+    month: prettyDate('20251124'),
     label: 'Baseline Measurement',
-    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80',
+    imageUrl: plotUrl('california', 'los_disp_mm', '20251124'),
     description: 'Initial InSAR baseline established. Ground level stable.',
   },
   {
-    month: 'January 2021',
+    month: prettyDate('20260312'),
     label: 'Early Subsidence',
-    imageUrl: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=600&q=80',
-    description: 'Groundwater extraction begins. Minor subsidence detected (-12mm).',
+    imageUrl: plotUrl('california', 'los_disp_mm', '20260312'),
+    description: 'Groundwater extraction begins. Minor subsidence detected.',
   },
   {
-    month: 'January 2022',
+    month: prettyDate('20260604'),
     label: 'Accelerated Sinking',
-    imageUrl: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=600&q=80',
-    description: 'Rapid subsidence (-38mm). Infrastructure stress visible.',
+    imageUrl: plotUrl('california', 'los_disp_mm', '20260604'),
+    description: 'Rapid subsidence during summer irrigation peak.',
   },
   {
-    month: 'January 2023',
+    month: prettyDate('20260908'),
     label: 'Critical Level',
-    imageUrl: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80',
-    description: 'Peak subsidence (-45mm). Land deformation critical.',
+    imageUrl: plotUrl('california', 'los_disp_mm', '20260908'),
+    description: 'Blue = sinking ground. Land deformation critical.',
   },
 ];
 

@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import DialogueSystem, { DialogueLine } from './DialogueSystem';
 import Timeline from './Timeline';
+import { plotUrl, prettyDate } from '@/lib/nisarData';
 
 const HIMALAYA_DIALOGUE: DialogueLine[] = [
   { speaker: 'resident', text: "The glaciers here are melting faster than ever. We worry about the lakes bursting and flooding our villages downstream." },
@@ -17,60 +18,18 @@ const HIMALAYA_DIALOGUE: DialogueLine[] = [
 
 // ===== GLOF Risk Timeline =====
 const GLOF_TIMELINE = [
-  {
-    month: 'January 2024',
-    label: 'Winter Accumulation',
-    imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-    description: 'Snow accumulation on glacier surface - S-band captures fresh snow.',
-  },
-  {
-    month: 'April 2024',
-    label: 'Spring Melt Begins',
-    imageUrl: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=600&q=80',
-    description: 'Meltwater lakes begin forming behind moraine dams.',
-  },
-  {
-    month: 'July 2024',
-    label: 'Peak Melt Season',
-    imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80',
-    description: 'Rapid lake expansion detected. InSAR measures accelerating ice motion.',
-  },
-  {
-    month: 'October 2024',
-    label: 'Post-Monsoon Assessment',
-    imageUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80',
-    description: 'Lake size mapped. Moraine dam stability assessed via deformation.',
-  },
+  { month: prettyDate('20251126'), label: 'Winter Baseline', imageUrl: plotUrl('himalayas', 'rgb_composite', '20251126'), description: '...' },
+  { month: prettyDate('20260419'), label: 'Spring Melt', imageUrl: plotUrl('himalayas', 'hh_db', '20260419'), description: '...' },
+  { month: prettyDate('20260724'), label: 'Peak Melt', imageUrl: plotUrl('himalayas', 'hv_db', '20260724'), description: '...' },
+  { month: prettyDate('20261109'), label: 'Latest Pass', imageUrl: plotUrl('himalayas', 'rgb_composite', '20261109'), description: '...' },
 ];
 
-// ===== Ice Velocity Timeline =====
 const VELOCITY_TIMELINE = [
-  {
-    month: 'January 2024',
-    label: 'Baseline Velocity',
-    imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-    description: 'Normal ice flow velocity measured at 120m/year.',
-  },
-  {
-    month: 'April 2024',
-    label: 'Acceleration Detected',
-    imageUrl: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=600&q=80',
-    description: 'Ice velocity increases to 145m/year. Precursor to instability.',
-  },
-  {
-    month: 'July 2024',
-    label: 'Critical Acceleration',
-    imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80',
-    description: 'Velocity spikes to 180m/year. Moraine dam deformation detected.',
-  },
-  {
-    month: 'October 2024',
-    label: 'Post-Event Stabilization',
-    imageUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80',
-    description: 'Velocity returns to 130m/year. Residual instability monitored.',
-  },
+  { month: prettyDate('20251126'), label: 'Baseline Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20251126_20251126'), description: '...' },
+  { month: prettyDate('20260206'), label: 'Winter Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20260206_20260206'), description: '...' },
+  { month: prettyDate('20260501'), label: 'Monsoon Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20260501_20260501'), description: '...' },
+  { month: prettyDate('20261004'), label: 'Post-Monsoon', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20261004_20261004'), description: '...' },
 ];
-
 export default function HimalayaSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: 0.5 });

@@ -7,6 +7,7 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     LineChart, Line
 } from 'recharts';
+import { plotUrl } from '@/lib/nisarData';
 
 const AGRI_PHASES = [
     {
@@ -237,20 +238,17 @@ export default function NileDataPage() {
                                     <h2 className="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
                                         <Layers className="w-5 h-5" /> Coastal Subsidence Map
                                     </h2>
-                                    <div className="relative h-64 rounded-xl overflow-hidden border border-emerald-500/20 bg-black/40 mb-4">
-                                        <div
-                                            className="absolute inset-0 transition-all duration-700"
-                                            style={{
-                                                opacity: yearData.intensity,
-                                                background: `radial-gradient(ellipse at 40% 60%, rgba(16,185,129,0.85) 0%, rgba(16,185,129,0.35) 35%, transparent 70%),
-                                     radial-gradient(ellipse 40% 35% at 70% 40%, rgba(245,158,11,0.6) 0%, rgba(245,158,11,0.2) 40%, transparent 65%),
-                                     linear-gradient(135deg, #0a0a0a 0%, #0a1a10 100%)`,
-                                            }}
-                                        />
-                                        <span className="absolute bottom-2 left-3 text-xs text-gray-400 font-mono">
-                                            Nile Delta Coast • {selectedYear} • Max: {yearData.maxMm} mm/yr
-                                        </span>
-                                    </div>
+                                       {/* ✅ خريطة الهبوط الساحلي الحقيقية */}
+   <div className="relative h-64 rounded-xl overflow-hidden border border-green-500/20 bg-white mb-4">
+     <img 
+       src={plotUrl('nile', 'vert_disp_mm', '20260906')} 
+       alt="Coastal Subsidence Map"
+       className="w-full h-full object-contain p-2"
+     />
+     <span className="absolute bottom-2 left-3 text-xs text-gray-600 font-mono bg-white/80 px-2 py-1 rounded">
+       Nile Delta Coast • Sep 06, 2026
+     </span>
+   </div>
                                     <div className="flex gap-2">
                                         {SUBSIDENCE_YEARS.map((y) => (
                                             <button
