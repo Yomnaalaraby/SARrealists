@@ -34,3 +34,31 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Captain DIO game
+
+The story-driven NISAR game lives at `/game`. Its specification is in
+[`docs/GAME_PROMPT_V2.md`](docs/GAME_PROMPT_V2.md).
+
+```bash
+npm run dev              # play at http://localhost:3000/game
+npm run validate:content # schema, spoiler, image, source, and text checks
+npm test                 # engine, content, and persistence tests
+npm run typecheck        # strict TypeScript
+```
+
+Game foundation:
+
+- `src/game/types.ts` — domain types
+- `src/game/content.ts` — zod schemas, parsing, localization, accessors
+- `src/game/engine.ts` — quality tier, outcomes, crew state, endings, report
+- `src/game/state.ts` — reducer and best-report persistence
+- `src/game/validation.ts` — build-time content rules
+- `public/game/` — `story.json`, `lenses.json`, `missions.json`,
+  `reveal.json`, `facts.json`, placeholder images
+- `scripts/validate_content.ts` — CLI validator
+- `tests/` — Vitest suite
+
+Mission content is placeholder until real NISAR crops and sourced facts are
+supplied. Pre-reveal mission data must never contain real place names,
+coordinates, or place-specific source URLs; those belong in `reveal.json`.

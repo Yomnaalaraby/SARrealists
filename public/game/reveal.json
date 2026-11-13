@@ -1,0 +1,132 @@
+{
+  "version": "v1",
+  "places": {
+    "m1-smoke": {
+      "name": { "en": "California, USA", "ar": "كاليفورنيا، الولايات المتحدة" },
+      "siteId": "california",
+      "lon": -118.5,
+      "lat": 34.07,
+      "zoom": 10
+    },
+    "m2-glacier": {
+      "name": { "en": "Himalaya, Asia", "ar": "الهيمالايا، آسيا" },
+      "siteId": "himalaya",
+      "lon": 79.09,
+      "lat": 30.95,
+      "zoom": 10
+    },
+    "m3-delta": {
+      "name": { "en": "Nile Delta, Egypt", "ar": "دلتا النيل، مصر" },
+      "siteId": "nile_delta",
+      "lon": 31.0,
+      "lat": 30.5,
+      "zoom": 8
+    },
+    "m4-foundations": {
+      "name": { "en": "Nile Delta coast, Egypt", "ar": "ساحل دلتا النيل، مصر" },
+      "siteId": "nile_delta",
+      "lon": 31.2,
+      "lat": 31.1,
+      "zoom": 10
+    }
+  },
+  "beats": [
+    {
+      "id": "cross-match",
+      "text": {
+        "en": "PLACEHOLDER: LUMEN cross-matches the terrain against its Earth archive. The ridge lines, river channels, and burn scars align.",
+        "ar": "نص مؤقت: يطابق لومِن التضاريس مع أرشيف الأرض. تتوافق خطوط الحواف والمجاري النهرية وآثار الحرائق."
+      }
+    },
+    {
+      "id": "same-world",
+      "text": {
+        "en": "PLACEHOLDER: The planet is Earth. The scenes you analyzed were real radar scans, not a distant colony.",
+        "ar": "نص مؤقت: الكوكب هو الأرض. المشاهد التي حللتها كانت مسحات رادارية حقيقية، لا مستعمرة بعيدة."
+      }
+    },
+    {
+      "id": "california",
+      "text": {
+        "en": "PLACEHOLDER: Sector 4 is California. The smoke came from wildfires; the burn scar is real.",
+        "ar": "نص مؤقت: القطاع 4 هو كاليفورنيا. جاء الدخان من حرائق غابات؛ أثر الحريق حقيقي."
+      },
+      "placeId": "m1-smoke"
+    },
+    {
+      "id": "himalaya",
+      "text": {
+        "en": "PLACEHOLDER: Sector 9 is the Himalaya. The moving ice is a real glacier, studied pass by pass.",
+        "ar": "نص مؤقت: القطاع 9 هو الهيمالايا. الجليد المتحرك نهر جليدي حقيقي، يُدرس مروراً بعد مرور."
+      },
+      "placeId": "m2-glacier"
+    },
+    {
+      "id": "nile",
+      "text": {
+        "en": "PLACEHOLDER: Sectors 2 and 7 are the Nile Delta. The wet fields and sinking ground are real, and the causes need sources.",
+        "ar": "نص مؤقت: القطاعان 2 و7 هما دلتا النيل. الحقول الرطبة والأرض الهابطة حقيقية، وأسبابها تحتاج مصادر."
+      },
+      "placeId": "m3-delta",
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" }
+    }
+  ],
+  "crewRoleToRealWorld": [
+    {
+      "role": "geologist",
+      "user": { "en": "Geologists and land-use planners", "ar": "الجيولوجيون ومخططو استخدام الأراضي" },
+      "decides": { "en": "PLACEHOLDER: Where to build and which slopes need ground checks.", "ar": "نص مؤقت: أين نبني وأي المنحدرات تحتاج فحوصاً ميدانية." },
+      "source": { "title": "NASA NISAR data products", "url": "https://nisar.jpl.nasa.gov/data/" }
+    },
+    {
+      "role": "agronomist",
+      "user": { "en": "Farmers and agricultural extension teams", "ar": "المزارعون وفرق الإرشاد الزراعي" },
+      "decides": { "en": "PLACEHOLDER: When to plant, irrigate, or wait for wet fields to drain.", "ar": "نص مؤقت: متى نزرع أو نروي أو ننتظر تصريف الحقول الرطبة." },
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" }
+    },
+    {
+      "role": "medic",
+      "user": { "en": "Public-health and flood-response teams", "ar": "فرق الصحة العامة والاستجابة للفيضانات" },
+      "decides": { "en": "PLACEHOLDER: Where to stage supplies and which communities to reach first.", "ar": "نص مؤقت: أين نجهّز الإمدادات وأي المجتمعات نصل إليها أولاً." },
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" }
+    },
+    {
+      "role": "engineer",
+      "user": { "en": "Civil engineers and infrastructure planners", "ar": "المهندسون المدنيون ومخططو البنية التحتية" },
+      "decides": { "en": "PLACEHOLDER: Where roads, buildings, and flood defenses are safe to site.", "ar": "نص مؤقت: أين يكون موقع الطرق والمباني ودفاعات الفيضان آمناً." },
+      "source": { "title": "NASA NISAR data products", "url": "https://nisar.jpl.nasa.gov/data/" }
+    },
+    {
+      "role": "pilot",
+      "user": { "en": "Emergency aviation and logistics crews", "ar": "فرق الطيران اللوجستي والطوارئ" },
+      "decides": { "en": "PLACEHOLDER: Which route is visible and safe when smoke or cloud blocks the view.", "ar": "نص مؤقت: أي مسار مرئي وآمن عندما يحجب الدخان أو السحاب الرؤية." },
+      "source": { "title": "ASF NISAR data", "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/" }
+    },
+    {
+      "role": "glaciologist",
+      "user": { "en": "Glaciologists and water-resource managers", "ar": "علماء الجليديات ومديرو موارد المياه" },
+      "decides": { "en": "PLACEHOLDER: How fast ice is moving and what that means for downstream water.", "ar": "نص مؤقت: ما سرعة حركة الجليد وماذا تعني لمياه المصب." },
+      "source": { "title": "NASA NISAR science", "url": "https://nisar.jpl.nasa.gov/science/" }
+    },
+    {
+      "role": "hydrologist",
+      "user": { "en": "Water authorities and flood forecasters", "ar": "سلطات المياه ومتنبئو الفيضانات" },
+      "decides": { "en": "PLACEHOLDER: Where water is standing, where it may spread, and which fields to protect.", "ar": "نص مؤقت: أين تقف المياه، وأين قد تنتشر، وأي الحقول نحمي." },
+      "source": { "title": "ASF NISAR data", "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/" }
+    },
+    {
+      "role": "cook",
+      "user": { "en": "Food-security and supply teams", "ar": "فرق الأمن الغذائي والإمداد" },
+      "decides": { "en": "PLACEHOLDER: How much harvest to expect and where to store reserves.", "ar": "نص مؤقت: كم حصاداً نتوقع وأين نخزن الاحتياطيات." },
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" }
+    }
+  ],
+  "callToAction": {
+    "label": { "en": "Open the real map", "ar": "افتح الخريطة الحقيقية" },
+    "route": "/dashboard?siteId={siteId}&lon={lon}&lat={lat}&zoom={zoom}&lenses={lenses}"
+  },
+  "closingLine": {
+    "en": "You didn't need a new planet. You needed to see this one clearly.",
+    "ar": "لم تكن بحاجة إلى كوكب جديد. كنت بحاجة إلى رؤية هذا الكوكب بوضوح."
+  }
+}
