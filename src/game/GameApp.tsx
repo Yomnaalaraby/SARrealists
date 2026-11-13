@@ -1,6 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import './game.css';
 import { PixelCanvas } from './art/PixelCanvas';
 import { AcademyBriefing } from './components/AcademyBriefing';
@@ -49,16 +57,13 @@ function readLanguage(): Language {
 }
 
 export function GameApp() {
-  const [language, setLanguage] = useState<Language>(() =>
-    typeof window === 'undefined' ? 'en' : readLanguage(),
-  );
+  const [language, setLanguage] = useState<Language>('en');
   const [core, setCore] = useState<CoreContent | null>(null);
   const [reveal, setReveal] = useState<Reveal | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [codexOpen, setCodexOpen] = useState(false);
-  const [best, setBest] = useState<MissionReportType | null>(() =>
-    typeof window === 'undefined' ? null : loadBestReport(),
-  );
+  const [best, setBest] = useState<MissionReportType | null>(null);
+  const preferencesLoaded = useRef(false);
 
   const reducer = useMemo(
     () => (core ? createGameReducer(core) : (state: GameState) => state),
@@ -67,6 +72,16 @@ export function GameApp() {
   const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLanguage(readLanguage());
+    setBest(loadBestReport());
+    preferencesLoaded.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!preferencesLoaded.current) {
+      return;
+    }
     document.documentElement.lang = language;
     document.documentElement.dir = isRtl(language) ? 'rtl' : 'ltr';
     try {
