@@ -112,7 +112,10 @@ export function selectEnding(endings: Ending[], stats: EndingStats): Ending {
   return match ?? ranked[ranked.length - 1];
 }
 
-export function countBestDecisions(content: GameContent, decisions: GameState['decisions']): number {
+export function countBestDecisions(
+  content: Pick<GameContent, 'missions'>,
+  decisions: GameState['decisions'],
+): number {
   return decisions.filter((record) => {
     const mission = content.missions.missions.find((entry) => entry.id === record.missionId);
     return mission ? mission.bestDecision === record.decision : false;
@@ -127,7 +130,7 @@ export function scoreRun(healthy: number, bestDecisions: number, totalMissions: 
 }
 
 export function buildMissionReport(
-  content: GameContent,
+  content: Pick<GameContent, 'story' | 'missions'>,
   state: GameState,
   now: Date = new Date(),
 ): MissionReport {

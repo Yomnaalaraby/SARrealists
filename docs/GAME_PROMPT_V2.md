@@ -152,9 +152,11 @@ English; the dev build logs a warning, production does not.
 - **Message 1 (done):** types, zod content layer, pure engine, reducer, best
   report persistence, five JSON files with placeholder content, placeholder
   gradient images, validator, Vitest suite.
-- **Message 2:** pixel-art system, components, GameApp, i18n, `/game` route,
-  PlayButton, lens picker/results, decision/outcome/reality-check, codex,
-  crew bar, reveal, report, accessibility.
+- **Message 2 (done):** pixel-art system, components, GameApp, i18n, `/game`
+  route, PlayButton, lens picker/results, decision/outcome/reality-check,
+  codex, crew bar, reveal, report, accessibility. The reveal JSON is fetched
+  only when the player reaches the reveal; a four-mission playthrough test
+  covers the route.
 - **Message 3:** README mission-authoring guide, REFERENCES generator, judge
   guide, asset pipeline from `out_web` catalogs, bundle/network checks, polish.
 

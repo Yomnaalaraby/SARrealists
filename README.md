@@ -37,8 +37,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Captain DIO game
 
-The story-driven NISAR game lives at `/game`. Its specification is in
-[`docs/GAME_PROMPT_V2.md`](docs/GAME_PROMPT_V2.md).
+The story-driven NISAR game is playable at `/game`. Its specification is in
+[`docs/GAME_PROMPT_V2.md`](docs/GAME_PROMPT_V2.md). The landing hero also links
+to it with a **Play Captain DIO** button.
 
 ```bash
 npm run dev              # play at http://localhost:3000/game
@@ -47,7 +48,7 @@ npm test                 # engine, content, and persistence tests
 npm run typecheck        # strict TypeScript
 ```
 
-Game foundation:
+Game foundation and playable route:
 
 - `src/game/types.ts` — domain types
 - `src/game/content.ts` — zod schemas, parsing, localization, accessors
@@ -57,8 +58,15 @@ Game foundation:
 - `public/game/` — `story.json`, `lenses.json`, `missions.json`,
   `reveal.json`, `facts.json`, placeholder images
 - `scripts/validate_content.ts` — CLI validator
-- `tests/` — Vitest suite
+- `src/game/art/` — palette, original sprite data, seeded 160×90 scenes, canvas components
+- `src/game/components/` — cutscene, academy, briefing, crew bar, lens picker/results,
+  codex, decisions, outcome, reality check, Earth reveal, report, language toggle
+- `src/game/GameApp.tsx` — data loading, lazy reveal, phase router, persistence
+- `src/game/i18n.ts` and `src/game/game.css` — English/Arabic UI and RTL styling
+- `src/app/game/page.tsx` — the `/game` route
+- `tests/` — Vitest suite, including a full four-mission playthrough
 
-Mission content is placeholder until real NISAR crops and sourced facts are
+Run the production build with `npm run build && npm start` for the verified
+playable route. Mission content is placeholder until real NISAR crops and sourced facts are
 supplied. Pre-reveal mission data must never contain real place names,
 coordinates, or place-specific source URLs; those belong in `reveal.json`.

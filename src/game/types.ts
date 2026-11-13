@@ -253,12 +253,15 @@ export interface FactsFile {
   facts: Fact[];
 }
 
-export interface GameContent {
+export interface CoreContent {
   story: Story;
   lenses: LensLibrary;
   missions: MissionsFile;
-  reveal: Reveal;
   facts: FactsFile;
+}
+
+export interface GameContent extends CoreContent {
+  reveal: Reveal;
 }
 
 export type CrewInjuryMap = Record<Role, boolean>;

@@ -48,7 +48,7 @@ export type GameAction =
 
 export type GameReducer = (state: GameState, action: GameAction) => GameState;
 
-export function createGameReducer(content: GameContent): GameReducer {
+export function createGameReducer(content: Pick<GameContent, 'missions'>): GameReducer {
   return function reducer(state, action) {
     switch (action.type) {
       case 'START':
@@ -231,7 +231,11 @@ export function persistBestReport(
   return { saved: true, best: report };
 }
 
-export function createReport(content: GameContent, state: GameState, now?: Date): MissionReport {
+export function createReport(
+  content: Pick<GameContent, 'story' | 'missions'>,
+  state: GameState,
+  now?: Date,
+): MissionReport {
   return buildMissionReport(content, state, now);
 }
 

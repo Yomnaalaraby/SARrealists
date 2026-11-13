@@ -9,6 +9,7 @@ import {
   RELEVANCE_VALUES,
   RELIABILITIES,
   ROLES,
+  type CoreContent,
   type CrewHint,
   type GameContent,
   type Language,
@@ -17,6 +18,7 @@ import {
   type LocalizedText,
   type Mission,
   type RealPlace,
+  type Reveal,
   type Role,
   type Source,
   type StoryCrewMember,
@@ -49,7 +51,7 @@ const endingSchema = z.object({
   minBestDecisions: z.number().int().min(0),
 });
 
-const storySchema = z.object({
+export const storySchema = z.object({
   version: z.string().min(1),
   ship: localizedTextSchema,
   planet: localizedTextSchema,
@@ -69,7 +71,7 @@ const lensSchema = z.object({
   icon: z.string().min(1),
 });
 
-const lensLibrarySchema = z.object({
+export const lensLibrarySchema = z.object({
   version: z.string().min(1),
   lenses: z.array(lensSchema).min(1),
 });
@@ -183,7 +185,7 @@ const missionSchema = z.object({
   hints: z.array(localizedTextSchema).optional(),
 });
 
-const missionsFileSchema = z.object({
+export const missionsFileSchema = z.object({
   version: z.string().min(1),
   missions: z.array(missionSchema).min(1),
 });
@@ -215,7 +217,7 @@ const callToActionSchema = z.object({
   route: z.string().min(1),
 });
 
-const revealSchema = z.object({
+export const revealSchema = z.object({
   version: z.string().min(1),
   places: z.record(z.string(), realPlaceSchema),
   beats: z.array(revealBeatSchema).min(1),
@@ -232,16 +234,23 @@ const factSchema = z.object({
   status: z.enum(['verified', 'todo']),
 });
 
-const factsFileSchema = z.object({
+export const factsFileSchema = z.object({
   version: z.string().min(1),
   facts: z.array(factSchema).min(1),
 });
 
-const gameContentSchema = z.object({
+export const gameContentSchema = z.object({
   story: storySchema,
   lenses: lensLibrarySchema,
   missions: missionsFileSchema,
   reveal: revealSchema,
+  facts: factsFileSchema,
+});
+
+const coreContentSchema = z.object({
+  story: storySchema,
+  lenses: lensLibrarySchema,
+  missions: missionsFileSchema,
   facts: factsFileSchema,
 });
 
@@ -257,7 +266,7 @@ function isRole(value: string): value is Role {
  * Structural cross-checks that zod cannot express, shared by the parser and
  * the build-time validator.
  */
-export function collectContentErrors(content: GameContent): string[] {
+export function collectCoreContentErrors(content: CoreContent): string[] {
   const errors: string[] = [];
 
   const lensIds = new Set(content.lenses.lenses.map((lens) => lens.id));
@@ -275,10 +284,6 @@ export function collectContentErrors(content: GameContent): string[] {
       errors.push(`Duplicate mission id: ${mission.id}`);
     }
     missionIds.add(mission.id);
-
-    if (!content.reveal.places[mission.id]) {
-      errors.push(`reveal.places is missing an entry for mission ${mission.id}`);
-    }
 
     for (const lensId of Object.keys(mission.relevance)) {
       if (!isLensId(lensId) || !lensIds.has(lensId)) {
@@ -309,6 +314,22 @@ export function collectContentErrors(content: GameContent): string[] {
     }
   }
 
+  return errors;
+}
+
+/**
+ * Full cross-checks, including the reveal that is loaded only at the end.
+ */
+export function collectContentErrors(content: GameContent): string[] {
+  const errors = collectCoreContentErrors(content);
+  const missionIds = new Set(content.missions.missions.map((mission) => mission.id));
+
+  for (const mission of content.missions.missions) {
+    if (!content.reveal.places[mission.id]) {
+      errors.push(`reveal.places is missing an entry for mission ${mission.id}`);
+    }
+  }
+
   for (const [placeId] of Object.entries(content.reveal.places)) {
     if (!missionIds.has(placeId)) {
       errors.push(`reveal.places contains an unknown mission id: ${placeId}`);
@@ -330,6 +351,19 @@ export function collectContentErrors(content: GameContent): string[] {
   }
 
   return errors;
+}
+
+export function parseCoreContent(raw: unknown): CoreContent {
+  const parsed = coreContentSchema.parse(raw) as CoreContent;
+  const errors = collectCoreContentErrors(parsed);
+  if (errors.length > 0) {
+    throw new Error(`Invalid game content:\n- ${errors.join('\n- ')}`);
+  }
+  return parsed;
+}
+
+export function parseReveal(raw: unknown): Reveal {
+  return revealSchema.parse(raw) as Reveal;
 }
 
 export function parseGameContent(raw: unknown): GameContent {
@@ -377,7 +411,7 @@ export function getLens(content: GameContent, lensId: LensId): Lens {
   return lens;
 }
 
-export function getMission(content: GameContent, missionId: string): Mission {
+export function getMission(content: Pick<GameContent, 'missions'>, missionId: string): Mission {
   const mission = content.missions.missions.find((entry) => entry.id === missionId);
   if (!mission) {
     throw new Error(`Unknown mission: ${missionId}`);
@@ -385,7 +419,7 @@ export function getMission(content: GameContent, missionId: string): Mission {
   return mission;
 }
 
-export function getMissionAt(content: GameContent, index: number): Mission {
+export function getMissionAt(content: Pick<GameContent, 'missions'>, index: number): Mission {
   const mission = content.missions.missions[index];
   if (!mission) {
     throw new Error(`No mission at index ${index}`);
