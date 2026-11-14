@@ -1234,6 +1234,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.out_dir is not None:
         cfg["out_dir"] = str(args.out_dir)
 
+    if args.skip_tiles:
+        cfg["export_tiles"] = False
+    if args.skip_zarr:
+        cfg["export_zarr"] = False
+
     site_cfg = cfg["sites"][args.site]
     if args.bbox:
         site_cfg["bbox"] = list(args.bbox)
