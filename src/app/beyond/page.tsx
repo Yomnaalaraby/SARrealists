@@ -93,7 +93,7 @@ export default function BeyondPage() {
               Back to Dashboard
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-fuchsia-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
-              Beyond 2025 Horizons
+              Beyond 2026 Horizons
             </h1>
             <p className="mt-3 text-slate-400 max-w-2xl text-lg">
               Predictive analytics and future applications powered by NISAR's continuous L & S-Band radar observations.

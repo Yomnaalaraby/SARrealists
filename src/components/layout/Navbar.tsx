@@ -11,7 +11,7 @@ export default function Navbar() {
     { href: '/', label: 'Home', icon: Satellite },
     { href: '/data-analysis', label: 'Data Analysis', icon: BarChart3 },
     { href: '/game', label: 'Game', icon: Gamepad2 },
-    { href: '/beyond', label: 'Beyond 2025', icon: Rocket },
+    { href: '/beyond', label: 'Beyond 2026', icon: Rocket },
   ];
 
   return (
