@@ -38,6 +38,10 @@ describe('GameApp', () => {
     render(<GameApp />);
 
     fireEvent.click(await screen.findByRole('button', { name: /start mission/i }));
+    for (let index = 0; index < 5; index += 1) {
+      fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
+    }
+    fireEvent.click(screen.getByRole('button', { name: /open the academy/i }));
     fireEvent.click(screen.getByRole('button', { name: /help the crew/i }));
 
     const missions = [
@@ -48,6 +52,10 @@ describe('GameApp', () => {
     ];
 
     for (const [index, mission] of missions.entries()) {
+      for (let line = 0; line < 3; line += 1) {
+        fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
+      }
+      fireEvent.click(screen.getByRole('button', { name: /brief the crew/i }));
       fireEvent.click(screen.getByRole('button', { name: /choose exactly two lenses/i }));
       for (const lens of mission.lenses) {
         fireEvent.click(screen.getByRole('button', { name: lens }));

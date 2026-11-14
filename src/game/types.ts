@@ -18,6 +18,14 @@ export const ROLES = [
 ] as const;
 export type Role = (typeof ROLES)[number];
 
+export const DIALOGUE_SPEAKERS = ['captain', 'ai', ...ROLES] as const;
+export type DialogueSpeaker = (typeof DIALOGUE_SPEAKERS)[number];
+
+export interface DialogueLine {
+  speaker: DialogueSpeaker;
+  text: LocalizedText;
+}
+
 export const LENS_IDS = [
   'brightness',
   'water',
@@ -94,6 +102,7 @@ export interface Story {
   planet: LocalizedText;
   captain: LocalizedText;
   ai: LocalizedText;
+  intro: DialogueLine[];
   crew: StoryCrewMember[];
   endings: Ending[];
 }
@@ -187,6 +196,7 @@ export interface Mission {
   siteId: string;
   title: LocalizedText;
   briefing: LocalizedText;
+  dialogue: DialogueLine[];
   alias: string;
   data: MissionData;
   relevance: Partial<Record<LensId, Relevance>>;

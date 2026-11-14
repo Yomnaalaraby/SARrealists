@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   CONFIDENCES,
   DECISIONS,
+  DIALOGUE_SPEAKERS,
   DIRECTIONS,
   LENS_IDS,
   LENS_STATUSES,
@@ -43,6 +44,11 @@ const storyCrewSchema = z.object({
   title: localizedTextSchema,
 });
 
+const dialogueLineSchema = z.object({
+  speaker: z.enum(DIALOGUE_SPEAKERS),
+  text: localizedTextSchema,
+});
+
 const endingSchema = z.object({
   id: z.string().min(1),
   title: localizedTextSchema,
@@ -57,6 +63,7 @@ export const storySchema = z.object({
   planet: localizedTextSchema,
   captain: localizedTextSchema,
   ai: localizedTextSchema,
+  intro: z.array(dialogueLineSchema).min(1),
   crew: z.array(storyCrewSchema).length(8),
   endings: z.array(endingSchema).min(1),
 });
@@ -173,6 +180,7 @@ const missionSchema = z.object({
   siteId: z.string().min(1),
   title: localizedTextSchema,
   briefing: localizedTextSchema,
+  dialogue: z.array(dialogueLineSchema).min(1),
   alias: z.string().min(1),
   data: missionDataSchema,
   relevance: z.record(z.string(), z.enum(RELEVANCE_VALUES)),

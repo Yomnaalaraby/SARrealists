@@ -253,6 +253,7 @@ the sites the crew just analyzed.
 - Folded-jump explanation: **confirmed**.
 - Crew-led dialogue instead of invented native voices: **confirmed**.
 - Opening arrival copy, four mission briefings, seven reveal beats, revised endings, and the new “Explore the real Earth data” CTA are implemented in the game content.
+- Dedicated speaker-by-speaker dialogue screens with crew portraits are implemented for the opening and every mission briefing.
 
 ## Open questions
 

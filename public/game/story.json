@@ -159,5 +159,49 @@
       "minHealthy": 0,
       "minBestDecisions": 0
     }
+  ],
+  "intro": [
+    {
+      "speaker": "captain",
+      "text": {
+        "en": "Crew, the log says 100 light-years. The Aurelia Dawn is finally down.",
+        "ar": "أيها الطاقم، يقول السجل إننا قطعنا 100 سنة ضوئية. هبطت فجر أوريليا أخيراً."
+      }
+    },
+    {
+      "speaker": "ai",
+      "text": {
+        "en": "No human signals on the surface. I detect a carbon pulse, active fires, moving ice, and unstable ground.",
+        "ar": "لا إشارات بشرية على السطح. أرصد نبضة كربون وحرائق نشطة وجليداً متحركاً وأرضاً غير مستقرة."
+      }
+    },
+    {
+      "speaker": "medic",
+      "text": {
+        "en": "If the planet is empty, why does it look like it is under stress?",
+        "ar": "إن كان الكوكب خالياً، فلماذا يبدو تحت ضغط؟"
+      }
+    },
+    {
+      "speaker": "agronomist",
+      "text": {
+        "en": "A world can be empty and still be in trouble. We need eyes on it before anyone steps outside.",
+        "ar": "يمكن أن يكون العالم خالياً ومع ذلك في خطر. نحتاج عيوناً عليه قبل أن يخرج أحد."
+      }
+    },
+    {
+      "speaker": "captain",
+      "text": {
+        "en": "LUMEN, give the team the radar briefing. We do this carefully.",
+        "ar": "لومِن، أعطِ الفريق إحاطة الرادار. سنفعل هذا بحذر."
+      }
+    },
+    {
+      "speaker": "ai",
+      "text": {
+        "en": "Two lenses per pass. Learn to see what dust and smoke hide.",
+        "ar": "عدستان لكل مرور. تعلّموا رؤية ما يخفيه الغبار والدخان."
+      }
+    }
   ]
 }

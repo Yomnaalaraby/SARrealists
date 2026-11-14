@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { PixelCanvas } from '../art/PixelCanvas';
 import { getCrewMember, localize } from '../content';
 import { t } from '../i18n';
 import type { CrewInjuryMap, Language, Mission, Role, Story } from '../types';
 import { CrewBar } from './CrewBar';
-import { Cutscene } from './Cutscene';
+import { DialogueScene } from './DialogueScene';
 import { PixelBadge, PixelButton, PixelPanel, SectionHeading } from './ui';
 
 export function Briefing({
@@ -31,8 +32,33 @@ export function Briefing({
   onConsult: (role: Role) => void;
   onContinue: () => void;
 }) {
+  const [dialogueDone, setDialogueDone] = useState(false);
   const hint = consultedRole ? mission.crewHints[consultedRole] : undefined;
   const consulted = consultedRole ? getCrewMember(story, consultedRole) : undefined;
+
+  if (!dialogueDone) {
+    return (
+      <section className="phase phase--briefing" aria-labelledby="briefing-title">
+        <div className="phase__art">
+          <PixelCanvas
+            scene={scene}
+            seed={mission.id}
+            label={`${mission.alias}: ${localize(mission.title, language)}`}
+          />
+        </div>
+        <PixelPanel className="phase__panel">
+          <DialogueScene
+            lines={mission.dialogue}
+            story={story}
+            language={language}
+            title={localize(mission.title, language)}
+            continueLabel={t(language, 'briefCrew')}
+            onComplete={() => setDialogueDone(true)}
+          />
+        </PixelPanel>
+      </section>
+    );
+  }
 
   return (
     <section className="phase phase--briefing" aria-labelledby="briefing-title">
@@ -50,14 +76,6 @@ export function Briefing({
         >
           {t(language, 'briefing')}
         </SectionHeading>
-
-        <Cutscene
-          text={localize(mission.briefing, language)}
-          language={language}
-          onComplete={() => undefined}
-          speedMs={6}
-          showAction={false}
-        />
 
         <div className="badge-row">
           <PixelBadge tone="accent">{t(language, 'passesBefore', { count: mission.data.passes })}</PixelBadge>

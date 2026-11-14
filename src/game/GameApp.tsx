@@ -183,6 +183,7 @@ export function GameApp() {
 
   const mission = core.missions.missions[state.missionIndex];
   const lastRecord = state.decisions[state.decisions.length - 1];
+  const isArrival = state.phase === 'academy';
 
   const header = (
     <header className="game-header">
@@ -190,19 +191,29 @@ export function GameApp() {
         <span className="game-header__mark" aria-hidden="true">◈</span>
         <div>
           <p className="pixel-eyebrow">{t(language, 'gameTitle')}</p>
-          <strong>{mission ? mission.alias : t(language, 'reportTitle')}</strong>
+          <strong>
+            {isArrival
+              ? t(language, 'academyTitle')
+              : mission
+                ? mission.alias
+                : t(language, 'reportTitle')}
+          </strong>
         </div>
       </div>
       <div className="game-header__progress" aria-label={t(language, 'progress')}>
-        {core.missions.missions.map((entry, index) => (
-          <span
-            key={entry.id}
-            className={`progress-dot ${index < state.decisions.length ? 'is-done' : ''} ${index === state.missionIndex ? 'is-current' : ''}`}
-            aria-hidden="true"
-          />
-        ))}
+        {!isArrival
+          ? core.missions.missions.map((entry, index) => (
+              <span
+                key={entry.id}
+                className={`progress-dot ${index < state.decisions.length ? 'is-done' : ''} ${index === state.missionIndex ? 'is-current' : ''}`}
+                aria-hidden="true"
+              />
+            ))
+          : null}
         <span className="progress-text">
-          {t(language, 'missionLabel')} {Math.min(state.missionIndex + 1, core.missions.missions.length)} / {core.missions.missions.length}
+          {isArrival
+            ? t(language, 'academyTitle')
+            : `${t(language, 'missionLabel')} ${Math.min(state.missionIndex + 1, core.missions.missions.length)} / ${core.missions.missions.length}`}
         </span>
       </div>
       <div className="game-header__actions">
@@ -240,6 +251,7 @@ export function GameApp() {
         return (
           <AcademyBriefing
             language={language}
+            story={core.story}
             onContinue={() => dispatch({ type: 'ACADEMY_COMPLETE' })}
           />
         );
@@ -247,6 +259,7 @@ export function GameApp() {
       case 'briefing':
         return (
           <Briefing
+            key={mission.id}
             mission={mission}
             missionIndex={state.missionIndex}
             missionCount={core.missions.missions.length}

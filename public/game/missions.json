@@ -266,6 +266,36 @@
           "en": "Ask LUMEN which lens can see through smoke, and which one can see the wet ground.",
           "ar": "اسأل لومِن أي عدسة ترى عبر الدخان، وأيها ترى الأرض الرطبة."
         }
+      ],
+      "dialogue": [
+        {
+          "speaker": "captain",
+          "text": {
+            "en": "After 100 light-years, the Aurelia Dawn is finally down.",
+            "ar": "بعد 100 سنة ضوئية، هبطت فجر أوريليا أخيراً."
+          }
+        },
+        {
+          "speaker": "medic",
+          "text": {
+            "en": "The smoke is too thick for a visual approach.",
+            "ar": "الدخان كثيف جداً للهبوط البصري."
+          }
+        },
+        {
+          "speaker": "agronomist",
+          "text": {
+            "en": "If the basin is wet, the ground may move under the lander.",
+            "ar": "إن كان الحوض رطباً فقد تتحرك الأرض تحت المركبة."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses before we commit.",
+            "ar": "تبقّى مروران. اختر عدستين قبل أن نلتزم."
+          }
+        }
       ]
     },
     {
@@ -571,6 +601,36 @@
           "en": "Flow is the direct question for a moving glacier. Coherence tells you where the measurement can be trusted.",
           "ar": "الحركة هي السؤال المباشر للنهر الجليدي المتحرك. يخبرك التماسك أين يمكن الوثوق بالقياس."
         }
+      ],
+      "dialogue": [
+        {
+          "speaker": "glaciologist",
+          "text": {
+            "en": "The glacier above camp is moving faster than the archive predicts.",
+            "ar": "يتحرك النهر الجليدي فوق المخيم أسرع مما يتوقع الأرشيف."
+          }
+        },
+        {
+          "speaker": "engineer",
+          "text": {
+            "en": "The ridge route is the only way to the drill site.",
+            "ar": "طريق الحافة هو السبيل الوحيد إلى موقع الحفر."
+          }
+        },
+        {
+          "speaker": "pilot",
+          "text": {
+            "en": "Cloud is closing in. I need a route I can fly.",
+            "ar": "السحاب يقترب. أحتاج مساراً يمكنني الطيران فيه."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Three passes remain. Choose two lenses before the route is committed.",
+            "ar": "تبقّت ثلاثة مرورات. اختر عدستين قبل تثبيت المسار."
+          }
+        }
       ]
     },
     {
@@ -845,6 +905,36 @@
         {
           "en": "Water and moisture answer different questions: where water stands, and how wet the soil is.",
           "ar": "الماء والرطوبة يجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "agronomist",
+          "text": {
+            "en": "The delta soil looks rich, but the river is already high.",
+            "ar": "تبدو تربة الدلتا خصبة، لكن النهر مرتفع بالفعل."
+          }
+        },
+        {
+          "speaker": "hydrologist",
+          "text": {
+            "en": "If the fields are saturated, the next pass could flood them.",
+            "ar": "إن تشبّعت الحقول فقد يغمرها المرور التالي."
+          }
+        },
+        {
+          "speaker": "medic",
+          "text": {
+            "en": "We cannot move a whole settlement twice.",
+            "ar": "لا يمكننا نقل مستوطنة كاملة مرتين."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses before planting.",
+            "ar": "تبقّى مروران. اختر عدستين قبل الزراعة."
+          }
         }
       ]
     },
@@ -1139,6 +1229,36 @@
         {
           "en": "A short motion record is a warning, not a verdict. More passes build confidence.",
           "ar": "سجل الحركة القصير تحذير وليس حكماً نهائياً. مزيد من المرورات يبني الثقة."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "engineer",
+          "text": {
+            "en": "The first permanent building needs ground that will not move.",
+            "ar": "يحتاج أول مبنى دائم إلى أرض لا تتحرك."
+          }
+        },
+        {
+          "speaker": "geologist",
+          "text": {
+            "en": "The surface looks flat, but flat is not stable.",
+            "ar": "السطح يبدو مستوياً، لكن الاستواء ليس ثباتاً."
+          }
+        },
+        {
+          "speaker": "captain",
+          "text": {
+            "en": "We have one chance to site this foundation.",
+            "ar": "لدينا فرصة واحدة لاختيار موقع الأساس."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses.",
+            "ar": "تبقّى مروران. اختر عدستين."
+          }
         }
       ]
     }

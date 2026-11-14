@@ -1148,3 +1148,134 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Dedicated crew dialogue */
+.dialogue-scene {
+  display: grid;
+  gap: 1rem;
+}
+
+.dialogue-scene__title {
+  color: var(--cyan);
+}
+
+.dialogue-scene__stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 1.6rem);
+  min-height: 15rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background:
+    linear-gradient(135deg, rgba(76, 201, 240, 0.08), transparent 55%),
+    rgba(5, 7, 15, 0.55);
+  border: 2px solid rgba(76, 201, 240, 0.3);
+  box-shadow: inset 0 0 0 2px rgba(5, 7, 15, 0.55);
+  animation: dialogue-in 220ms steps(2, end);
+}
+
+.dialogue-scene__portrait {
+  display: grid;
+  place-items: center;
+  width: clamp(7rem, 16vw, 9rem);
+  aspect-ratio: 4 / 5;
+  background:
+    linear-gradient(180deg, rgba(76, 201, 240, 0.16), transparent 65%),
+    var(--panel-2);
+  border: 3px solid var(--accent);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45);
+}
+
+.dialogue-scene__portrait svg {
+  image-rendering: pixelated;
+}
+
+.dialogue-scene__portrait--ai {
+  border-color: var(--cyan);
+}
+
+.dialogue-scene__content {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.dialogue-scene__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+}
+
+.dialogue-scene__meta h3 {
+  color: var(--accent);
+  font-family: var(--pixel-font);
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+[dir='rtl'] .dialogue-scene__meta h3 {
+  font-family: var(--body-font);
+  text-transform: none;
+}
+
+.dialogue-scene__meta span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.dialogue-scene__line {
+  min-height: 4.5rem;
+  color: #eef4ff;
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.dialogue-scene__progress {
+  color: var(--muted);
+  font-family: var(--pixel-font);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.dialogue-scene__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed rgba(242, 246, 255, 0.2);
+}
+
+@keyframes dialogue-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .dialogue-scene__stage {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    text-align: center;
+  }
+
+  .dialogue-scene__portrait {
+    width: 7rem;
+    margin: 0 auto;
+  }
+
+  .dialogue-scene__meta {
+    justify-content: center;
+  }
+
+  .dialogue-scene__actions {
+    justify-content: center;
+  }
+}
