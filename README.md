@@ -39,13 +39,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 The story-driven NISAR game is playable at `/game`. Its specification is in
 [`docs/GAME_PROMPT_V2.md`](docs/GAME_PROMPT_V2.md). The landing hero also links
-to it with a **Play Captain DIO** button.
+to it with a **Play Captain DIO** button. The current readiness and asset audit
+is in [`docs/GAME_AUDIT.md`](docs/GAME_AUDIT.md).
 
 ```bash
 npm run dev              # play at http://localhost:3000/game
 npm run validate:content # schema, spoiler, image, source, and text checks
 npm test                 # engine, content, and persistence tests
 npm run typecheck        # strict TypeScript
+python3 scripts/generate_game_images.py  # regenerate 160x90 mission pixel art
 ```
 
 Game foundation and playable route:
@@ -56,7 +58,9 @@ Game foundation and playable route:
 - `src/game/state.ts` — reducer and best-report persistence
 - `src/game/validation.ts` — build-time content rules
 - `public/game/` — `story.json`, `lenses.json`, `missions.json`,
-  `reveal.json`, `facts.json`, placeholder images
+  `reveal.json`, `facts.json`, and 22 generated pixel-art mission images
+- `scripts/generate_game_images.py` — deterministic 160×90 pixel-art generator
+  using the shared in-game palette
 - `scripts/validate_content.ts` — CLI validator
 - `src/game/art/` — palette, original sprite data, seeded 160×90 scenes, canvas components
 - `src/game/components/` — cutscene, academy, briefing, crew bar, lens picker/results,

@@ -77,7 +77,8 @@ describe('outcomes', () => {
     for (const mission of content.missions.missions) {
       for (const tier of ['strong', 'partial', 'blind'] as const) {
         for (const decision of mission.decisions) {
-          expect(resolveOutcome(mission, tier, decision).text.en).toContain('PLACEHOLDER');
+          expect(resolveOutcome(mission, tier, decision).text.en.length).toBeGreaterThan(0);
+          expect(resolveOutcome(mission, tier, decision).text.en).not.toContain('PLACEHOLDER');
         }
       }
     }

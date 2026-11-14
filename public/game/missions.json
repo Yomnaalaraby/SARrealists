@@ -5,12 +5,12 @@
       "id": "m1-smoke",
       "siteId": "sector-4",
       "title": {
-        "en": "PLACEHOLDER: Landing under smoke",
-        "ar": "نص مؤقت: الهبوط تحت الدخان"
+        "en": "Landing under smoke",
+        "ar": "الهبوط تحت الدخان"
       },
       "briefing": {
-        "en": "PLACEHOLDER: The lander is descending toward a basin covered in smoke. Two passes remain before the expedition must leave. Choose two lenses to judge the landing zone.",
-        "ar": "نص مؤقت: تهبط المركبة نحو حوض يغطيه الدخان. تبقّى مروران قبل مغادرة البعثة. اختر عدستين لتقييم منطقة الهبوط."
+        "en": "The lander is descending toward a basin covered in smoke. Two passes remain before the expedition must leave. Choose two lenses to judge the landing zone.",
+        "ar": "تهبط المركبة نحو حوض يغطيه الدخان. تبقّى مروران قبل مغادرة البعثة. اختر عدستين لتقييم منطقة الهبوط."
       },
       "alias": "Aurelia, Sector 4",
       "data": {
@@ -38,8 +38,8 @@
         "brightness": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: The burn scar is brighter than the intact canopy.",
-            "ar": "نص مؤقت: أثر الحريق أكثر سطوعاً من الغطاء السليم."
+            "en": "The burn scar is brighter than the intact canopy.",
+            "ar": "أثر الحريق أكثر سطوعاً من الغطاء السليم."
           },
           "visual": {
             "kind": "pair",
@@ -66,8 +66,8 @@
         "optical": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: Smoke completely blocks the optical view.",
-            "ar": "نص مؤقت: الدخان يحجب الرؤية البصرية تماماً."
+            "en": "Smoke completely blocks the optical view.",
+            "ar": "الدخان يحجب الرؤية البصرية تماماً."
           },
           "visual": {
             "kind": "single",
@@ -83,8 +83,8 @@
         "water": {
           "status": "weak",
           "caption": {
-            "en": "PLACEHOLDER: A dark patch could be water or a shadow.",
-            "ar": "نص مؤقت: قد تكون البقعة الداكنة ماءً أو ظلاً."
+            "en": "A dark patch could be water or a shadow.",
+            "ar": "قد تكون البقعة الداكنة ماءً أو ظلاً."
           },
           "visual": {
             "kind": "single",
@@ -100,29 +100,29 @@
         "moisture": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: No usable soil-moisture signal at this look angle.",
-            "ar": "نص مؤقت: لا توجد إشارة رطوبة تربة صالحة عند زاوية النظر هذه."
+            "en": "No usable soil-moisture signal at this look angle.",
+            "ar": "لا توجد إشارة رطوبة تربة صالحة عند زاوية النظر هذه."
           }
         },
         "motion": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: One pair is not enough to measure motion.",
-            "ar": "نص مؤقت: زوج واحد لا يكفي لقياس الحركة."
+            "en": "One pair is not enough to measure motion.",
+            "ar": "زوج واحد لا يكفي لقياس الحركة."
           }
         },
         "stability": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: The surface lost coherence in the smoke-affected area.",
-            "ar": "نص مؤقت: فقد السطح تماسكه في المنطقة المتأثرة بالدخان."
+            "en": "The surface lost coherence in the smoke-affected area.",
+            "ar": "فقد السطح تماسكه في المنطقة المتأثرة بالدخان."
           }
         },
         "iceflow": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: No ice is visible in this sector.",
-            "ar": "نص مؤقت: لا يظهر جليد في هذا القطاع."
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
           }
         }
       },
@@ -139,22 +139,22 @@
               "pilot"
             ],
             "text": {
-              "en": "PLACEHOLDER: The crew lands safely, but the pilot is injured clearing debris.",
-              "ar": "نص مؤقت: يهبط الطاقم بأمان، لكن الطيارة تُصاب أثناء إزالة الحطام."
+              "en": "The crew lands safely, but the pilot is injured clearing debris.",
+              "ar": "يهبط الطاقم بأمان، لكن الطيارة تُصاب أثناء إزالة الحطام."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You wait for a clearer pass. No one is hurt; the expedition loses time.",
-              "ar": "نص مؤقت: تنتظر مروراً أوضح. لا أحد يُصاب، لكن البعثة تخسر وقتاً."
+              "en": "You wait for a clearer pass. No one is hurt; the expedition loses time.",
+              "ar": "تنتظر مروراً أوضح. لا أحد يُصاب، لكن البعثة تخسر وقتاً."
             }
           },
           "reroute": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You reroute to the burn-scar edge. The crew is safe.",
-              "ar": "نص مؤقت: تعيد المسار إلى حافة أثر الحريق. الطاقم بأمان."
+              "en": "You reroute to the burn-scar edge. The crew is safe.",
+              "ar": "تعيد المسار إلى حافة أثر الحريق. الطاقم بأمان."
             }
           }
         },
@@ -165,8 +165,8 @@
               "geologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The smoke hides a gully; the pilot and geologist are injured.",
-              "ar": "نص مؤقت: يخفي الدخان وادياً؛ تُصاب الطيارة والجيولوجية."
+              "en": "The smoke hides a gully; the pilot and geologist are injured.",
+              "ar": "يخفي الدخان وادياً؛ تُصاب الطيارة والجيولوجية."
             }
           },
           "delay": {
@@ -174,8 +174,8 @@
               "engineer"
             ],
             "text": {
-              "en": "PLACEHOLDER: Delay helps, but the engineer is hurt repairing the lander.",
-              "ar": "نص مؤقت: التأجيل يساعد، لكن المهندس يُصاب أثناء إصلاح المركبة."
+              "en": "Delay helps, but the engineer is hurt repairing the lander.",
+              "ar": "التأجيل يساعد، لكن المهندس يُصاب أثناء إصلاح المركبة."
             }
           },
           "reroute": {
@@ -183,8 +183,8 @@
               "geologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The reroute is safer, though the geologist twists an ankle.",
-              "ar": "نص مؤقت: المسار الجديد أكثر أماناً، لكن الجيولوجية تلتوي كاحلها."
+              "en": "The reroute is safer, though the geologist twists an ankle.",
+              "ar": "المسار الجديد أكثر أماناً، لكن الجيولوجية تلتوي كاحلها."
             }
           }
         },
@@ -195,15 +195,15 @@
               "medic"
             ],
             "text": {
-              "en": "PLACEHOLDER: With no usable signal, the landing damages the lander; the pilot and medic are injured.",
-              "ar": "نص مؤقت: دون إشارة صالحة، يضر الهبوط بالمركبة؛ تُصاب الطيارة والطبيبة."
+              "en": "With no usable signal, the landing damages the lander; the pilot and medic are injured.",
+              "ar": "دون إشارة صالحة، يضر الهبوط بالمركبة؛ تُصاب الطيارة والطبيبة."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You delay and lose time, but the crew is unhurt.",
-              "ar": "نص مؤقت: تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
             }
           },
           "reroute": {
@@ -211,24 +211,24 @@
               "engineer"
             ],
             "text": {
-              "en": "PLACEHOLDER: You reroute blindly; the engineer is injured.",
-              "ar": "نص مؤقت: تغيّر المسار على غير هدى؛ يُصاب المهندس."
+              "en": "You reroute blindly; the engineer is injured.",
+              "ar": "تغيّر المسار على غير هدى؛ يُصاب المهندس."
             }
           }
         }
       },
       "realityCheck": {
         "explain": {
-          "en": "PLACEHOLDER: Radar sends its own signal, so smoke does not block it. A burn scar changes surface roughness and can appear brighter or darker than intact vegetation.",
-          "ar": "نص مؤقت: يرسل الرادار إشارته الخاصة، لذا لا يحجبه الدخان. يغيّر أثر الحريق خشونة السطح وقد يظهر أسطع أو أغمق من الغطاء السليم."
+          "en": "Radar sends its own signal, so smoke does not block it. A burn scar changes surface roughness and can appear brighter or darker than intact vegetation.",
+          "ar": "يرسل الرادار إشارته الخاصة، لذا لا يحجبه الدخان. يغيّر أثر الحريق خشونة السطح وقد يظهر أسطع أو أغمق من الغطاء السليم."
         },
         "limits": {
-          "en": "PLACEHOLDER: Brightness alone cannot separate damage from moisture or roughness change. A second lens or a later pass helps.",
-          "ar": "نص مؤقت: السطوع وحده لا يفصل الضرر عن تغيّر الرطوبة أو الخشونة. عدسة ثانية أو مرور لاحق يساعدان."
+          "en": "Brightness alone cannot separate damage from moisture or roughness change. A second lens or a later pass helps.",
+          "ar": "السطوع وحده لا يفصل الضرر عن تغيّر الرطوبة أو الخشونة. عدسة ثانية أو مرور لاحق يساعدان."
         },
         "benefit": {
-          "en": "PLACEHOLDER: Emergency planners and land-use teams use change maps to prioritize ground checks.",
-          "ar": "نص مؤقت: يستخدم مخططو الطوارئ وفرق استخدام الأراضي خرائط التغيّر لترتيب الفحوص الميدانية."
+          "en": "Emergency planners and land-use teams use change maps to prioritize ground checks.",
+          "ar": "يستخدم مخططو الطوارئ وفرق استخدام الأراضي خرائط التغيّر لترتيب الفحوص الميدانية."
         },
         "source": {
           "title": "NASA NISAR data products",
@@ -238,24 +238,24 @@
       "crewHints": {
         "pilot": {
           "text": {
-            "en": "PLACEHOLDER: I cannot see anything through this smoke. Try the optical camera.",
-            "ar": "نص مؤقت: لا أرى شيئاً عبر هذا الدخان. جرّب الكاميرا البصرية."
+            "en": "I cannot see anything through this smoke. Try the optical camera.",
+            "ar": "لا أرى شيئاً عبر هذا الدخان. جرّب الكاميرا البصرية."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
         },
         "engineer": {
           "text": {
-            "en": "PLACEHOLDER: The lander needs a flat, stable patch. Brightness change may show the burn edge.",
-            "ar": "نص مؤقت: تحتاج المركبة إلى بقعة مستوية وثابتة. قد يُظهر تغيّر السطوع حافة الحريق."
+            "en": "The lander needs a flat, stable patch. Brightness change may show the burn edge.",
+            "ar": "تحتاج المركبة إلى بقعة مستوية وثابتة. قد يُظهر تغيّر السطوع حافة الحريق."
           },
           "suggestsLens": "brightness",
           "reliability": "good"
         },
         "medic": {
           "text": {
-            "en": "PLACEHOLDER: If there is water nearby, we should map it before landing.",
-            "ar": "نص مؤقت: إن كانت هناك مياه قريبة، علينا رسمها قبل الهبوط."
+            "en": "If there is water nearby, we should map it before landing.",
+            "ar": "إن كانت هناك مياه قريبة، علينا رسمها قبل الهبوط."
           },
           "suggestsLens": "water",
           "reliability": "wrong"
@@ -263,8 +263,8 @@
       },
       "hints": [
         {
-          "en": "PLACEHOLDER: Ask LUMEN which lens can see through smoke.",
-          "ar": "نص مؤقت: اسأل لومِن أي عدسة ترى عبر الدخان."
+          "en": "Ask LUMEN which lens can see through smoke.",
+          "ar": "اسأل لومِن أي عدسة ترى عبر الدخان."
         }
       ]
     },
@@ -272,12 +272,12 @@
       "id": "m2-glacier",
       "siteId": "sector-9",
       "title": {
-        "en": "PLACEHOLDER: Glacier expedition",
-        "ar": "نص مؤقت: بعثة النهر الجليدي"
+        "en": "Glacier expedition",
+        "ar": "بعثة النهر الجليدي"
       },
       "briefing": {
-        "en": "PLACEHOLDER: A glacier above the camp is moving. Three passes remain. Choose two lenses to judge whether the route to the ridge is safe.",
-        "ar": "نص مؤقت: يتحرك نهر جليدي فوق المخيم. تبقّى ثلاثة مرورات. اختر عدستين لتقييم أمان الطريق إلى الحافة."
+        "en": "A glacier above the camp is moving. Three passes remain. Choose two lenses to judge whether the route to the ridge is safe.",
+        "ar": "يتحرك نهر جليدي فوق المخيم. تبقّى ثلاثة مرورات. اختر عدستين لتقييم أمان الطريق إلى الحافة."
       },
       "alias": "Aurelia, Sector 9",
       "data": {
@@ -305,8 +305,8 @@
         "iceflow": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: The glacier tongue has moved between the two passes.",
-            "ar": "نص مؤقت: تحرّك لسان النهر الجليدي بين المرورين."
+            "en": "The glacier tongue has moved between the two passes.",
+            "ar": "تحرّك لسان النهر الجليدي بين المرورين."
           },
           "visual": {
             "kind": "pair",
@@ -333,8 +333,8 @@
         "brightness": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: The debris-covered ice edge has a different brightness.",
-            "ar": "نص مؤقت: لحافة الجليد المغطاة بالحطام سطوع مختلف."
+            "en": "The debris-covered ice edge has a different brightness.",
+            "ar": "لحافة الجليد المغطاة بالحطام سطوع مختلف."
           },
           "visual": {
             "kind": "pair",
@@ -351,8 +351,8 @@
         "stability": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: Coherence falls where the surface is changing.",
-            "ar": "نص مؤقت: ينخفض التماسك حيث يتغيّر السطح."
+            "en": "Coherence falls where the surface is changing.",
+            "ar": "ينخفض التماسك حيث يتغيّر السطح."
           },
           "visual": {
             "kind": "chart",
@@ -386,8 +386,8 @@
         "optical": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: Cloud covers the ridge in the optical image.",
-            "ar": "نص مؤقت: يغطي السحاب الحافة في الصورة البصرية."
+            "en": "Cloud covers the ridge in the optical image.",
+            "ar": "يغطي السحاب الحافة في الصورة البصرية."
           },
           "visual": {
             "kind": "single",
@@ -403,8 +403,8 @@
         "motion": {
           "status": "weak",
           "caption": {
-            "en": "PLACEHOLDER: The short baseline gives a noisy motion estimate.",
-            "ar": "نص مؤقت: خط الأساس القصير يعطي تقدير حركة مشوشاً."
+            "en": "The short baseline gives a noisy motion estimate.",
+            "ar": "خط الأساس القصير يعطي تقدير حركة مشوشاً."
           },
           "visual": {
             "kind": "single",
@@ -420,15 +420,15 @@
         "water": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: No open water is visible in this sector.",
-            "ar": "نص مؤقت: لا تظهر مياه مفتوحة في هذا القطاع."
+            "en": "No open water is visible in this sector.",
+            "ar": "لا تظهر مياه مفتوحة في هذا القطاع."
           }
         },
         "moisture": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: Ice and snow dominate the surface signal.",
-            "ar": "نص مؤقت: يسيطر الجليد والثلج على إشارة السطح."
+            "en": "Ice and snow dominate the surface signal.",
+            "ar": "يسيطر الجليد والثلج على إشارة السطح."
           }
         }
       },
@@ -443,8 +443,8 @@
           "go": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: The route is safe. The crew reaches the ridge and returns before dark.",
-              "ar": "نص مؤقت: الطريق آمن. يصل الطاقم إلى الحافة ويعود قبل الظلام."
+              "en": "The route is safe. The crew reaches the ridge and returns before dark.",
+              "ar": "الطريق آمن. يصل الطاقم إلى الحافة ويعود قبل الظلام."
             }
           },
           "delay": {
@@ -452,8 +452,8 @@
               "engineer"
             ],
             "text": {
-              "en": "PLACEHOLDER: The delay costs a pass, but the engineer is injured on the exposed slope.",
-              "ar": "نص مؤقت: يكلف التأجيل مروراً، لكن المهندس يُصاب على المنحدر المكشوف."
+              "en": "The delay costs a pass, but the engineer is injured on the exposed slope.",
+              "ar": "يكلف التأجيل مروراً، لكن المهندس يُصاب على المنحدر المكشوف."
             }
           },
           "reroute": {
@@ -461,8 +461,8 @@
               "pilot"
             ],
             "text": {
-              "en": "PLACEHOLDER: The longer route is safe, but the pilot is injured scouting it.",
-              "ar": "نص مؤقت: المسار الأطول آمن، لكن الطيارة تُصاب أثناء استطلاعه."
+              "en": "The longer route is safe, but the pilot is injured scouting it.",
+              "ar": "المسار الأطول آمن، لكن الطيارة تُصاب أثناء استطلاعه."
             }
           }
         },
@@ -472,15 +472,15 @@
               "glaciologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The route holds, but the glaciologist is injured on unstable ice.",
-              "ar": "نص مؤقت: يصمد الطريق، لكن عالمة الجليديات تُصاب على جليد غير مستقر."
+              "en": "The route holds, but the glaciologist is injured on unstable ice.",
+              "ar": "يصمد الطريق، لكن عالمة الجليديات تُصاب على جليد غير مستقر."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You wait for another pass. No one is hurt, but time is lost.",
-              "ar": "نص مؤقت: تنتظر مروراً آخر. لا أحد يُصاب، لكن الوقت يضيع."
+              "en": "You wait for another pass. No one is hurt, but time is lost.",
+              "ar": "تنتظر مروراً آخر. لا أحد يُصاب، لكن الوقت يضيع."
             }
           },
           "reroute": {
@@ -488,8 +488,8 @@
               "engineer"
             ],
             "text": {
-              "en": "PLACEHOLDER: The reroute avoids the tongue, but the engineer is injured.",
-              "ar": "نص مؤقت: يتجنب المسار الجديد اللسان، لكن المهندس يُصاب."
+              "en": "The reroute avoids the tongue, but the engineer is injured.",
+              "ar": "يتجنب المسار الجديد اللسان، لكن المهندس يُصاب."
             }
           }
         },
@@ -500,15 +500,15 @@
               "pilot"
             ],
             "text": {
-              "en": "PLACEHOLDER: Without flow data, the ice gives way; the glaciologist and pilot are injured.",
-              "ar": "نص مؤقت: دون بيانات التدفق، ينهار الجليد؛ تُصاب عالمة الجليديات والطيارة."
+              "en": "Without flow data, the ice gives way; the glaciologist and pilot are injured.",
+              "ar": "دون بيانات التدفق، ينهار الجليد؛ تُصاب عالمة الجليديات والطيارة."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You delay and lose time, but the crew is unhurt.",
-              "ar": "نص مؤقت: تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
             }
           },
           "reroute": {
@@ -516,24 +516,24 @@
               "glaciologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The blind reroute crosses a crevasse field; the glaciologist is injured.",
-              "ar": "نص مؤقت: يعبر المسار الجديد حقل شقوق جليدية؛ تُصاب عالمة الجليديات."
+              "en": "The blind reroute crosses a crevasse field; the glaciologist is injured.",
+              "ar": "يعبر المسار الجديد حقل شقوق جليدية؛ تُصاب عالمة الجليديات."
             }
           }
         }
       },
       "realityCheck": {
         "explain": {
-          "en": "PLACEHOLDER: Repeat radar passes let us track glacier motion. Slow flow needs a longer baseline, and coherence tells us where the surface changed.",
-          "ar": "نص مؤقت: تتيح مرورات الرادار المتكررة تتبّع حركة النهر الجليدي. الحركة البطيئة تحتاج خط أساس أطول، ويخبرنا التماسك أين تغيّر السطح."
+          "en": "Repeat radar passes let us track glacier motion. Slow flow needs a longer baseline, and coherence tells us where the surface changed.",
+          "ar": "تتيح مرورات الرادار المتكررة تتبّع حركة النهر الجليدي. الحركة البطيئة تحتاج خط أساس أطول، ويخبرنا التماسك أين تغيّر السطح."
         },
         "limits": {
-          "en": "PLACEHOLDER: A two-pass record cannot separate seasonal speed-up from a long-term trend. More passes build confidence.",
-          "ar": "نص مؤقت: سجل من مرورين لا يفصل بين تسارع موسمي واتجاه طويل الأمد. المرورات الأكثر تبني الثقة."
+          "en": "A two-pass record cannot separate seasonal speed-up from a long-term trend. More passes build confidence.",
+          "ar": "سجل من مرورين لا يفصل بين تسارع موسمي واتجاه طويل الأمد. المرورات الأكثر تبني الثقة."
         },
         "benefit": {
-          "en": "PLACEHOLDER: Glaciologists and water managers use flow and mass-change estimates to plan downstream water supplies.",
-          "ar": "نص مؤقت: يستخدم علماء الجليديات ومديرو المياه تقديرات التدفق وتغيّر الكتلة لتخطيط إمدادات المياه في المصب."
+          "en": "Glaciologists and water managers use flow and mass-change estimates to plan downstream water supplies.",
+          "ar": "يستخدم علماء الجليديات ومديرو المياه تقديرات التدفق وتغيّر الكتلة لتخطيط إمدادات المياه في المصب."
         },
         "source": {
           "title": "NASA NISAR data products",
@@ -543,24 +543,24 @@
       "crewHints": {
         "glaciologist": {
           "text": {
-            "en": "PLACEHOLDER: Ice flow is the direct measurement here. Brightness is a useful second look.",
-            "ar": "نص مؤقت: تدفق الجليد هو القياس المباشر هنا. السطوع نظرة ثانية مفيدة."
+            "en": "Ice flow is the direct measurement here. Brightness is a useful second look.",
+            "ar": "تدفق الجليد هو القياس المباشر هنا. السطوع نظرة ثانية مفيدة."
           },
           "suggestsLens": "iceflow",
           "reliability": "good"
         },
         "engineer": {
           "text": {
-            "en": "PLACEHOLDER: Coherence will tell us which ice is stable enough to cross.",
-            "ar": "نص مؤقت: سيخبرنا التماسك أي الجليد مستقر بما يكفي للعبور."
+            "en": "Coherence will tell us which ice is stable enough to cross.",
+            "ar": "سيخبرنا التماسك أي الجليد مستقر بما يكفي للعبور."
           },
           "suggestsLens": "stability",
           "reliability": "good"
         },
         "pilot": {
           "text": {
-            "en": "PLACEHOLDER: I need a clear view of the ridge. Optical should work.",
-            "ar": "نص مؤقت: أحتاج رؤية واضحة للحافة. يجب أن تعمل الكاميرا البصرية."
+            "en": "I need a clear view of the ridge. Optical should work.",
+            "ar": "أحتاج رؤية واضحة للحافة. يجب أن تعمل الكاميرا البصرية."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
@@ -568,8 +568,8 @@
       },
       "hints": [
         {
-          "en": "PLACEHOLDER: Flow, not brightness, is the direct question for a moving glacier.",
-          "ar": "نص مؤقت: التدفق، لا السطوع، هو السؤال المباشر لنهر جليدي متحرك."
+          "en": "Flow, not brightness, is the direct question for a moving glacier.",
+          "ar": "التدفق، لا السطوع، هو السؤال المباشر لنهر جليدي متحرك."
         }
       ]
     },
@@ -577,12 +577,12 @@
       "id": "m3-delta",
       "siteId": "sector-2",
       "title": {
-        "en": "PLACEHOLDER: Settlement in the river delta",
-        "ar": "نص مؤقت: مستوطنة في دلتا النهر"
+        "en": "Settlement in the river delta",
+        "ar": "مستوطنة في دلتا النهر"
       },
       "briefing": {
-        "en": "PLACEHOLDER: The colony wants to farm the delta. Two passes remain. Choose two lenses to judge soil wetness and flood risk before the fields are planted.",
-        "ar": "نص مؤقت: تريد المستعمرة زراعة الدلتا. تبقّى مروران. اختر عدستين لتقييم رطوبة التربة وخطر الفيضان قبل زراعة الحقول."
+        "en": "The colony wants to farm the delta. Two passes remain. Choose two lenses to judge soil wetness and flood risk before the fields are planted.",
+        "ar": "تريد المستعمرة زراعة الدلتا. تبقّى مروران. اختر عدستين لتقييم رطوبة التربة وخطر الفيضان قبل زراعة الحقول."
       },
       "alias": "Aurelia, Sector 2",
       "data": {
@@ -610,8 +610,8 @@
         "moisture": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: Wet soil is brighter in the L-band return.",
-            "ar": "نص مؤقت: التربة الرطبة أكثر سطوعاً في ارتداد النطاق L."
+            "en": "Wet soil is brighter in the L-band return.",
+            "ar": "التربة الرطبة أكثر سطوعاً في ارتداد النطاق L."
           },
           "visual": {
             "kind": "pair",
@@ -628,8 +628,8 @@
         "water": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: Open water is dark; flooded vegetation stays bright.",
-            "ar": "نص مؤقت: المياه المفتوحة داكنة؛ النباتات المغمورة تبقى ساطعة."
+            "en": "Open water is dark; flooded vegetation stays bright.",
+            "ar": "المياه المفتوحة داكنة؛ النباتات المغمورة تبقى ساطعة."
           },
           "visual": {
             "kind": "pair",
@@ -646,8 +646,8 @@
         "brightness": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: Field edges and bare soil show a brightness change.",
-            "ar": "نص مؤقت: تُظهر حدود الحقول والتربة العارية تغيّراً في السطوع."
+            "en": "Field edges and bare soil show a brightness change.",
+            "ar": "تُظهر حدود الحقول والتربة العارية تغيّراً في السطوع."
           },
           "visual": {
             "kind": "single",
@@ -663,8 +663,8 @@
         "optical": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: Haze hides the fields in the optical image.",
-            "ar": "نص مؤقت: يخفي الضباب الحقول في الصورة البصرية."
+            "en": "Haze hides the fields in the optical image.",
+            "ar": "يخفي الضباب الحقول في الصورة البصرية."
           },
           "visual": {
             "kind": "single",
@@ -680,8 +680,8 @@
         "stability": {
           "status": "weak",
           "caption": {
-            "en": "PLACEHOLDER: Coherence is low over the wet fields.",
-            "ar": "نص مؤقت: التماسك منخفض فوق الحقول الرطبة."
+            "en": "Coherence is low over the wet fields.",
+            "ar": "التماسك منخفض فوق الحقول الرطبة."
           },
           "visual": {
             "kind": "single",
@@ -697,15 +697,15 @@
         "motion": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: The short record cannot resolve slow settlement.",
-            "ar": "نص مؤقت: السجل القصير لا يحلّ الهبوط البطيء."
+            "en": "The short record cannot resolve slow settlement.",
+            "ar": "السجل القصير لا يحلّ الهبوط البطيء."
           }
         },
         "iceflow": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: No ice is visible in this sector.",
-            "ar": "نص مؤقت: لا يظهر جليد في هذا القطاع."
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
           }
         }
       },
@@ -722,22 +722,22 @@
               "agronomist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The fields are planted, but the agronomist is injured in a flooded ditch.",
-              "ar": "نص مؤقت: تُزرع الحقول، لكن المهندس الزراعي يُصاب في خندق مغمور."
+              "en": "The fields are planted, but the agronomist is injured in a flooded ditch.",
+              "ar": "تُزرع الحقول، لكن المهندس الزراعي يُصاب في خندق مغمور."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You wait for the flood peak to pass. No one is hurt; planting is late.",
-              "ar": "نص مؤقت: تنتظر مرور ذروة الفيضان. لا أحد يُصاب؛ الزراعة متأخرة."
+              "en": "You wait for the flood peak to pass. No one is hurt; planting is late.",
+              "ar": "تنتظر مرور ذروة الفيضان. لا أحد يُصاب؛ الزراعة متأخرة."
             }
           },
           "reroute": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You move the fields to higher ground. The harvest is safe.",
-              "ar": "نص مؤقت: تنقل الحقول إلى أرض أعلى. الحصاد آمن."
+              "en": "You move the fields to higher ground. The harvest is safe.",
+              "ar": "تنقل الحقول إلى أرض أعلى. الحصاد آمن."
             }
           }
         },
@@ -747,8 +747,8 @@
               "hydrologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The wet patch floods; the hydrologist is injured.",
-              "ar": "نص مؤقت: تغمر البقعة الرطبة؛ تُصاب عالمة الهيدرولوجيا."
+              "en": "The wet patch floods; the hydrologist is injured.",
+              "ar": "تغمر البقعة الرطبة؛ تُصاب عالمة الهيدرولوجيا."
             }
           },
           "delay": {
@@ -756,15 +756,15 @@
               "cook"
             ],
             "text": {
-              "en": "PLACEHOLDER: The delay helps, but the cook is injured moving stores.",
-              "ar": "نص مؤقت: يساعد التأجيل، لكن الطبّاخ يُصاب أثناء نقل المؤن."
+              "en": "The delay helps, but the cook is injured moving stores.",
+              "ar": "يساعد التأجيل، لكن الطبّاخ يُصاب أثناء نقل المؤن."
             }
           },
           "reroute": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: The reroute is safer, though the fields are smaller.",
-              "ar": "نص مؤقت: المسار الجديد أكثر أماناً، لكن الحقول أصغر."
+              "en": "The reroute is safer, though the fields are smaller.",
+              "ar": "المسار الجديد أكثر أماناً، لكن الحقول أصغر."
             }
           }
         },
@@ -775,15 +775,15 @@
               "cook"
             ],
             "text": {
-              "en": "PLACEHOLDER: Without water or moisture maps, the flood catches the crew; the hydrologist and cook are injured.",
-              "ar": "نص مؤقت: دون خرائط المياه والرطوبة، ي مفاجئ الفيضان الطاقم؛ تُصاب عالمة الهيدرولوجيا والطبّاخ."
+              "en": "Without water or moisture maps, the flood catches the crew; the hydrologist and cook are injured.",
+              "ar": "دون خرائط المياه والرطوبة، ي مفاجئ الفيضان الطاقم؛ تُصاب عالمة الهيدرولوجيا والطبّاخ."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You delay and lose time, but the crew is unhurt.",
-              "ar": "نص مؤقت: تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
             }
           },
           "reroute": {
@@ -791,24 +791,24 @@
               "agronomist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The blind reroute crosses a soft bank; the agronomist is injured.",
-              "ar": "نص مؤقت: يعبر المسار الجديد ضفة رخوة؛ يُصاب المهندس الزراعي."
+              "en": "The blind reroute crosses a soft bank; the agronomist is injured.",
+              "ar": "يعبر المسار الجديد ضفة رخوة؛ يُصاب المهندس الزراعي."
             }
           }
         }
       },
       "realityCheck": {
         "explain": {
-          "en": "PLACEHOLDER: Radar is sensitive to water because liquid water raises the dielectric constant. Smooth open water usually looks dark, while wet soil and flooded vegetation can look bright.",
-          "ar": "نص مؤقت: الرادار حساس للماء لأن الماء السائل يرفع ثابت العزل الكهربائي. المياه المفتوحة الهادئة تبدو عادة داكنة، بينما قد تبدو التربة الرطبة والنباتات المغمورة ساطعة."
+          "en": "Radar is sensitive to water because liquid water raises the dielectric constant. Smooth open water usually looks dark, while wet soil and flooded vegetation can look bright.",
+          "ar": "الرادار حساس للماء لأن الماء السائل يرفع ثابت العزل الكهربائي. المياه المفتوحة الهادئة تبدو عادة داكنة، بينما قد تبدو التربة الرطبة والنباتات المغمورة ساطعة."
         },
         "limits": {
-          "en": "PLACEHOLDER: Wind, vegetation, and shallow water can confuse a simple water map. Pair it with moisture or a later pass.",
-          "ar": "نص مؤقت: الرياح والنباتات والمياه الضحلة قد تربك خريطة المياه البسيطة. اقرنها بالرطوبة أو بمرور لاحق."
+          "en": "Wind, vegetation, and shallow water can confuse a simple water map. Pair it with moisture or a later pass.",
+          "ar": "الرياح والنباتات والمياه الضحلة قد تربك خريطة المياه البسيطة. اقرنها بالرطوبة أو بمرور لاحق."
         },
         "benefit": {
-          "en": "PLACEHOLDER: Farmers, water authorities, and flood responders use wetness and flood maps to choose crops and protect settlements.",
-          "ar": "نص مؤقت: يستخدم المزارعون وسلطات المياه وفرق الاستجابة للفيضانات خرائط الرطوبة والفيضان لاختيار المحاصيل وحماية المستوطنات."
+          "en": "Farmers, water authorities, and flood responders use wetness and flood maps to choose crops and protect settlements.",
+          "ar": "يستخدم المزارعون وسلطات المياه وفرق الاستجابة للفيضانات خرائط الرطوبة والفيضان لاختيار المحاصيل وحماية المستوطنات."
         },
         "source": {
           "title": "NASA NISAR data products",
@@ -818,24 +818,24 @@
       "crewHints": {
         "agronomist": {
           "text": {
-            "en": "PLACEHOLDER: Soil moisture tells us what can be planted now. Water shows where not to plant.",
-            "ar": "نص مؤقت: تخبرنا رطوبة التربة بما يمكن زراعته الآن. المياه تُظهر أين لا نزرع."
+            "en": "Soil moisture tells us what can be planted now. Water shows where not to plant.",
+            "ar": "تخبرنا رطوبة التربة بما يمكن زراعته الآن. المياه تُظهر أين لا نزرع."
           },
           "suggestsLens": "moisture",
           "reliability": "good"
         },
         "hydrologist": {
           "text": {
-            "en": "PLACEHOLDER: The flood map is the direct check for standing water.",
-            "ar": "نص مؤقت: خريطة الفيضان هي الفحص المباشر للمياه الراكدة."
+            "en": "The flood map is the direct check for standing water.",
+            "ar": "خريطة الفيضان هي الفحص المباشر للمياه الراكدة."
           },
           "suggestsLens": "water",
           "reliability": "good"
         },
         "cook": {
           "text": {
-            "en": "PLACEHOLDER: If the fields are bright, the food stores should be fine.",
-            "ar": "نص مؤقت: إن كانت الحقول ساطعة، فمخزون الطعام سيكون بخير."
+            "en": "If the fields are bright, the food stores should be fine.",
+            "ar": "إن كانت الحقول ساطعة، فمخزون الطعام سيكون بخير."
           },
           "suggestsLens": "brightness",
           "reliability": "biased"
@@ -843,8 +843,8 @@
       },
       "hints": [
         {
-          "en": "PLACEHOLDER: Water and moisture answer different questions: where water stands, and how wet the soil is.",
-          "ar": "نص مؤقت: المياه والرطوبة تجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
+          "en": "Water and moisture answer different questions: where water stands, and how wet the soil is.",
+          "ar": "المياه والرطوبة تجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
         }
       ]
     },
@@ -852,12 +852,12 @@
       "id": "m4-foundations",
       "siteId": "sector-7",
       "title": {
-        "en": "PLACEHOLDER: Foundations on soft ground",
-        "ar": "نص مؤقت: أساسات على أرض رخوة"
+        "en": "Foundations on soft ground",
+        "ar": "أساسات على أرض رخوة"
       },
       "briefing": {
-        "en": "PLACEHOLDER: The colony must choose a site for its first permanent building. Two passes remain. Choose two lenses to judge whether the ground is stable enough.",
-        "ar": "نص مؤقت: يجب على المستعمرة اختيار موقع لأول مبنى دائم. تبقّى مروران. اختر عدستين لتقييم استقرار الأرض."
+        "en": "The colony must choose a site for its first permanent building. Two passes remain. Choose two lenses to judge whether the ground is stable enough.",
+        "ar": "يجب على المستعمرة اختيار موقع لأول مبنى دائم. تبقّى مروران. اختر عدستين لتقييم استقرار الأرض."
       },
       "alias": "Aurelia, Sector 7",
       "data": {
@@ -885,8 +885,8 @@
         "motion": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: The ground is sinking faster than the surrounding area.",
-            "ar": "نص مؤقت: تهبط الأرض أسرع من المنطقة المحيطة."
+            "en": "The ground is sinking faster than the surrounding area.",
+            "ar": "تهبط الأرض أسرع من المنطقة المحيطة."
           },
           "visual": {
             "kind": "chart",
@@ -920,8 +920,8 @@
         "stability": {
           "status": "weak",
           "caption": {
-            "en": "PLACEHOLDER: Coherence is patchy over the soft ground.",
-            "ar": "نص مؤقت: التماسك متقطّع فوق الأرض الرخوة."
+            "en": "Coherence is patchy over the soft ground.",
+            "ar": "التماسك متقطّع فوق الأرض الرخوة."
           },
           "visual": {
             "kind": "single",
@@ -937,8 +937,8 @@
         "optical": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: The optical image looks clear, but it cannot show motion.",
-            "ar": "نص مؤقت: تبدو الصورة البصرية واضحة، لكنها لا تُظهر الحركة."
+            "en": "The optical image looks clear, but it cannot show motion.",
+            "ar": "تبدو الصورة البصرية واضحة، لكنها لا تُظهر الحركة."
           },
           "visual": {
             "kind": "single",
@@ -954,15 +954,15 @@
         "moisture": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: The surface is too dry for a usable moisture signal.",
-            "ar": "نص مؤقت: السطح جاف جداً لإشارة رطوبة صالحة."
+            "en": "The surface is too dry for a usable moisture signal.",
+            "ar": "السطح جاف جداً لإشارة رطوبة صالحة."
           }
         },
         "water": {
           "status": "weak",
           "caption": {
-            "en": "PLACEHOLDER: A small dark patch may be shallow water.",
-            "ar": "نص مؤقت: قد تكون بقعة داكنة صغيرة مياهاً ضحلة."
+            "en": "A small dark patch may be shallow water.",
+            "ar": "قد تكون بقعة داكنة صغيرة مياهاً ضحلة."
           },
           "visual": {
             "kind": "single",
@@ -978,8 +978,8 @@
         "brightness": {
           "status": "clear",
           "caption": {
-            "en": "PLACEHOLDER: The surface looks unchanged in brightness.",
-            "ar": "نص مؤقت: يبدو السطح بلا تغيّر في السطوع."
+            "en": "The surface looks unchanged in brightness.",
+            "ar": "يبدو السطح بلا تغيّر في السطوع."
           },
           "visual": {
             "kind": "single",
@@ -995,8 +995,8 @@
         "iceflow": {
           "status": "blind",
           "caption": {
-            "en": "PLACEHOLDER: No ice is visible in this sector.",
-            "ar": "نص مؤقت: لا يظهر جليد في هذا القطاع."
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
           }
         }
       },
@@ -1013,15 +1013,15 @@
               "engineer"
             ],
             "text": {
-              "en": "PLACEHOLDER: The building goes up, but the engineer is injured when the foundation shifts.",
-              "ar": "نص مؤقت: يُبنى المبنى، لكن المهندس يُصاب عندما ينزاح الأساس."
+              "en": "The building goes up, but the engineer is injured when the foundation shifts.",
+              "ar": "يُبنى المبنى، لكن المهندس يُصاب عندما ينزاح الأساس."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You delay and collect another pass. The extra data confirms the sinking ground; no one is hurt.",
-              "ar": "نص مؤقت: تؤجل وتجمع مروراً آخر. تؤكد البيانات الإضافية هبوط الأرض؛ لا أحد يُصاب."
+              "en": "You delay and collect another pass. The extra data confirms the sinking ground; no one is hurt.",
+              "ar": "تؤجل وتجمع مروراً آخر. تؤكد البيانات الإضافية هبوط الأرض؛ لا أحد يُصاب."
             }
           },
           "reroute": {
@@ -1029,8 +1029,8 @@
               "geologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: You move to firmer ground, but the geologist is injured surveying the new site.",
-              "ar": "نص مؤقت: تنتقل إلى أرض أثبت، لكن الجيولوجية تُصاب أثناء مسح الموقع الجديد."
+              "en": "You move to firmer ground, but the geologist is injured surveying the new site.",
+              "ar": "تنتقل إلى أرض أثبت، لكن الجيولوجية تُصاب أثناء مسح الموقع الجديد."
             }
           }
         },
@@ -1041,15 +1041,15 @@
               "pilot"
             ],
             "text": {
-              "en": "PLACEHOLDER: The foundation cracks; the engineer and pilot are injured.",
-              "ar": "نص مؤقت: يتشقق الأساس؛ يُصاب المهندس والطيارة."
+              "en": "The foundation cracks; the engineer and pilot are injured.",
+              "ar": "يتشقق الأساس؛ يُصاب المهندس والطيارة."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: The delay is the right call. No one is hurt, though the schedule slips.",
-              "ar": "نص مؤقت: التأجيل هو القرار الصحيح. لا أحد يُصاب، لكن الجدول يتأخر."
+              "en": "The delay is the right call. No one is hurt, though the schedule slips.",
+              "ar": "التأجيل هو القرار الصحيح. لا أحد يُصاب، لكن الجدول يتأخر."
             }
           },
           "reroute": {
@@ -1057,8 +1057,8 @@
               "geologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: The new site is better, but the geologist is injured on the way.",
-              "ar": "نص مؤقت: الموقع الجديد أفضل، لكن الجيولوجية تُصاب في الطريق."
+              "en": "The new site is better, but the geologist is injured on the way.",
+              "ar": "الموقع الجديد أفضل، لكن الجيولوجية تُصاب في الطريق."
             }
           }
         },
@@ -1069,15 +1069,15 @@
               "geologist"
             ],
             "text": {
-              "en": "PLACEHOLDER: Without motion data, the foundation fails; the engineer and geologist are injured.",
-              "ar": "نص مؤقت: دون بيانات الحركة، يفشل الأساس؛ يُصاب المهندس والجيولوجية."
+              "en": "Without motion data, the foundation fails; the engineer and geologist are injured.",
+              "ar": "دون بيانات الحركة، يفشل الأساس؛ يُصاب المهندس والجيولوجية."
             }
           },
           "delay": {
             "injuredRoles": [],
             "text": {
-              "en": "PLACEHOLDER: You delay and lose time, but the crew is unhurt.",
-              "ar": "نص مؤقت: تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
             }
           },
           "reroute": {
@@ -1085,24 +1085,24 @@
               "pilot"
             ],
             "text": {
-              "en": "PLACEHOLDER: The blind reroute is no better; the pilot is injured.",
-              "ar": "نص مؤقت: المسار الجديد على غير هدى ليس أفضل؛ تُصاب الطيارة."
+              "en": "The blind reroute is no better; the pilot is injured.",
+              "ar": "المسار الجديد على غير هدى ليس أفضل؛ تُصاب الطيارة."
             }
           }
         }
       },
       "realityCheck": {
         "explain": {
-          "en": "PLACEHOLDER: Interferometry compares the phase of repeat passes. A consistent baseline can reveal millimetres to centimetres of sinking, but a short record has limited confidence.",
-          "ar": "نص مؤقت: يقارن التداخل طور المرورات المتكررة. يمكن لخط أساس متسق كشف هبوط من المليمترات إلى السنتيمترات، لكن السجل القصير ثقته محدودة."
+          "en": "Interferometry compares the phase of repeat passes. A consistent baseline can reveal millimetres to centimetres of sinking, but a short record has limited confidence.",
+          "ar": "يقارن التداخل طور المرورات المتكررة. يمكن لخط أساس متسق كشف هبوط من المليمترات إلى السنتيمترات، لكن السجل القصير ثقته محدودة."
         },
         "limits": {
-          "en": "PLACEHOLDER: Two passes cannot separate seasonal settling from a long-term trend. Delay is a legitimate engineering decision when data maturity is low.",
-          "ar": "نص مؤقت: مروران لا يفصلان بين هبوط موسمي واتجاه طويل الأمد. التأجيل قرار هندسي مشروع عندما تكون نضج البيانات منخفضاً."
+          "en": "Two passes cannot separate seasonal settling from a long-term trend. Delay is a legitimate engineering decision when data maturity is low.",
+          "ar": "مروران لا يفصلان بين هبوط موسمي واتجاه طويل الأمد. التأجيل قرار هندسي مشروع عندما تكون نضج البيانات منخفضاً."
         },
         "benefit": {
-          "en": "PLACEHOLDER: Civil engineers and planners use motion maps to site roads, buildings, and flood defenses.",
-          "ar": "نص مؤقت: يستخدم المهندسون المدنيون والمخططون خرائط الحركة لاختيار مواقع الطرق والمباني ودفاعات الفيضان."
+          "en": "Civil engineers and planners use motion maps to site roads, buildings, and flood defenses.",
+          "ar": "يستخدم المهندسون المدنيون والمخططون خرائط الحركة لاختيار مواقع الطرق والمباني ودفاعات الفيضان."
         },
         "source": {
           "title": "NASA NISAR data products",
@@ -1112,24 +1112,24 @@
       "crewHints": {
         "geologist": {
           "text": {
-            "en": "PLACEHOLDER: Motion is the direct question for a foundation. Stability tells us where the measurement is trustworthy.",
-            "ar": "نص مؤقت: الحركة هي السؤال المباشر للأساس. الاستقرار يخبرنا أين يكون القياس موثوقاً."
+            "en": "Motion is the direct question for a foundation. Stability tells us where the measurement is trustworthy.",
+            "ar": "الحركة هي السؤال المباشر للأساس. الاستقرار يخبرنا أين يكون القياس موثوقاً."
           },
           "suggestsLens": "motion",
           "reliability": "good"
         },
         "engineer": {
           "text": {
-            "en": "PLACEHOLDER: I would trust a longer record more. A delay may be cheaper than a cracked foundation.",
-            "ar": "نص مؤقت: سأثق بسجل أطول أكثر. قد يكون التأجيل أرخص من أساس متشقق."
+            "en": "I would trust a longer record more. A delay may be cheaper than a cracked foundation.",
+            "ar": "سأثق بسجل أطول أكثر. قد يكون التأجيل أرخص من أساس متشقق."
           },
           "suggestsLens": "stability",
           "reliability": "good"
         },
         "pilot": {
           "text": {
-            "en": "PLACEHOLDER: The optical image looks perfectly flat. Let us build.",
-            "ar": "نص مؤقت: تبدو الصورة البصرية مستوية تماماً. لنبنِ."
+            "en": "The optical image looks perfectly flat. Let us build.",
+            "ar": "تبدو الصورة البصرية مستوية تماماً. لنبنِ."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
@@ -1137,8 +1137,8 @@
       },
       "hints": [
         {
-          "en": "PLACEHOLDER: A short motion record is a warning, not a verdict. More passes build confidence.",
-          "ar": "نص مؤقت: سجل الحركة القصير تحذير وليس حكماً. المرورات الأكثر تبني الثقة."
+          "en": "A short motion record is a warning, not a verdict. More passes build confidence.",
+          "ar": "سجل الحركة القصير تحذير وليس حكماً. المرورات الأكثر تبني الثقة."
         }
       ]
     }

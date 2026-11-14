@@ -51,8 +51,8 @@
       "id": "pathfinder",
       "title": { "en": "The Pathfinder", "ar": "الرائد" },
       "text": {
-        "en": "PLACEHOLDER: The whole crew is healthy and every decision matched the evidence. LUMEN logs a clean mission.",
-        "ar": "نص مؤقت: الطاقم كله بخير، وكل قرار طابق الأدلة. يسجّل لومِن مهمة نظيفة."
+        "en": "The whole crew is healthy and every decision matched the evidence. LUMEN logs a clean mission.",
+        "ar": "الطاقم كله بخير، وكل قرار طابق الأدلة. يسجّل لومِن مهمة نظيفة."
       },
       "minHealthy": 8,
       "minBestDecisions": 4
@@ -61,8 +61,8 @@
       "id": "guardian",
       "title": { "en": "The Guardian", "ar": "الحامي" },
       "text": {
-        "en": "PLACEHOLDER: Most of the crew is healthy and the mission is a success, with lessons learned along the way.",
-        "ar": "نص مؤقت: معظم الطاقم بخير والمهمة ناجحة، مع دروس تعلّمتموها في الطريق."
+        "en": "Most of the crew is healthy and the mission is a success, with lessons learned along the way.",
+        "ar": "معظم الطاقم بخير والمهمة ناجحة، مع دروس تعلّمتموها في الطريق."
       },
       "minHealthy": 6,
       "minBestDecisions": 3
@@ -71,8 +71,8 @@
       "id": "survivor",
       "title": { "en": "The Survivor", "ar": "الناجي" },
       "text": {
-        "en": "PLACEHOLDER: The colony survives, but the cost is visible in the injured list and the Mission Report.",
-        "ar": "نص مؤقت: المستعمرة تنجو، لكن الكلفة ظاهرة في قائمة المصابين وتقرير المهمة."
+        "en": "The colony survives, but the cost is visible in the injured list and the Mission Report.",
+        "ar": "المستعمرة تنجو، لكن الكلفة ظاهرة في قائمة المصابين وتقرير المهمة."
       },
       "minHealthy": 4,
       "minBestDecisions": 2
@@ -81,8 +81,8 @@
       "id": "lumen-protocol",
       "title": { "en": "LUMEN Protocol", "ar": "بروتوكول لومِن" },
       "text": {
-        "en": "PLACEHOLDER: Too many crew are out of action. LUMEN takes over the remaining decisions and the mission continues.",
-        "ar": "نص مؤقت: كثير من الطاقم خارج الخدمة. يتولى لومِن القرارات المتبقية وتستمر المهمة."
+        "en": "Too many crew are out of action. LUMEN takes over the remaining decisions and the mission continues.",
+        "ar": "كثير من الطاقم خارج الخدمة. يتولى لومِن القرارات المتبقية وتستمر المهمة."
       },
       "minHealthy": 0,
       "minBestDecisions": 0
