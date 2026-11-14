@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { plotUrl, prettyDate } from '@/lib/nisarData';
+import { heatmapUrl, prettyDate } from '@/lib/nisarData';
 import { Snowflake, ArrowLeft, Layers, Activity, Compass } from 'lucide-react';
 import Link from 'next/link';
 import { 
@@ -64,13 +64,11 @@ const HV_TIME_SERIES = [
 ];
 
 // ✅ التواريخ الحقيقية
-const LAKE_DATES = ['20251126_20261109'];
+const LAKE_DATES = ['20261109'];
 
 const VELOCITY_DATES = [
-  '20251126_20251126','20251208_20251208','20260101_20260101',
-  '20260206_20260206','20260314_20260314','20260407_20260407',
-  '20260501_20260501','20260606_20260606','20260712_20260712',
-  '20260817_20260817','20260910_20260910','20261004_20261004'
+  '20251126','20251208','20260101','20260206','20260314','20260407',
+  '20260501','20260606','20260712','20260817','20260910','20261004'
 ];
 
 export default function HimalayasDataPage() {
@@ -176,7 +174,7 @@ export default function HimalayasDataPage() {
                   <div
                     className="absolute inset-0"
                     style={{
-                      backgroundImage: `url(${plotUrl('himalayas', freqMode === 'L-Band' ? 'freq_diff_db' : 'pol_ratio_db', '20261109')})`,
+                      backgroundImage: `url(${heatmapUrl('himalayas', freqMode === 'L-Band' ? 'freq_diff_db' : 'pol_ratio_db', '20261109')})`,
                       backgroundSize: `${152 + freqZoom * 6}% ${125 + freqZoom * 6}%`,
                       backgroundPosition: `${45 + freqPanX}% ${50 + freqPanY}%`,
                       backgroundRepeat: 'no-repeat',
@@ -284,7 +282,7 @@ export default function HimalayasDataPage() {
   
   <div className="relative h-80 rounded-xl overflow-hidden border border-blue-500/20 mb-4 bg-gray-900 flex-shrink-0">
     <img
-      src={plotUrl('himalayas', 'hv_db_change', LAKE_DATES[lakeIdx])}
+      src={heatmapUrl('himalayas', 'hv_db_change', LAKE_DATES[lakeIdx])}
       alt="HV Change Map"
       className="w-full h-full object-contain"
     />
@@ -368,7 +366,7 @@ export default function HimalayasDataPage() {
                     <div
                       className="absolute inset-0"
                       style={{
-                        backgroundImage: `url(${plotUrl('himalayas', 'velocity_m_yr', VELOCITY_DATES[velIdx])})`,
+                        backgroundImage: `url(${heatmapUrl('himalayas', 'velocity_m_yr', VELOCITY_DATES[velIdx])})`,
                         backgroundSize: `${152 + velZoom * 6}% ${125 + velZoom * 6}%`,
                         backgroundPosition: `${45 + velPanX}% ${50 + velPanY}%`,
                         backgroundRepeat: 'no-repeat',

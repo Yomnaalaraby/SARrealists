@@ -54,14 +54,14 @@ export default function CompareSlider({
         </span>
       </div>
 
-      {/* Before (Optical) — صورة فعلية أو ضبابية */}
+      {/* Before (NISAR) — clean heatmap */}
       <div
         className="absolute inset-0 bg-white"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
         <img
           src={beforeImage}
-          alt="Optical Smoke"
+          alt="NISAR before heatmap"
           className="w-full h-full object-cover"
           style={beforeEffect ? { filter: 'blur(2.5px) grayscale(0.75) brightness(0.7)' } : undefined}
         />
