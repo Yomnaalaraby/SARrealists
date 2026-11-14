@@ -57,6 +57,13 @@ export default function MapComponent({ showDashboard = false }: MapComponentProp
     map.on('error', () => {
       window.setTimeout(() => setMapFailed(true), 0);
     });
+    map.on('click', (event) => {
+      window.dispatchEvent(
+        new CustomEvent('sar:map-click', {
+          detail: { lon: event.lngLat.lng, lat: event.lngLat.lat },
+        }),
+      );
+    });
 
     map.on('style.load', () => {
       map.setFog({

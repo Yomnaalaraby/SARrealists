@@ -70,3 +70,38 @@ Run the production build with `npm run build && npm start` for the verified
 playable route. Mission content is placeholder until real NISAR crops and sourced facts are
 supplied. Pre-reveal mission data must never contain real place names,
 coordinates, or place-specific source URLs; those belong in `reveal.json`.
+
+## LUMEN AI chatbot
+
+Every page includes a floating **Ask LUMEN** assistant. It supports four
+explanation personas (Scientist, Decision Maker, Student, Enthusiast),
+English/Arabic replies, citable NISAR sources, and optional map actions.
+When the interactive map is available, clicking a point attaches its
+coordinates and site context to the next question.
+
+The server route is `POST /api/chat`:
+
+- `src/app/api/chat/route.ts` — validates the request, retrieves grounded
+  NISAR chunks, calls an OpenAI-compatible chat endpoint, filters map actions,
+  and returns `ChatResponse`.
+- `src/ai/knowledge.ts` — curated NASA/NISAR sources and deterministic
+  retrieval.
+- `src/ai/promptBuilder.ts` and `src/ai/personas.ts` — grounded persona prompts.
+- `src/ai/fallback.ts` — local grounded answer when no API key is configured
+  or the model call fails.
+- `src/components/ai/ChatPanel.tsx` — the floating panel UI.
+- `src/ai/components/PersonaSwitcher.tsx` — reusable persona selector.
+
+Copy `.env.example` to `.env.local` and fill in the values:
+
+```env
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_public_token
+OPENAI_API_KEY=your_openai_key
+OPENAI_MODEL=gpt-4o-mini
+# Optional for OpenAI-compatible providers:
+OPENAI_BASE_URL=https://api.openai.com/v1
+```
+
+`OPENAI_API_KEY` is server-only and is never exposed to the browser. Without
+it, the assistant still answers from the bundled NISAR references and marks the
+response as a grounded local answer.
