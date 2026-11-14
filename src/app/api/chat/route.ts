@@ -107,6 +107,8 @@ export async function POST(request: Request) {
     'https://api.openai.com/v1'
   ).replace(/\/$/, '');
   const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS) || 90_000;
+  const reasoningEffort = process.env.OPENAI_REASONING_EFFORT;
 
   try {
     const completion = await fetch(`${baseUrl}/chat/completions`, {
@@ -119,12 +121,13 @@ export async function POST(request: Request) {
         model,
         temperature: 0.2,
         max_tokens: 3000,
+        ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
         messages: [
           { role: 'system', content: prompts.systemPrompt },
           { role: 'user', content: prompts.userTurn },
         ],
       }),
-      signal: AbortSignal.timeout(35_000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
 
     if (!completion.ok) {
