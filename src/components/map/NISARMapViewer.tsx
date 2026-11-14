@@ -78,12 +78,14 @@ export function NISARMapViewer({
       if (m.getSource(sourceId)) m.removeSource(sourceId);
       if (!visible) return;
 
-      // 🔑 نستخدم monthly_pngs بدل tile_templates
-      const pngPath = layer.monthly_pngs.find(p => p.includes(timestamp));
+      // Prefer map-ready heatmaps; monthly plots remain a compatibility fallback.
+      const cleanPath = layer.heatmap_clean_pngs?.find((p) => p.includes(timestamp));
+      const pngPath = cleanPath ?? layer.monthly_pngs.find((p) => p.includes(timestamp));
       if (!pngPath) {
-        console.warn(`No monthly PNG for ${timestamp} in layer ${layer.id}`);
+        console.warn(`No image for ${timestamp} in layer ${layer.id}`);
         return;
       }
+      const isCleanHeatmap = Boolean(cleanPath);
 
       const imageUrl = `${SITES[siteId].basePath}/${pngPath}`;
       const [west, south, east, north] = layer.bounds;
@@ -106,7 +108,7 @@ export function NISARMapViewer({
         source: sourceId,
         paint: {
           'raster-opacity': opacity,
-          'raster-resampling': 'linear', // تنعيم الصورة عند التكبير
+          'raster-resampling': isCleanHeatmap ? 'nearest' : 'linear',
         },
       });
 

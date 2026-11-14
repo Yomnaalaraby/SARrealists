@@ -7,7 +7,7 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     LineChart, Line
 } from 'recharts';
-import { plotUrl } from '@/lib/nisarData';
+import { heatmapUrl } from '@/lib/nisarData';
 
 const AGRI_PHASES = [
     {
@@ -240,8 +240,8 @@ export default function NileDataPage() {
                                     </h2>
                                        {/* ✅ خريطة الهبوط الساحلي الحقيقية */}
    <div className="relative h-64 rounded-xl overflow-hidden border border-green-500/20 bg-white mb-4">
-     <img 
-       src={plotUrl('nile', 'vert_disp_mm', '20260906')} 
+     <img
+       src={heatmapUrl('nile', 'vert_disp_mm', '20260906')}
        alt="Coastal Subsidence Map"
        className="w-full h-full object-contain p-2"
      />

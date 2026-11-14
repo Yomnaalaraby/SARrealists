@@ -18,6 +18,7 @@ Verifies:
 from __future__ import annotations
 
 import io
+import json
 import sys
 from pathlib import Path
 
@@ -41,6 +42,7 @@ from nisar_pipeline.gcov import (
     compute_rvi,
     compute_single_date_products,
     linear_to_db,
+    write_float32_cog,
     write_rgb_cog,
 )
 from nisar_pipeline.goff import compute_velocity_vectors
@@ -59,7 +61,11 @@ from nisar_pipeline.layers import (
     GUNW_UNWRAPPED_PHASE,
     require_verified_layer,
 )
-from nisar_pipeline.plots import plot_pol_and_freq_explorer
+from nisar_pipeline.plots import (
+    plot_clean_heatmaps_from_catalog,
+    plot_heatmap_clean,
+    plot_pol_and_freq_explorer,
+)
 from nisar_pipeline.window import (
     GCOVWindow,
     block_mean,
@@ -425,3 +431,60 @@ def test_dual_frequency_rgb_and_human_plots(tmp_path: Path) -> None:
         win=win, prod=prod, site_out_dir=tmp_path, site_title="Synthetic Test Site"
     )
     assert explorer_png.exists()
+
+def test_clean_heatmap_is_full_bleed_and_transparent(tmp_path: Path) -> None:
+    """Clean heatmaps must contain pixels only, with transparent nodata and no plot margins."""
+    import matplotlib.image as mpimg
+
+    arr = np.array(
+        [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, np.nan]],
+        dtype=np.float32,
+    )
+    png = plot_heatmap_clean(
+        arr,
+        layer_id="hh_db",
+        date_str="20260101",
+        site_out_dir=tmp_path,
+        max_size=64,
+        vmin=0.0,
+        vmax=8.0,
+        cmap_name="gray",
+    )
+    image = mpimg.imread(png)
+    assert image.shape[0] <= 64 and image.shape[1] <= 64
+    assert image.shape[2] == 4
+    assert image[0, 0, 3] == pytest.approx(1.0)
+    assert image[-1, -1, 3] == pytest.approx(0.0)
+
+
+def test_clean_heatmaps_are_added_to_catalog(tmp_path: Path) -> None:
+    """A cataloged COG should produce a heatmap_clean_pngs entry."""
+    x = np.arange(4, dtype=np.float64) * 10.0
+    y = np.arange(3, dtype=np.float64) * 10.0
+    arr = np.arange(12, dtype=np.float32).reshape(3, 4)
+    cog_rel = Path("cog") / "hh_db" / "20260101.tif"
+    write_float32_cog(arr, x, y, 32611, tmp_path / cog_rel)
+    catalog = {
+        "site": "california",
+        "title": "Test",
+        "updated_utc": "2026-01-01T00:00:00Z",
+        "timestamps": ["20260101"],
+        "default_timestamp": "20260101",
+        "layers": {
+            "hh_db": {
+                "id": "hh_db",
+                "dates": ["20260101"],
+                "cog_files": [str(cog_rel)],
+                "color_range": [0.0, 11.0],
+                "colormap": "gray",
+                "monthly_pngs": [],
+            }
+        },
+    }
+    (tmp_path / "catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+    written = plot_clean_heatmaps_from_catalog(tmp_path, max_size=64)
+    assert written == 1
+    updated = json.loads((tmp_path / "catalog.json").read_text(encoding="utf-8"))
+    clean = updated["layers"]["hh_db"]["heatmap_clean_pngs"]
+    assert clean == ["plots/heatmap_clean/hh_db/20260101.png"]
+    assert (tmp_path / clean[0]).exists()

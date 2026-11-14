@@ -2,19 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Snowflake, ArrowLeft, Layers, Activity, Compass, 
-  Satellite, Calendar, MapPin, Loader2, AlertCircle 
+import {
+  Snowflake, ArrowLeft, Layers, Activity, Compass,
+  Satellite, Calendar, MapPin, Loader2, AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
-import { 
-  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, 
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip 
+import {
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
+  ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
 import { useNISARCatalog } from '@/hooks/useNISARCatalog';
 import { formatTimestamp } from '@/types/nisar';
 import { NISARMapViewer } from '@/components/map/NISARMapViewer';
-import { plotUrl } from '@/lib/nisarData';
+import { heatmapUrl } from '@/lib/nisarData';
 
 // ============================================
 // 📊 Mock Data (للـ Educational Sections)
@@ -79,14 +79,14 @@ const LAKE_YEARS = [
 // ============================================
 // 🗺️ مكون الخريطة المصغرة (Mini Map)
 // ============================================
-function MiniMapSection({ 
-  layer, 
-  timestamp, 
-  setLayerId, 
-  setTimestamp, 
-  availableLayers, 
+function MiniMapSection({
+  layer,
+  timestamp,
+  setLayerId,
+  setTimestamp,
+  availableLayers,
   availableTimestamps,
-  loading 
+  loading
 }: {
   layer: any;
   timestamp: string;
@@ -131,7 +131,7 @@ function MiniMapSection({
       <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl p-4 mb-4">
         <h3 className="font-semibold text-cyan-300 text-sm mb-1">{layer.friendly_title}</h3>
         <p className="text-xs text-slate-400 mb-3">{layer.what_it_shows}</p>
-        
+
         {layer.legend_stops.length > 0 && (
           <div className="grid grid-cols-2 gap-1">
             {layer.legend_stops.map((stop: any, i: number) => (
@@ -181,8 +181,8 @@ function MiniMapSection({
       <button
         onClick={() => setShowLayer(!showLayer)}
         className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-all mb-4 ${
-          showLayer 
-            ? 'bg-cyan-600 text-white hover:bg-cyan-500' 
+          showLayer
+            ? 'bg-cyan-600 text-white hover:bg-cyan-500'
             : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
         }`}
       >
@@ -328,7 +328,7 @@ export default function HimalayasDataPage() {
                   <span className="bg-cyan-600 text-xs px-2 py-1 rounded text-white">LEVEL 1</span>
                   Wavelength Determines Penetration
                 </h2>
-                
+
                 <div className="relative h-64 rounded-xl overflow-hidden border border-cyan-500/20 bg-black/40 mb-6">
                   <div className={`absolute inset-0 transition-all duration-700 ${freqMode === 'L-Band' ? 'opacity-100' : 'opacity-0'}`}>
                     <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/40 to-blue-950/80" />
@@ -368,7 +368,7 @@ export default function HimalayasDataPage() {
                 </div>
 
                 <div className="bg-black/30 p-4 rounded-lg text-sm text-gray-200 leading-relaxed border-l-4 border-cyan-500">
-                  {freqMode === 'L-Band' 
+                  {freqMode === 'L-Band'
                     ? "The 24 cm L-Band wavelength is long enough to penetrate deep into the ice and snowpack. This allows NISAR to reveal internal crevasses, measure glacier thickness, and track structural changes hidden from optical sensors."
                     : "The ~10 cm S-Band wavelength is shorter and primarily reflects off the outer surface layer. This makes it highly sensitive to surface roughness, fresh snow accumulation, and the immediate top layer of the glacier."}
                 </div>
@@ -429,8 +429,8 @@ export default function HimalayasDataPage() {
                   </h2>
                      {/* ✅ خريطة توسع البحيرات الجليدية الحقيقية */}
    <div className="relative h-64 rounded-xl overflow-hidden border border-blue-500/20 bg-white mb-4">
-     <img 
-       src={plotUrl('himalayas', 'hv_db', '20260724')} 
+     <img
+       src={heatmapUrl('himalayas', 'hv_db', '20260724')}
        alt="Glacial Lake Map"
        className="w-full h-full object-contain p-2"
      />
@@ -487,7 +487,7 @@ export default function HimalayasDataPage() {
                   <Layers className="w-5 h-5" /> Why 12-Day Repeat Matters
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  While a GLOF unfolds in hours, the <strong className="text-cyan-300">precursors</strong> (rapid lake growth, dam deformation, accelerating ice motion) build up over weeks. 
+                  While a GLOF unfolds in hours, the <strong className="text-cyan-300">precursors</strong> (rapid lake growth, dam deformation, accelerating ice motion) build up over weeks.
                   NISAR's exact 12-day repeat cycle with consistent acquisition geometry is perfectly tuned to detect these critical warning signs through persistent mountain cloud cover.
                 </p>
               </div>

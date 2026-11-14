@@ -20,6 +20,7 @@ export interface NISARLayer {
   cog_files: string[];
   tile_templates: string[];
   monthly_pngs: string[];
+  heatmap_clean_pngs?: string[];
   track?: number;
   frame?: number;
   direction?: string;

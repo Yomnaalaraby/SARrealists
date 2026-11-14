@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import CompareSlider from '@/components/map/CompareSlider';
 import { PolarizationChart, SubsidenceChart } from '@/components/charts/ChartWidget';
-import { plotUrl, prettyDate } from '@/lib/nisarData'; // ✅ 2. أضفنا prettyDate
+import { heatmapUrl, prettyDate } from '@/lib/nisarData'; // ✅ 2. أضفنا prettyDate
 
 const FIRE_PHASES = [
   {
@@ -129,10 +129,10 @@ const [panY, setPanY] = useState(0);
                 </h2>
                 <CompareSlider
                   beforeImage="https://static01.nyt.com/images/2020/08/28/us/28fires-smoke01alt/merlin_175974066_e1961b7a-d369-4cc1-be39-f98986d5a2e0-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
-                  afterImage={plotUrl('california', 'hv_db', '20260228')}
+                  afterImage={heatmapUrl('california', 'hv_db', '20260228')}
+                  afterFit="contain"
                   beforeLabel="Optical — Blinded by Smoke"
                   afterLabel="NISAR Radar — Sees Through"
-                  afterCrop="inset(7% 19% 7% 13%)" 
                 />
               </div>
 
@@ -249,7 +249,7 @@ const [panY, setPanY] = useState(0);
   <div
     className="absolute inset-0"
     style={{
-      backgroundImage: `url(${plotUrl('california', 'los_disp_mm', SUBSIDENCE_DATES[selectedIdx])})`,
+      backgroundImage: `url(${heatmapUrl('california', 'los_disp_mm', SUBSIDENCE_DATES[selectedIdx])})`,
       backgroundSize: `${130 + zoom * 8}% ${118 + zoom * 8}%`,
       backgroundPosition: `${42 + panX}% ${50 + panY}%`,
       backgroundRepeat: 'no-repeat',

@@ -68,6 +68,7 @@ from nisar_pipeline.layers import (
 )
 from nisar_pipeline.plots import (
     enrich_catalog_with_human_labels,
+    plot_clean_heatmaps_from_catalog,
     plot_human_friendly_guide,
     plot_monthly_phenomenon_png,
     plot_pol_and_freq_explorer,
@@ -82,6 +83,20 @@ from nisar_pipeline.window import (
 )
 
 logger = logging.getLogger("nisar_pipeline")
+
+
+def _export_tiles(cfg: Dict[str, Any], exporter: Any, **kwargs: Any) -> int:
+    """Run an XYZ tile exporter unless the fast map-only path disabled tiles."""
+    if not cfg.get("export_tiles", True):
+        return 0
+    return int(exporter(**kwargs) or 0)
+
+
+def _append_zarr(cfg: Dict[str, Any], appender: Any, **kwargs: Any) -> Any:
+    """Run a Zarr append unless the caller explicitly disabled stack export."""
+    if not cfg.get("export_zarr", True):
+        return None
+    return appender(**kwargs)
 
 # Required GCOV phenomenon layers per site in --monthly mode
 SITE_PHENOMENON_GCOV_LAYERS: Dict[str, Set[str]] = {
@@ -383,7 +398,7 @@ def build_gcov_for_site(
                     "freq_b_mhz": win.freq_b_mhz,
                 },
             )
-            append_to_zarr_stack(
+            _append_zarr(cfg, append_to_zarr_stack,
                 arr=arr,
                 x=win.x,
                 y=win.y,
@@ -397,7 +412,7 @@ def build_gcov_for_site(
             c_meta = color_cfg.get(layer_name, {})
             tiles_rel = Path("tiles") / layer_name / rec.date_str
             if layer_name == "hh_db" and co_key:
-                export_xyz_png_tiles(
+                _export_tiles(cfg, export_xyz_png_tiles,
                     arr=win.pols[co_key],
                     x=win.x,
                     y=win.y,
@@ -409,7 +424,7 @@ def build_gcov_for_site(
                     convert_linear_to_db_after=True,
                 )
             elif layer_name == "hv_db" and cr_key:
-                export_xyz_png_tiles(
+                _export_tiles(cfg, export_xyz_png_tiles,
                     arr=win.pols[cr_key],
                     x=win.x,
                     y=win.y,
@@ -421,7 +436,7 @@ def build_gcov_for_site(
                     convert_linear_to_db_after=True,
                 )
             else:
-                export_xyz_png_tiles(
+                _export_tiles(cfg, export_xyz_png_tiles,
                     arr=arr,
                     x=win.x,
                     y=win.y,
@@ -460,7 +475,7 @@ def build_gcov_for_site(
             metadata={"date": rec.date_str, "polarization_flag": prod["polarization_flag"]},
         )
         rgb_tiles_rel = Path("tiles") / "rgb_composite" / rec.date_str
-        export_rgb_xyz_png_tiles(
+        _export_tiles(cfg, export_rgb_xyz_png_tiles,
             rgb_arr=prod["rgb"],
             x=win.x,
             y=win.y,
@@ -551,7 +566,7 @@ def build_gcov_for_site(
             )
             c_meta = color_cfg.get(ch_name, {})
             tiles_rel = Path("tiles") / ch_name / pair_tag
-            export_xyz_png_tiles(
+            _export_tiles(cfg, export_xyz_png_tiles,
                 arr=ch_arr,
                 x=change_res["x"],
                 y=change_res["y"],
@@ -702,9 +717,9 @@ def build_gunw_for_site(
         arr = stack_res["cum_los_mm"][i]
         cog_rel = Path("cog") / "los_disp_mm" / f"{d_str}.tif"
         write_float32_cog(arr, x, y, epsg, site_out_dir / cog_rel, metadata={"date": d_str})
-        append_to_zarr_stack(arr, x, y, epsg, d_str, "los_disp_mm", site_out_dir / "stack" / "los_disp_mm.zarr")
+        _append_zarr(cfg, append_to_zarr_stack, arr, x, y, epsg, d_str, "los_disp_mm", site_out_dir / "stack" / "los_disp_mm.zarr")
         tiles_rel = Path("tiles") / "los_disp_mm" / d_str
-        export_xyz_png_tiles(
+        _export_tiles(cfg, export_xyz_png_tiles,
             arr=arr,
             x=x,
             y=y,
@@ -763,7 +778,7 @@ def build_gunw_for_site(
             cog_rel = Path("cog") / "vert_disp_mm" / f"{d_str}.tif"
             write_float32_cog(v_arr, x, y, epsg, site_out_dir / cog_rel, metadata={"date": d_str})
             tiles_rel = Path("tiles") / "vert_disp_mm" / d_str
-            export_xyz_png_tiles(
+            _export_tiles(cfg, export_xyz_png_tiles,
                 arr=v_arr,
                 x=x,
                 y=y,
@@ -810,7 +825,7 @@ def build_gunw_for_site(
     )
     c_rate = color_cfg.get("disp_rate_mm_yr", {})
     rate_tiles_rel = Path("tiles") / "disp_rate_mm_yr" / rate_tag
-    export_xyz_png_tiles(
+    _export_tiles(cfg, export_xyz_png_tiles,
         arr=stack_res["rate_mm_yr"],
         x=x,
         y=y,
@@ -933,7 +948,7 @@ def build_goff_for_site(
         write_float32_cog(clipped["direction_deg"], x_c, y_c, epsg_code, site_out_dir / dir_cog_rel)
 
         tiles_rel = Path("tiles") / "velocity_m_yr" / pair_tag
-        export_xyz_png_tiles(
+        _export_tiles(cfg, export_xyz_png_tiles,
             arr=clipped["speed_m_yr"],
             x=x_c,
             y=y_c,
@@ -1061,10 +1076,10 @@ def build_sme2_for_site(
         bounds_lonlat = utm_bounds_to_lonlat(x_w, y_w, epsg_code)
         cog_rel = Path("cog") / "soil_moisture" / f"{rec.date_str}.tif"
         write_float32_cog(sm_arr, x_w, y_w, epsg_code, site_out_dir / cog_rel)
-        append_to_zarr_stack(sm_arr, x_w, y_w, epsg_code, rec.date_str, "soil_moisture", site_out_dir / "stack" / "soil_moisture.zarr")
+        _append_zarr(cfg, append_to_zarr_stack, sm_arr, x_w, y_w, epsg_code, rec.date_str, "soil_moisture", site_out_dir / "stack" / "soil_moisture.zarr")
 
         tiles_rel = Path("tiles") / "soil_moisture" / rec.date_str
-        export_xyz_png_tiles(
+        _export_tiles(cfg, export_xyz_png_tiles,
             arr=sm_arr,
             x=x_w,
             y=y_w,
@@ -1127,7 +1142,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="run_site.py",
         description="NASA-ISRO NISAR data-pull, preprocessing, and human-friendly plotting CLI.",
     )
-    ap.add_argument("cmd", choices=["search", "inspect", "build", "plot"])
+    ap.add_argument("cmd", choices=["search", "inspect", "build", "plot", "clean"])
     ap.add_argument(
         "--site",
         choices=["california", "nile_delta", "himalaya"],
@@ -1153,7 +1168,34 @@ def build_parser() -> argparse.ArgumentParser:
         help="Select 1 best pass per calendar month (YYYYMM) and export required phenomenon PNGs + tiles.",
     )
     ap.add_argument("--download", action="store_true", help="Download full granules with .part resume.")
+    ap.add_argument(
+        "--clean-size",
+        type=int,
+        default=1600,
+        help="Longest side of text-free heatmap PNGs (default: 1600).",
+    )
+    ap.add_argument(
+        "--force-clean",
+        action="store_true",
+        help="Rebuild existing text-free heatmap PNGs.",
+    )
     ap.add_argument("--config", type=Path, default=None, help="Path to custom config.yaml.")
+    ap.add_argument(
+        "--out-dir",
+        type=Path,
+        default=None,
+        help="Override output root (use out_web to publish map-ready assets).",
+    )
+    ap.add_argument(
+        "--skip-tiles",
+        action="store_true",
+        help="Fast map-only path: do not generate XYZ tiles (clean PNG overlays are enough).",
+    )
+    ap.add_argument(
+        "--skip-zarr",
+        action="store_true",
+        help="Skip Zarr stack writes when only COGs, PNGs, and the catalog are needed.",
+    )
     return ap
 
 
@@ -1165,6 +1207,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     args = build_parser().parse_args(argv)
     cfg = load_config(args.config)
+    if args.out_dir is not None:
+        cfg["out_dir"] = str(args.out_dir)
 
     site_cfg = cfg["sites"][args.site]
     if args.bbox:
@@ -1176,9 +1220,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     site_out_dir = Path(cfg.get("out_dir", "out")) / args.site
 
+    if args.cmd == "clean":
+        written = plot_clean_heatmaps_from_catalog(
+            site_out_dir,
+            force=args.force_clean,
+            max_size=args.clean_size,
+        )
+        logger.info("Clean heatmap export complete: %d PNG(s)", written)
+        return 0
+
     if args.cmd == "plot":
         if (site_out_dir / "catalog.json").exists():
             plot_human_friendly_guide(site_out_dir, show_inline=False)
+            plot_clean_heatmaps_from_catalog(
+                site_out_dir,
+                force=args.force_clean,
+                max_size=args.clean_size,
+            )
         else:
             logger.info(
                 "No existing catalog in %s; streaming latest GCOV granule to generate explorer plot.",
@@ -1309,6 +1367,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     args.site, cfg, records, token, args.download, args.max_dates, args.monthly
                 )
 
+    if args.cmd == "build" and (site_out_dir / "catalog.json").exists():
+        plot_clean_heatmaps_from_catalog(
+            site_out_dir,
+            force=args.force_clean,
+            max_size=args.clean_size,
+        )
     return 0
 
 

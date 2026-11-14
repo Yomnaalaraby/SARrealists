@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -707,3 +708,182 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
     plt.close(fig)
     logger.info("Saved human-friendly guide plot: %s", guide_png)
     return guide_png
+
+
+def plot_heatmap_clean(
+    arr: np.ndarray,
+    layer_id: str,
+    date_str: str,
+    site_out_dir: Path,
+    max_size: int = 1600,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    cmap_name: Optional[str] = None,
+    dpi: int = 100,
+) -> Path:
+    """
+    Save a map-ready, text-free heatmap at:
+      `out/<site>/plots/heatmap_clean/<layer_id>/<date_str>.png`
+
+    The output contains only the raster pixels: no title, axes, ticks, labels,
+    colorbar, or padding. Nodata is transparent. The longest side is capped at
+    `max_size` pixels so the image stays practical for the browser.
+    """
+    out_png = site_out_dir / "plots" / "heatmap_clean" / layer_id / f"{date_str}.png"
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+
+    spec = HUMAN_LAYER_SPECS.get(layer_id, {})
+    raw = np.asarray(arr)
+
+    if raw.ndim == 3 and raw.shape[0] == 3:
+        rgb = np.clip(raw, 0, 255).astype(np.uint8)
+        rgba = _rgb_chw_to_rgba_hwc(rgb)
+        image = rgba
+        height, width = image.shape[:2]
+        interpolation = "nearest"
+    elif raw.ndim == 3 and raw.shape[-1] == 3:
+        rgb = np.transpose(np.clip(raw, 0, 255).astype(np.uint8), (2, 0, 1))
+        rgba = _rgb_chw_to_rgba_hwc(rgb)
+        image = rgba
+        height, width = image.shape[:2]
+        interpolation = "nearest"
+    else:
+        data = np.asarray(raw, dtype=np.float32)
+        if data.ndim != 2:
+            raise ValueError(f"Clean heatmap expects 2D or RGB data, got shape {data.shape}")
+        height, width = data.shape
+        finite = data[np.isfinite(data)]
+        if finite.size == 0:
+            raise ValueError(f"Layer {layer_id} has no finite pixels")
+        lo = float(vmin if vmin is not None else spec.get("vmin", float(finite.min())))
+        hi = float(vmax if vmax is not None else spec.get("vmax", float(finite.max())))
+        if not np.isfinite(lo) or not np.isfinite(hi) or hi <= lo:
+            lo, hi = float(finite.min()), float(finite.max())
+        if hi <= lo:
+            hi = lo + 1.0
+        cmap = plt.get_cmap(cmap_name or str(spec.get("cmap", "viridis"))).with_extremes(
+            bad=(0.0, 0.0, 0.0, 0.0)
+        )
+        image = np.ma.masked_invalid(data)
+        interpolation = "nearest"
+
+    if height < 1 or width < 1:
+        raise ValueError(f"Layer {layer_id} has invalid shape {height}x{width}")
+
+    # Always render to the requested web size; large COGs are downscaled and
+    # small source rasters are upscaled with nearest-neighbor pixels.
+    scale = float(max_size) / float(max(height, width))
+    target_w = max(1, int(round(width * scale)))
+    target_h = max(1, int(round(height * scale)))
+
+    fig = plt.figure(figsize=(target_w / dpi, target_h / dpi), dpi=dpi, frameon=False)
+    ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
+    ax.set_axis_off()
+    if image.ndim == 2:
+        ax.imshow(
+            image,
+            origin="upper",
+            aspect="auto",
+            interpolation=interpolation,
+            cmap=cmap,
+            vmin=lo,
+            vmax=hi,
+        )
+    else:
+        ax.imshow(image, origin="upper", aspect="auto", interpolation=interpolation)
+    fig.patch.set_alpha(0.0)
+    fig.savefig(
+        out_png,
+        dpi=dpi,
+        transparent=True,
+        pad_inches=0.0,
+        bbox_inches=None,
+    )
+    plt.close(fig)
+    return out_png
+
+
+def _find_cog_for_date(cog_files: list[str], date_str: str, index: int) -> Optional[str]:
+    """Find the COG belonging to a catalog date, tolerating pair-tag filenames."""
+    by_stem = {Path(path).stem: path for path in cog_files}
+    if date_str in by_stem:
+        return by_stem[date_str]
+    for path in cog_files:
+        if date_str in Path(path).stem:
+            return path
+    if 0 <= index < len(cog_files):
+        return cog_files[index]
+    return None
+
+
+def plot_clean_heatmaps_from_catalog(
+    site_out_dir: Path,
+    force: bool = False,
+    max_size: int = 1600,
+) -> int:
+    """
+    Read every cataloged COG and create a clean map-ready PNG beside the catalog.
+
+    Adds `heatmap_clean_pngs` to each layer. This is intentionally a catalog
+    post-process so it works for GCOV, GUNW, GOFF, and SME2 layers without
+    changing each scientific product builder.
+    """
+    catalog_path = site_out_dir / "catalog.json"
+    if not catalog_path.exists():
+        logger.info("No catalog at %s; skipping clean heatmaps.", catalog_path)
+        return 0
+
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    layers = catalog.get("layers", {})
+    written = 0
+    for layer_id, layer in layers.items():
+        dates = layer.get("dates", [])
+        cog_files = layer.get("cog_files", [])
+        if not dates or not cog_files:
+            continue
+        clean_paths: list[str] = []
+        vmin_vmax = layer.get("color_range") or [None, None]
+        vmin = float(vmin_vmax[0]) if vmin_vmax and vmin_vmax[0] is not None else None
+        vmax = float(vmin_vmax[1]) if len(vmin_vmax) > 1 and vmin_vmax[1] is not None else None
+        cmap_name = layer.get("colormap")
+        for index, date_str in enumerate(dates):
+            cog_rel = _find_cog_for_date(cog_files, date_str, index)
+            if not cog_rel:
+                continue
+            cog_path = site_out_dir / cog_rel
+            if not cog_path.exists():
+                logger.debug("Missing COG for clean heatmap: %s", cog_path)
+                continue
+            out_path = site_out_dir / "plots" / "heatmap_clean" / layer_id / f"{date_str}.png"
+            if not force and out_path.exists():
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                continue
+            try:
+                with rasterio.open(cog_path) as src:
+                    if src.count >= 3:
+                        arr = src.read([1, 2, 3], masked=True).filled(0).astype(np.uint8)
+                    else:
+                        arr = src.read(1, masked=True).filled(np.nan).astype(np.float32)
+                plot_heatmap_clean(
+                    arr=arr,
+                    layer_id=layer_id,
+                    date_str=date_str,
+                    site_out_dir=site_out_dir,
+                    max_size=max_size,
+                    vmin=vmin,
+                    vmax=vmax,
+                    cmap_name=cmap_name,
+                )
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                written += 1
+            except Exception as exc:  # pragma: no cover - depends on real COGs
+                logger.warning("Clean heatmap failed for %s %s: %s", layer_id, date_str, exc)
+        if clean_paths:
+            layer["heatmap_clean_pngs"] = clean_paths
+
+    catalog["heatmap_clean_version"] = "1"
+    catalog["heatmap_clean_max_size"] = int(max_size)
+    catalog["updated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
+    logger.info("Clean heatmaps written for %s: %d", site_out_dir.name, written)
+    return written
