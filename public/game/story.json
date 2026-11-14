@@ -1,88 +1,160 @@
 {
   "version": "v1",
-  "ship": { "en": "Aurelia Dawn", "ar": "فجر أوريليا" },
-  "planet": { "en": "Aurelia", "ar": "أوريليا" },
-  "captain": { "en": "Captain DIO", "ar": "الكابتن ديو" },
-  "ai": { "en": "LUMEN", "ar": "لومِن" },
+  "ship": {
+    "en": "Aurelia Dawn",
+    "ar": "فجر أوريليا"
+  },
+  "planet": {
+    "en": "Aurelia",
+    "ar": "أوريليا"
+  },
+  "captain": {
+    "en": "Captain DIO",
+    "ar": "الكابتن ديو"
+  },
+  "ai": {
+    "en": "LUMEN",
+    "ar": "لومِن"
+  },
   "crew": [
     {
       "role": "geologist",
-      "name": { "en": "Dr. Sana Qadir", "ar": "د. سناء قادر" },
-      "title": { "en": "Geologist", "ar": "جيولوجية" }
+      "name": {
+        "en": "Dr. Sana Qadir",
+        "ar": "د. سناء قادر"
+      },
+      "title": {
+        "en": "Geologist",
+        "ar": "جيولوجية"
+      }
     },
     {
       "role": "agronomist",
-      "name": { "en": "Tomas Reyes", "ar": "توماس رييس" },
-      "title": { "en": "Agronomist", "ar": "مهندس زراعي" }
+      "name": {
+        "en": "Tomas Reyes",
+        "ar": "توماس رييس"
+      },
+      "title": {
+        "en": "Agronomist",
+        "ar": "مهندس زراعي"
+      }
     },
     {
       "role": "medic",
-      "name": { "en": "Dr. Imani Cole", "ar": "د. إيماني كول" },
-      "title": { "en": "Medic", "ar": "طبيبة" }
+      "name": {
+        "en": "Dr. Imani Cole",
+        "ar": "د. إيماني كول"
+      },
+      "title": {
+        "en": "Medic",
+        "ar": "طبيبة"
+      }
     },
     {
       "role": "engineer",
-      "name": { "en": "Ravi Menon", "ar": "رافي مينون" },
-      "title": { "en": "Engineer", "ar": "مهندس" }
+      "name": {
+        "en": "Ravi Menon",
+        "ar": "رافي مينون"
+      },
+      "title": {
+        "en": "Engineer",
+        "ar": "مهندس"
+      }
     },
     {
       "role": "pilot",
-      "name": { "en": "Jules Park", "ar": "جولز بارك" },
-      "title": { "en": "Pilot", "ar": "طيارة" }
+      "name": {
+        "en": "Jules Park",
+        "ar": "جولز بارك"
+      },
+      "title": {
+        "en": "Pilot",
+        "ar": "طيارة"
+      }
     },
     {
       "role": "glaciologist",
-      "name": { "en": "Dr. Elin Varga", "ar": "د. إلين فارغا" },
-      "title": { "en": "Glaciologist", "ar": "عالمة جليديات" }
+      "name": {
+        "en": "Dr. Elin Varga",
+        "ar": "د. إلين فارغا"
+      },
+      "title": {
+        "en": "Glaciologist",
+        "ar": "عالمة جليديات"
+      }
     },
     {
       "role": "hydrologist",
-      "name": { "en": "Nadia Haddad", "ar": "نادية حداد" },
-      "title": { "en": "Hydrologist", "ar": "عالمة هيدرولوجيا" }
+      "name": {
+        "en": "Nadia Haddad",
+        "ar": "نادية حداد"
+      },
+      "title": {
+        "en": "Hydrologist",
+        "ar": "عالمة هيدرولوجيا"
+      }
     },
     {
       "role": "cook",
-      "name": { "en": "Pietro Russo", "ar": "بيترو روسو" },
-      "title": { "en": "Cook", "ar": "طبّاخ" }
+      "name": {
+        "en": "Pietro Russo",
+        "ar": "بيترو روسو"
+      },
+      "title": {
+        "en": "Cook",
+        "ar": "طبّاخ"
+      }
     }
   ],
   "endings": [
     {
       "id": "pathfinder",
-      "title": { "en": "The Pathfinder", "ar": "الرائد" },
+      "title": {
+        "en": "The Pathfinder",
+        "ar": "الرائد"
+      },
       "text": {
-        "en": "The whole crew is healthy and every decision matched the evidence. LUMEN logs a clean mission.",
-        "ar": "الطاقم كله بخير، وكل قرار طابق الأدلة. يسجّل لومِن مهمة نظيفة."
+        "en": "DIO logs a clean mission. Then LUMEN speaks: “The star fix is wrong. Aurelia is Earth.” The crew is healthy. The warning is not.",
+        "ar": "يسجّل ديو مهمة نظيفة. ثم يقول لومِن: «تحديد النجوم خطأ. أوريليا هي الأرض». الطاقم بخير. لكن التحذير ليس كذلك."
       },
       "minHealthy": 8,
       "minBestDecisions": 4
     },
     {
       "id": "guardian",
-      "title": { "en": "The Guardian", "ar": "الحامي" },
+      "title": {
+        "en": "The Guardian",
+        "ar": "الحامي"
+      },
       "text": {
-        "en": "Most of the crew is healthy and the mission is a success, with lessons learned along the way.",
-        "ar": "معظم الطاقم بخير والمهمة ناجحة، مع دروس تعلّمتموها في الطريق."
+        "en": "Most of the crew is healthy. They did not conquer Aurelia; they learned to read it. The final fix points home.",
+        "ar": "معظم الطاقم بخير. لم يغزوا أوريليا؛ بل تعلّموا قراءتها. التحديد الأخير يشير إلى الديار."
       },
       "minHealthy": 6,
       "minBestDecisions": 3
     },
     {
       "id": "survivor",
-      "title": { "en": "The Survivor", "ar": "الناجي" },
+      "title": {
+        "en": "The Survivor",
+        "ar": "الناجي"
+      },
       "text": {
-        "en": "The colony survives, but the cost is visible in the injured list and the Mission Report.",
-        "ar": "المستعمرة تنجو، لكن الكلفة ظاهرة في قائمة المصابين وتقرير المهمة."
+        "en": "The colony survives, but the injured list is long. LUMEN’s last image is Earth, and the cost of ignoring its warnings.",
+        "ar": "تنجو المستعمرة، لكن قائمة المصابين طويلة. آخر صورة لدى لومِن هي الأرض، وثمن تجاهل تحذيراتها."
       },
       "minHealthy": 4,
       "minBestDecisions": 2
     },
     {
       "id": "lumen-protocol",
-      "title": { "en": "LUMEN Protocol", "ar": "بروتوكول لومِن" },
+      "title": {
+        "en": "LUMEN Protocol",
+        "ar": "بروتوكول لومِن"
+      },
       "text": {
-        "en": "Too many crew are out of action. LUMEN takes over the remaining decisions and the mission continues.",
-        "ar": "كثير من الطاقم خارج الخدمة. يتولى لومِن القرارات المتبقية وتستمر المهمة."
+        "en": "Too many crew are down. LUMEN takes command and completes the survey. Its final message is simple: there is no Planet B.",
+        "ar": "كثير من الطاقم خارج الخدمة. يتولى لومِن القيادة ويكمل المسح. رسالته الأخيرة بسيطة: لا يوجد كوكب بديل."
       },
       "minHealthy": 0,
       "minBestDecisions": 0

@@ -248,6 +248,12 @@ After the mission report, the CTA opens the real data explorer:
 The dialogue and game stay as they are; the explorer becomes the “live” view of
 the sites the crew just analyzed.
 
+## Confirmed decisions
+
+- Folded-jump explanation: **confirmed**.
+- Crew-led dialogue instead of invented native voices: **confirmed**.
+- Opening arrival copy, four mission briefings, seven reveal beats, revised endings, and the new “Explore the real Earth data” CTA are implemented in the game content.
+
 ## Open questions
 
 1. Keep the name **Captain DIO**, or rename to **Captain Dew**?

@@ -107,7 +107,7 @@ export function MissionReport({
         <div className="phase__actions">
           <PixelButton variant="ghost" onClick={onReplay}>{t(language, 'replay')}</PixelButton>
           <a className="pixel-button pixel-button--primary" href={route}>
-            {t(language, 'openMap')}
+            {localize(reveal.callToAction.label, language)}
           </a>
         </div>
         <p className="muted">{t(language, 'mapHint')}</p>

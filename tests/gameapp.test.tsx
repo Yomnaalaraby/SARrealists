@@ -24,7 +24,7 @@ describe('GameApp', () => {
 
     render(<GameApp />);
     expect(await screen.findByRole('button', { name: /start mission/i })).toBeInTheDocument();
-    expect(screen.getByText(/a radar mission/i)).toBeInTheDocument();
+    expect(screen.getByText(/one planet left to understand/i)).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalledWith(expect.stringContaining('reveal.json'));
   });
 
@@ -38,7 +38,7 @@ describe('GameApp', () => {
     render(<GameApp />);
 
     fireEvent.click(await screen.findByRole('button', { name: /start mission/i }));
-    fireEvent.click(screen.getByRole('button', { name: /enter the bridge/i }));
+    fireEvent.click(screen.getByRole('button', { name: /help the crew/i }));
 
     const missions = [
       { lenses: [/surface brightness/i, /water and flood/i], decision: /^reroute$/i },
@@ -64,12 +64,12 @@ describe('GameApp', () => {
       expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('reveal.json')),
     );
     expect(await screen.findByRole('button', { name: /^next$/i })).toBeInTheDocument();
-    for (let index = 0; index < 4; index += 1) {
+    for (let index = 0; index < 6; index += 1) {
       fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
     }
     fireEvent.click(screen.getByRole('button', { name: /open the mission report/i }));
     expect(screen.getByRole('heading', { name: /mission report/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /open the real map/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /explore the real earth data/i })).toHaveAttribute(
       'href',
       expect.stringContaining('/dashboard?siteId=nile_delta'),
     );

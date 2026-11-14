@@ -5,12 +5,12 @@
       "id": "m1-smoke",
       "siteId": "sector-4",
       "title": {
-        "en": "Landing under smoke",
-        "ar": "الهبوط تحت الدخان"
+        "en": "Smoke over the landing basin",
+        "ar": "دخان فوق حوض الهبوط"
       },
       "briefing": {
-        "en": "The lander is descending toward a basin covered in smoke. Two passes remain before the expedition must leave. Choose two lenses to judge the landing zone.",
-        "ar": "تهبط المركبة نحو حوض يغطيه الدخان. تبقّى مروران قبل مغادرة البعثة. اختر عدستين لتقييم منطقة الهبوط."
+        "en": "DIO: After 100 light-years, the Aurelia Dawn is finally down. Imani: The smoke is too thick for a visual approach. Tomas: If the basin is wet, the ground may move under the lander. LUMEN: Two passes remain. Choose two lenses before we commit.",
+        "ar": "ديو: بعد 100 سنة ضوئية، هبطت فجر أوريليا أخيراً. إيماني: الدخان كثيف جداً للهبوط البصري. توماس: إن كان الحوض رطباً فقد تتحرك الأرض تحت المركبة. لومِن: تبقّى مروران. اختر عدستين قبل أن نلتزم."
       },
       "alias": "Aurelia, Sector 4",
       "data": {
@@ -238,24 +238,24 @@
       "crewHints": {
         "pilot": {
           "text": {
-            "en": "I cannot see anything through this smoke. Try the optical camera.",
-            "ar": "لا أرى شيئاً عبر هذا الدخان. جرّب الكاميرا البصرية."
+            "en": "I cannot see through this smoke. My eyes say no, even if the instruments disagree.",
+            "ar": "لا أرى عبر هذا الدخان. عيناي تقولان لا، حتى لو اختلفت الأجهزة."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
         },
         "engineer": {
           "text": {
-            "en": "The lander needs a flat, stable patch. Brightness change may show the burn edge.",
-            "ar": "تحتاج المركبة إلى بقعة مستوية وثابتة. قد يُظهر تغيّر السطوع حافة الحريق."
+            "en": "The pad needs flat, stable ground. A brightness change may show the burn edge.",
+            "ar": "تحتاج منصة الهبوط أرضاً مستوية وثابتة. قد يُظهر تغيّر السطوع حافة الحريق."
           },
           "suggestsLens": "brightness",
           "reliability": "good"
         },
         "medic": {
           "text": {
-            "en": "If there is water nearby, we should map it before landing.",
-            "ar": "إن كانت هناك مياه قريبة، علينا رسمها قبل الهبوط."
+            "en": "If there is water in the basin, I need to know before we set down.",
+            "ar": "إن كانت هناك مياه في الحوض، عليّ أن أعرف قبل الهبوط."
           },
           "suggestsLens": "water",
           "reliability": "wrong"
@@ -263,8 +263,8 @@
       },
       "hints": [
         {
-          "en": "Ask LUMEN which lens can see through smoke.",
-          "ar": "اسأل لومِن أي عدسة ترى عبر الدخان."
+          "en": "Ask LUMEN which lens can see through smoke, and which one can see the wet ground.",
+          "ar": "اسأل لومِن أي عدسة ترى عبر الدخان، وأيها ترى الأرض الرطبة."
         }
       ]
     },
@@ -272,12 +272,12 @@
       "id": "m2-glacier",
       "siteId": "sector-9",
       "title": {
-        "en": "Glacier expedition",
-        "ar": "بعثة النهر الجليدي"
+        "en": "The moving glacier",
+        "ar": "النهر الجليدي المتحرك"
       },
       "briefing": {
-        "en": "A glacier above the camp is moving. Three passes remain. Choose two lenses to judge whether the route to the ridge is safe.",
-        "ar": "يتحرك نهر جليدي فوق المخيم. تبقّى ثلاثة مرورات. اختر عدستين لتقييم أمان الطريق إلى الحافة."
+        "en": "Elin: The glacier above camp is moving faster than the archive predicts. Ravi: The ridge route is the only way to the drill site. Jules: Cloud is closing in. LUMEN: Three passes remain. Choose two lenses before the route is committed.",
+        "ar": "إلين: يتحرك النهر الجليدي فوق المخيم أسرع مما يتوقع الأرشيف. رافي: طريق الحافة هو السبيل الوحيد إلى موقع الحفر. جولز: السحاب يقترب. لومِن: تبقّت ثلاثة مرورات. اختر عدستين قبل تثبيت المسار."
       },
       "alias": "Aurelia, Sector 9",
       "data": {
@@ -543,8 +543,8 @@
       "crewHints": {
         "glaciologist": {
           "text": {
-            "en": "Ice flow is the direct measurement here. Brightness is a useful second look.",
-            "ar": "تدفق الجليد هو القياس المباشر هنا. السطوع نظرة ثانية مفيدة."
+            "en": "The ice is moving. Ice flow is the direct measurement here; brightness is only a second look.",
+            "ar": "الجليد يتحرك. تدفق الجليد هو القياس المباشر هنا؛ السطوع مجرد نظرة ثانية."
           },
           "suggestsLens": "iceflow",
           "reliability": "good"
@@ -552,15 +552,15 @@
         "engineer": {
           "text": {
             "en": "Coherence will tell us which ice is stable enough to cross.",
-            "ar": "سيخبرنا التماسك أي الجليد مستقر بما يكفي للعبور."
+            "ar": "سيخبرنا التماسك أي الجليد ثابت بما يكفي للعبور."
           },
           "suggestsLens": "stability",
           "reliability": "good"
         },
         "pilot": {
           "text": {
-            "en": "I need a clear view of the ridge. Optical should work.",
-            "ar": "أحتاج رؤية واضحة للحافة. يجب أن تعمل الكاميرا البصرية."
+            "en": "Cloud is closing. Optical should give me a clean view of the ridge.",
+            "ar": "السحاب يقترب. يفترض أن تعطيني الصورة البصرية رؤية واضحة للحافة."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
@@ -568,8 +568,8 @@
       },
       "hints": [
         {
-          "en": "Flow, not brightness, is the direct question for a moving glacier.",
-          "ar": "التدفق، لا السطوع، هو السؤال المباشر لنهر جليدي متحرك."
+          "en": "Flow is the direct question for a moving glacier. Coherence tells you where the measurement can be trusted.",
+          "ar": "الحركة هي السؤال المباشر للنهر الجليدي المتحرك. يخبرك التماسك أين يمكن الوثوق بالقياس."
         }
       ]
     },
@@ -577,12 +577,12 @@
       "id": "m3-delta",
       "siteId": "sector-2",
       "title": {
-        "en": "Settlement in the river delta",
-        "ar": "مستوطنة في دلتا النهر"
+        "en": "Fields in the delta",
+        "ar": "حقول في الدلتا"
       },
       "briefing": {
-        "en": "The colony wants to farm the delta. Two passes remain. Choose two lenses to judge soil wetness and flood risk before the fields are planted.",
-        "ar": "تريد المستعمرة زراعة الدلتا. تبقّى مروران. اختر عدستين لتقييم رطوبة التربة وخطر الفيضان قبل زراعة الحقول."
+        "en": "Tomas: The delta soil looks rich, but the river is already high. Nadia: If the fields are saturated, the next pass could flood them. Imani: We cannot move a whole settlement twice. LUMEN: Two passes remain. Choose two lenses before planting.",
+        "ar": "توماس: تبدو تربة الدلتا خصبة، لكن النهر مرتفع بالفعل. نادية: إن تشبّعت الحقول فقد يغمرها المرور التالي. إيماني: لا يمكننا نقل مستوطنة كاملة مرتين. لومِن: تبقّى مروران. اختر عدستين قبل الزراعة."
       },
       "alias": "Aurelia, Sector 2",
       "data": {
@@ -819,7 +819,7 @@
         "agronomist": {
           "text": {
             "en": "Soil moisture tells us what can be planted now. Water shows where not to plant.",
-            "ar": "تخبرنا رطوبة التربة بما يمكن زراعته الآن. المياه تُظهر أين لا نزرع."
+            "ar": "تخبرنا رطوبة التربة بما يمكن زراعته الآن. يُظهر الماء أين لا نزرع."
           },
           "suggestsLens": "moisture",
           "reliability": "good"
@@ -844,7 +844,7 @@
       "hints": [
         {
           "en": "Water and moisture answer different questions: where water stands, and how wet the soil is.",
-          "ar": "المياه والرطوبة تجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
+          "ar": "الماء والرطوبة يجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
         }
       ]
     },
@@ -852,12 +852,12 @@
       "id": "m4-foundations",
       "siteId": "sector-7",
       "title": {
-        "en": "Foundations on soft ground",
-        "ar": "أساسات على أرض رخوة"
+        "en": "Soft ground",
+        "ar": "أرض رخوة"
       },
       "briefing": {
-        "en": "The colony must choose a site for its first permanent building. Two passes remain. Choose two lenses to judge whether the ground is stable enough.",
-        "ar": "يجب على المستعمرة اختيار موقع لأول مبنى دائم. تبقّى مروران. اختر عدستين لتقييم استقرار الأرض."
+        "en": "Ravi: The first permanent building needs ground that will not move. Sana: The surface looks flat, but flat is not stable. DIO: We have one chance to site this foundation. LUMEN: Two passes remain. Choose two lenses.",
+        "ar": "رافي: يحتاج أول مبنى دائم إلى أرض لا تتحرك. سناء: السطح يبدو مستوياً، لكن الاستواء ليس ثباتاً. ديو: لدينا فرصة واحدة لاختيار موقع الأساس. لومِن: تبقّى مروران. اختر عدستين."
       },
       "alias": "Aurelia, Sector 7",
       "data": {
@@ -1113,15 +1113,15 @@
         "geologist": {
           "text": {
             "en": "Motion is the direct question for a foundation. Stability tells us where the measurement is trustworthy.",
-            "ar": "الحركة هي السؤال المباشر للأساس. الاستقرار يخبرنا أين يكون القياس موثوقاً."
+            "ar": "الحركة هي السؤال المباشر للأساس. يخبرنا التثبيت أين يمكن الوثوق بالقياس."
           },
           "suggestsLens": "motion",
           "reliability": "good"
         },
         "engineer": {
           "text": {
-            "en": "I would trust a longer record more. A delay may be cheaper than a cracked foundation.",
-            "ar": "سأثق بسجل أطول أكثر. قد يكون التأجيل أرخص من أساس متشقق."
+            "en": "I would trust a longer record. A delay is cheaper than a cracked foundation.",
+            "ar": "سأثق بسجل أطول. التأجيل أرخص من أساس متشقق."
           },
           "suggestsLens": "stability",
           "reliability": "good"
@@ -1129,7 +1129,7 @@
         "pilot": {
           "text": {
             "en": "The optical image looks perfectly flat. Let us build.",
-            "ar": "تبدو الصورة البصرية مستوية تماماً. لنبنِ."
+            "ar": "تبدو الصورة البصرية مستوية تماماً. لِنبنِ هنا."
           },
           "suggestsLens": "optical",
           "reliability": "biased"
@@ -1138,7 +1138,7 @@
       "hints": [
         {
           "en": "A short motion record is a warning, not a verdict. More passes build confidence.",
-          "ar": "سجل الحركة القصير تحذير وليس حكماً. المرورات الأكثر تبني الثقة."
+          "ar": "سجل الحركة القصير تحذير وليس حكماً نهائياً. مزيد من المرورات يبني الثقة."
         }
       ]
     }
