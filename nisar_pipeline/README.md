@@ -38,3 +38,14 @@ python -m nisar_pipeline.run_site build \
 Use `--skip-zarr` too if you do not need the Zarr stacks. Keep the default
 (no skip flags) when you need XYZ tiles for a future tile-based map or the
 Zarr stacks for downstream analysis.
+
+## Full monthly GCOV layer set
+
+In `--monthly` mode the pipeline selects one best acquisition per calendar
+month and exports all six GCOV map layers for every selected month:
+
+`hh_db`, `hv_db`, `rvi`, `pol_ratio_db`, `freq_diff_db`, and `rgb_composite`.
+
+`hv_db`, `rvi`, and `pol_ratio_db` are NaN gaps when cross-pol is unavailable;
+`freq_diff_db` is skipped when the granule has no dual-frequency sub-band.
+All other layers are still written for that month.

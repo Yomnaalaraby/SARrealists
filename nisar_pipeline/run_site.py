@@ -99,10 +99,22 @@ def _append_zarr(cfg: Dict[str, Any], appender: Any, **kwargs: Any) -> Any:
     return appender(**kwargs)
 
 # Required GCOV phenomenon layers per site in --monthly mode
+# Monthly mode keeps one best acquisition per calendar month, but still exports
+# the complete GCOV layer set for every selected month. Missing cross-pol or
+# dual-frequency inputs are handled by the scientific product code (NaN gap or
+# skipped frequency-difference layer), never by silently dropping other layers.
+ALL_GCOV_MAP_LAYERS: Set[str] = {
+    "hh_db",
+    "hv_db",
+    "rvi",
+    "pol_ratio_db",
+    "freq_diff_db",
+    "rgb_composite",
+}
 SITE_PHENOMENON_GCOV_LAYERS: Dict[str, Set[str]] = {
-    "nile_delta": {"rgb_composite", "rvi", "hh_db"},
-    "california": {"rgb_composite", "hv_db", "rvi"},
-    "himalaya": {"rgb_composite", "hh_db", "hv_db"},
+    "nile_delta": set(ALL_GCOV_MAP_LAYERS),
+    "california": set(ALL_GCOV_MAP_LAYERS),
+    "himalaya": set(ALL_GCOV_MAP_LAYERS),
 }
 
 
