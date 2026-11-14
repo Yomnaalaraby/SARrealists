@@ -49,3 +49,10 @@ month and exports all six GCOV map layers for every selected month:
 `hv_db`, `rvi`, and `pol_ratio_db` are NaN gaps when cross-pol is unavailable;
 `freq_diff_db` is skipped when the granule has no dual-frequency sub-band.
 All other layers are still written for that month.
+
+## ASF Search version
+
+Use `asf_search>=14.1.0` for current NISAR archive searches. Older pins such as
+`asf_search==8.1.0` can return zero granules for valid NISAR AOIs because NISAR
+support in the ASF client and CMR metadata has changed. The pipeline search
+code is unchanged; this is a client-version requirement.
