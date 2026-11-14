@@ -14,6 +14,74 @@ const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 20;
 const rateBuckets = new Map<string, number[]>();
 
+type ProviderConfig = {
+  apiKey?: string;
+  keySource: 'OPENAI_API_KEY' | 'GEMINI_API_KEY' | 'GOOGLE_API_KEY' | 'none';
+  keyLooksGemini: boolean;
+  baseUrl: string;
+  model: string;
+  timeoutMs: number;
+  reasoningEffort?: string;
+  isGemini: boolean;
+};
+
+function cleanEnvValue(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed.replace(/^['"]|['"]$/g, '') : undefined;
+}
+
+function resolveProviderConfig(): ProviderConfig {
+  const openaiKey = cleanEnvValue(process.env.OPENAI_API_KEY);
+  const geminiKey = cleanEnvValue(process.env.GEMINI_API_KEY) || cleanEnvValue(process.env.GOOGLE_API_KEY);
+  const apiKey = openaiKey || geminiKey;
+  const keySource = openaiKey
+    ? 'OPENAI_API_KEY'
+    : cleanEnvValue(process.env.GEMINI_API_KEY)
+      ? 'GEMINI_API_KEY'
+      : cleanEnvValue(process.env.GOOGLE_API_KEY)
+        ? 'GOOGLE_API_KEY'
+        : 'none';
+  const keyLooksGemini = Boolean(apiKey && /^AIza[0-9A-Za-z_-]{20,}$/.test(apiKey));
+  const explicitBase = (cleanEnvValue(process.env.OPENAI_BASE_URL) || cleanEnvValue(process.env.OPENAI_API_BASE) || '')
+    .replace(/\/$/, '');
+  const isGemini = Boolean(
+    explicitBase.includes('generativelanguage.googleapis.com') || keyLooksGemini,
+  );
+  const configuredModel = cleanEnvValue(process.env.OPENAI_MODEL);
+  const modelIsOpenAiOnly = Boolean(configuredModel && /^(gpt-|o\d)/i.test(configuredModel));
+  const model = configuredModel && !(isGemini && modelIsOpenAiOnly)
+    ? configuredModel
+    : isGemini
+      ? 'gemini-2.0-flash'
+      : 'gpt-4o-mini';
+  return {
+    apiKey,
+    keySource,
+    keyLooksGemini,
+    baseUrl: explicitBase || (isGemini
+      ? 'https://generativelanguage.googleapis.com/v1beta/openai'
+      : 'https://api.openai.com/v1'),
+    model,
+    timeoutMs: Number(process.env.OPENAI_TIMEOUT_MS) || 90_000,
+    reasoningEffort: cleanEnvValue(process.env.OPENAI_REASONING_EFFORT),
+    isGemini,
+  };
+}
+
+export async function GET() {
+  const provider = resolveProviderConfig();
+  return NextResponse.json({
+    configured: Boolean(provider.apiKey),
+    keySource: provider.keySource,
+    keyLooksGemini: provider.keyLooksGemini,
+    provider: provider.isGemini ? 'gemini' : 'openai-compatible',
+    baseUrl: provider.baseUrl,
+    model: provider.model,
+    timeoutMs: provider.timeoutMs,
+    reasoningEffort: provider.reasoningEffort ?? null,
+  });
+}
+
 function isRateLimited(key: string): boolean {
   const now = Date.now();
   const recent = (rateBuckets.get(key) ?? []).filter((stamp) => now - stamp < WINDOW_MS);
@@ -96,19 +164,11 @@ export async function POST(request: Request) {
     enableActions: chatRequest.enableActions,
   });
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  const provider = resolveProviderConfig();
+  if (!provider.apiKey) {
     return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
   }
-
-  const baseUrl = (
-    process.env.OPENAI_BASE_URL ||
-    process.env.OPENAI_API_BASE ||
-    'https://api.openai.com/v1'
-  ).replace(/\/$/, '');
-  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS) || 90_000;
-  const reasoningEffort = process.env.OPENAI_REASONING_EFFORT;
+  const { apiKey, baseUrl, model, timeoutMs, reasoningEffort } = provider;
 
   try {
     const completion = await fetch(`${baseUrl}/chat/completions`, {
@@ -132,15 +192,37 @@ export async function POST(request: Request) {
 
     if (!completion.ok) {
       const detail = await completion.text();
-      console.error('Chat completion failed:', completion.status, detail.slice(0, 500));
+      console.error('Chat completion failed:', {
+        status: completion.status,
+        provider: provider.isGemini ? 'gemini' : 'openai-compatible',
+        baseUrl,
+        model,
+        detail: detail.slice(0, 700),
+      });
       return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
     }
 
     const data = (await completion.json()) as {
+      error?: unknown;
       choices?: Array<{ message?: { content?: string } }>;
     };
+    if (data.error) {
+      console.error('Chat provider returned an error payload:', {
+        provider: provider.isGemini ? 'gemini' : 'openai-compatible',
+        baseUrl,
+        model,
+        detail: JSON.stringify(data.error).slice(0, 700),
+      });
+      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+    }
     const rawAnswer = data.choices?.[0]?.message?.content;
     if (!rawAnswer || !rawAnswer.trim()) {
+      console.error('Chat completion returned no answer:', {
+        provider: provider.isGemini ? 'gemini' : 'openai-compatible',
+        baseUrl,
+        model,
+        choices: data.choices?.length ?? 0,
+      });
       return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
     }
 
@@ -155,7 +237,12 @@ export async function POST(request: Request) {
       ),
     );
   } catch (error) {
-    console.error('Chat completion request failed:', error);
+    console.error('Chat completion request failed:', {
+      provider: provider.isGemini ? 'gemini' : 'openai-compatible',
+      baseUrl,
+      model,
+      error,
+    });
     return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
   }
 }
