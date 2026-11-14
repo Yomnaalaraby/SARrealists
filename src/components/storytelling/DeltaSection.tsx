@@ -39,7 +39,7 @@ export default function DeltaSection() {
 
   useEffect(() => {
     if (isInView) {
-      window.dispatchEvent(new CustomEvent('flyToLocation', { detail: 'delta' }));
+      window.dispatchEvent(new CustomEvent('flyToLocation', { detail: 'nile_delta' }));
     }
   }, [isInView]);
 

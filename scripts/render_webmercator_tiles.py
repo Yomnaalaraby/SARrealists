@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-Render Mapbox-ready XYZ tiles from the pipeline COGs, correctly.
+Render Mapbox-ready XYZ tiles from the pipeline COGs.
+
+The pipeline writes calibrated float32 products (dB, RVI, mm, m/yr) in native
+UTM (or EPSG:6933 for some SME2 layers). gdal2tiles only accepts 8-bit data,
+so each raster is colorized to RGBA with the catalog's colour range and ramp
+before it is warped to Web Mercator and cut into tiles.
 
 What this fixes relative to the originally proposed snippet:
-  * `gdal2tiles.py` has no `--webmercator` flag (it errors out); the projection
-    is selected with `-p mercator` / `--profile=mercator`.
-  * `gdal_translate -a_srs EPSG:3857` only *relabels* the CRS. It leaves the
-    UTM easting/northing values untouched, so the raster is placed near
-    3°E / 32°N (a "floating rectangle"). A real reprojection needs `gdalwarp`.
-  * `--tmscompatible` is only valid for the `raster` profile; combining it with
-    the mercator profile is rejected. `--xyz` already emits XYZ (Mapbox) order.
-  * Zoom levels are capped by the source resolution instead of blindly
-    generating z18 (which is ~3.7 TB of tiles for this project).
+  * `gdal2tiles.py` has no `--webmercator` flag; the projection is chosen with
+    `--profile=mercator`.
+  * `gdal_translate -a_srs EPSG:3857` only relabels the CRS and leaves UTM
+    coordinates in place, which is what produces the floating rectangle. A real
+    reprojection needs `gdalwarp -t_srs EPSG:3857`; it is verified here.
+  * `--tmscompatible` is only valid for the `raster` profile; `--xyz` already
+    emits Mapbox XYZ order.
+  * Float32 COGs are colorized first; gdal2tiles would otherwise refuse them.
+  * Zoom levels are capped by the source resolution (`--zoom 8-auto`) instead
+    of blindly generating z18.
 
-Usage (from repo root, after the pipeline has produced out_web/<site>/cog/):
-  python3 scripts/render_webmercator_tiles.py \
-      --sites california himalaya nile_delta \
-      --zoom 8-14 --processes 4
-
-  # only one layer / one date
-  python3 scripts/render_webmercator_tiles.py --sites california \
-      --layers hh_db --dates 20251124 --zoom 8-14
+Usage (from repo root, with out_web/<site>/cog/ and catalog.json present):
+  python3 scripts/render_webmercator_tiles.py --zoom 8-14 --processes 4
 
 Output layout (matches what the frontend requests):
   public/<site>/tiles_<letter>/<layer>/<date>/{z}/{x}/{y}.png
@@ -37,6 +37,12 @@ import tempfile
 import time
 from pathlib import Path
 
+import numpy as np
+from osgeo import gdal
+from matplotlib import colormaps
+
+gdal.UseExceptions()
+
 SITE_LETTER = {
     "california": "c",
     "himalaya": "h",
@@ -44,11 +50,28 @@ SITE_LETTER = {
     "nile_delta": "n",
 }
 
-WEB_MERCATOR_RES_Z0 = 156543.03392804097  # metres/pixel at z0, equator
+DEFAULT_STYLE = {
+    "hh_db": ([-22.0, 0.0], "gray"),
+    "hv_db": ([-30.0, -8.0], "YlGn"),
+    "rvi": ([0.0, 1.0], "YlGn"),
+    "pol_ratio_db": ([-15.0, -2.0], "viridis"),
+    "freq_diff_db": ([-4.0, 4.0], "coolwarm"),
+    "hh_db_change": ([-6.0, 6.0], "RdBu"),
+    "hv_db_change": ([-6.0, 6.0], "RdBu"),
+    "rvi_change": ([-0.4, 0.4], "RdBu"),
+    "los_disp_mm": ([-100.0, 100.0], "RdBu_r"),
+    "vert_disp_mm": ([-120.0, 120.0], "RdBu_r"),
+    "disp_rate_mm_yr": ([-50.0, 50.0], "RdBu_r"),
+    "velocity_m_yr": ([0.0, 150.0], "plasma"),
+    "velocity_dir_deg": ([0.0, 360.0], "hsv"),
+    "soil_moisture": ([0.0, 1.0], "YlGnBu"),
+}
+
+WEB_MERCATOR_RES_Z0 = 156543.03392804097
 
 
-def run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, check=True, text=True, capture_output=True, **kw)
+def run(cmd: list[str]) -> subprocess.CompletedProcess:
+    return subprocess.run(cmd, check=True, text=True, capture_output=True)
 
 
 def gdalinfo_json(path: Path) -> dict:
@@ -56,68 +79,166 @@ def gdalinfo_json(path: Path) -> dict:
 
 
 def epsg_of(path: Path) -> int | None:
-    """Robust EPSG lookup through PROJ."""
-    srs = run(["gdalsrsinfo", "-o", "epsg", str(path)]).stdout.strip()
-    for token in srs.replace("\n", " ").split():
+    out = run(["gdalsrsinfo", "-o", "epsg", str(path)]).stdout
+    for token in out.replace("\n", " ").split():
         if token.startswith("EPSG:") and token.split(":")[1].isdigit():
             return int(token.split(":")[1])
     return None
 
 
 def max_zoom_for(info: dict, lat: float) -> int:
-    """Largest zoom whose ground resolution is no finer than ~1.2x the source."""
+    """Largest zoom with no more than ~2.5x upsampling of the source."""
     gt = info["geoTransform"]
     res = max(abs(gt[1]), abs(gt[5]))
     coslat = max(0.05, math.cos(math.radians(lat)))
-    z = 0
-    for zz in range(0, 23):
-        if WEB_MERCATOR_RES_Z0 * coslat / (2 ** zz) >= res / 1.2:
-            z = zz
+    zmax = 0
+    for z in range(0, 23):
+        if WEB_MERCATOR_RES_Z0 * coslat / (2 ** z) >= res / 2.5:
+            zmax = z
         else:
             break
-    return max(0, z)
+    return zmax
 
 
-def reproject_to_3857(src: Path, dst: Path) -> None:
-    """Real reprojection (not -a_srs). Writes a tiled, deflated GeoTIFF."""
-    run(
-        [
-            "gdalwarp",
-            "-q",
-            "-overwrite",
-            "-t_srs", "EPSG:3857",
-            "-r", "bilinear",
-            "-of", "GTiff",
-            "-co", "TILED=YES",
-            "-co", "COMPRESS=DEFLATE",
-            "-co", "BIGTIFF=IF_SAFER",
-            str(src),
-            str(dst),
-        ]
+def read_catalog(out_web: Path, site: str) -> dict:
+    path = out_web / site / "catalog.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text()).get("layers", {})
+    except json.JSONDecodeError:
+        return {}
+
+
+def style_for(layer: str, catalog: dict) -> tuple[list[float], str]:
+    meta = catalog.get(layer, {})
+    rng = meta.get("color_range")
+    cmap = meta.get("colormap")
+    if rng and cmap:
+        return [float(rng[0]), float(rng[1])], cmap
+    return DEFAULT_STYLE.get(layer, ([0.0, 1.0], "viridis"))
+
+
+def colorize(src: Path, dst: Path, vmin: float, vmax: float, cmap_name: str) -> None:
+    """Write an RGBA GeoTIFF: colorized values, alpha=0 for nodata/NaN."""
+    ds = gdal.Open(str(src))
+    band = ds.GetRasterBand(1)
+    arr = band.ReadAsArray().astype(np.float32)
+    nodata = band.GetNoDataValue()
+    valid = np.isfinite(arr)
+    if nodata is not None and np.isfinite(nodata):
+        valid &= arr != nodata
+    denom = max(1e-9, vmax - vmin)
+    normed = np.clip((arr[valid] - vmin) / denom, 0.0, 1.0)
+    cmap = colormaps[cmap_name]
+    rgba = np.zeros((arr.shape[0], arr.shape[1], 4), dtype=np.uint8)
+    rgba[valid] = np.round(cmap(normed) * 255.0).astype(np.uint8)
+    rgba[valid, 3] = 255
+
+    drv = gdal.GetDriverByName("GTiff")
+    out = drv.Create(str(dst), ds.RasterXSize, ds.RasterYSize, 4, gdal.GDT_Byte,
+                     options=["TILED=YES", "COMPRESS=DEFLATE"])
+    out.SetGeoTransform(ds.GetGeoTransform())
+    out.SetProjection(ds.GetProjection())
+    for i in range(4):
+        out.GetRasterBand(i + 1).WriteArray(rgba[..., i])
+    out.GetRasterBand(4).SetColorInterpretation(gdal.GCI_AlphaBand)
+    out.FlushCache()
+    out = None
+    ds = None
+
+
+def rgb_to_rgba(src: Path, dst: Path) -> None:
+    """3-band Byte RGB -> RGBA with alpha from the union of the bands."""
+    ds = gdal.Open(str(src))
+    r, g, b = (ds.GetRasterBand(i).ReadAsArray() for i in (1, 2, 3))
+    alpha = np.where((r != 0) | (g != 0) | (b != 0), 255, 0).astype(np.uint8)
+    drv = gdal.GetDriverByName("GTiff")
+    out = drv.Create(str(dst), ds.RasterXSize, ds.RasterYSize, 4, gdal.GDT_Byte,
+                     options=["TILED=YES", "COMPRESS=DEFLATE"])
+    out.SetGeoTransform(ds.GetGeoTransform())
+    out.SetProjection(ds.GetProjection())
+    for i, a in enumerate((r, g, b, alpha)):
+        out.GetRasterBand(i + 1).WriteArray(a.astype(np.uint8))
+    out.GetRasterBand(4).SetColorInterpretation(gdal.GCI_AlphaBand)
+    out.FlushCache()
+    out = None
+    ds = None
+
+
+def warp_to_3857(src: Path, dst: Path) -> None:
+    gdal.Warp(
+        str(dst), str(src),
+        dstSRS="EPSG:3857",
+        resampleAlg="bilinear",
+        format="GTiff",
+        creationOptions=["TILED=YES", "COMPRESS=DEFLATE", "BIGTIFF=IF_SAFER"],
     )
-    info = gdalinfo_json(dst)
     epsg = epsg_of(dst)
     if epsg != 3857:
         raise RuntimeError(f"Reprojection check failed for {src}: got EPSG:{epsg}")
 
 
-def render(src_3857: Path, out_dir: Path, zmin: int, zmax: int,
-           processes: int, resampling: str, nodata: str | None) -> None:
-    cmd = [
-        "gdal2tiles.py",
-        "-q",
-        "--xyz",
-        "--profile=mercator",
-        f"--zoom={zmin}-{zmax}",
-        f"--resampling={resampling}",
-        f"--processes={processes}",
-        "--tiledriver=PNG",
-        "--tilesize=256",
-    ]
-    if nodata is not None:
-        cmd.append(f"--srcnodata={nodata}")
-    cmd += [str(src_3857), str(out_dir)]
-    run(cmd)
+def render(src_3857: Path, out_dir: Path, zmin: int, zmax: int, processes: int) -> None:
+    run([
+        "gdal2tiles.py", "-q", "--xyz", "--profile=mercator",
+        f"--zoom={zmin}-{zmax}", "--resampling=bilinear",
+        f"--processes={processes}", "--tiledriver=PNG", "--tilesize=256",
+        str(src_3857), str(out_dir),
+    ])
+
+
+def _is_empty(png: Path) -> bool:
+    from PIL import Image
+    try:
+        with Image.open(png) as im:
+            return im.mode == "RGBA" and im.getchannel("A").getextrema()[1] == 0
+    except Exception:
+        return False
+
+
+def _quantize(batch: list[str]) -> None:
+    subprocess.run(
+        ["pngquant", "--quality=60-85", "--ext", ".png", "--force", *batch],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+
+
+def prune_and_optimize(out_dir: Path, processes: int) -> None:
+    """Drop fully transparent tiles and palette-quantize the rest, in parallel."""
+    from concurrent.futures import ThreadPoolExecutor
+    workers = max(1, processes)
+    pngs = list(out_dir.rglob("*.png"))
+    with ThreadPoolExecutor(workers) as pool:
+        empty = list(pool.map(_is_empty, pngs))
+    removed = 0
+    for png, is_empty in zip(pngs, empty):
+        if is_empty:
+            png.unlink()
+            removed += 1
+    remaining = [str(p) for p, e in zip(pngs, empty) if not e]
+    if remaining and shutil.which("pngquant"):
+        batches = [remaining[i:i + 100] for i in range(0, len(remaining), 100)]
+        with ThreadPoolExecutor(workers) as pool:
+            list(pool.map(_quantize, batches))
+    if removed:
+        print(f"       pruned {removed} empty tiles", file=sys.stderr)
+
+
+def write_tile_catalog(out_root: Path) -> None:
+    """List the layers/dates actually present so the frontend can pick them."""
+    layers: dict[str, list[str]] = {}
+    if out_root.is_dir():
+        for layer_dir in sorted(p for p in out_root.iterdir() if p.is_dir()):
+            dates = sorted(
+                d.name for d in layer_dir.iterdir()
+                if d.is_dir() and any(d.glob("*/*/*.png"))
+            )
+            if dates:
+                layers[layer_dir.name] = dates
+    (out_root / "catalog.json").write_text(
+        json.dumps({"layers": layers}, indent=1) + "\n"
+    )
 
 
 def dir_size(path: Path) -> int:
@@ -130,21 +251,18 @@ def main() -> int:
     ap.add_argument("--out-web", default="out_web", type=Path)
     ap.add_argument("--public", default="public", type=Path)
     ap.add_argument("--sites", nargs="+", default=list(SITE_LETTER))
-    ap.add_argument("--layers", nargs="*", default=None,
-                    help="Restrict to these layer directories (e.g. hh_db rvi).")
-    ap.add_argument("--dates", nargs="*", default=None,
-                    help="Restrict to these dates / date ranges (YYYYMMDD[_YYYYMMDD]).")
-    ap.add_argument("--zoom", default="8-auto", help="'8-14', '8-auto' or '8-18'.")
-    ap.add_argument("--resampling", default="bilinear",
-                    choices=["average", "bilinear", "cubic", "near"])
+    ap.add_argument("--layers", nargs="*", default=None)
+    ap.add_argument("--dates", nargs="*", default=None)
+    ap.add_argument("--zoom", default="8-auto")
     ap.add_argument("--processes", default=4, type=int)
     ap.add_argument("--force", action="store_true")
-    ap.add_argument("--keep-warped", action="store_true",
-                    help="Keep the intermediate EPSG:3857 GeoTIFFs.")
+    ap.add_argument("--keep-warped", action="store_true")
+    ap.add_argument("--no-optimize", action="store_true",
+                    help="Skip transparent-tile pruning and pngquant.")
     args = ap.parse_args()
 
-    if shutil.which("gdalwarp") is None or shutil.which("gdal2tiles.py") is None:
-        sys.exit("GDAL command line tools (gdalwarp, gdal2tiles.py) are required.")
+    if shutil.which("gdal2tiles.py") is None:
+        sys.exit("gdal2tiles.py (GDAL command line tools) is required.")
 
     total_bytes = 0
     rendered = skipped = failed = 0
@@ -159,6 +277,7 @@ def main() -> int:
         if not cog_root.is_dir():
             print(f"[skip] no COG directory {cog_root}", file=sys.stderr)
             continue
+        catalog = read_catalog(args.out_web, site)
         out_root = args.public / site / f"tiles_{letter}"
 
         for tif in sorted(cog_root.rglob("*.tif")):
@@ -189,25 +308,31 @@ def main() -> int:
                 else:
                     zmin, zmax = (int(v) for v in args.zoom.split("-"))
 
-                nodata = info["bands"][0].get("noDataValue")
-                nodata_arg = repr(nodata) if nodata is not None else "nan"
+                nbands = len(info["bands"])
+                is_rgb = nbands == 3 and info["bands"][0]["type"] == "Byte"
 
-                if epsg == 3857:
-                    src_3857 = tif
+                prepared = tmp_root / f"{site}_{layer}_{date}_rgba.tif"
+                if is_rgb:
+                    rgb_to_rgba(tif, prepared)
                 else:
-                    src_3857 = tmp_root / f"{site}_{layer}_{date}_3857.tif"
-                    reproject_to_3857(tif, src_3857)
+                    (vmin, vmax), cmap_name = style_for(layer, catalog)
+                    colorize(tif, prepared, vmin, vmax, cmap_name)
+
+                src_3857 = tmp_root / f"{site}_{layer}_{date}_3857.tif"
+                warp_to_3857(prepared, src_3857)
 
                 out_dir.parent.mkdir(parents=True, exist_ok=True)
-                render(src_3857, out_dir, zmin, zmax, args.processes,
-                       args.resampling, nodata_arg)
+                render(src_3857, out_dir, zmin, zmax, args.processes)
+                if not args.no_optimize:
+                    prune_and_optimize(out_dir, args.processes)
 
                 size = dir_size(out_dir)
                 total_bytes += size
                 rendered += 1
                 print(f"[ok]   {site}/{rel}  EPSG:{epsg}->3857  z{zmin}-{zmax}  "
                       f"{size / 1e6:.1f} MB  {time.time() - t0:.1f}s")
-                if not args.keep_warped and src_3857 != tif:
+                if not args.keep_warped:
+                    prepared.unlink(missing_ok=True)
                     src_3857.unlink(missing_ok=True)
             except subprocess.CalledProcessError as exc:
                 failed += 1
@@ -216,6 +341,9 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001
                 failed += 1
                 print(f"[fail] {site}/{rel}: {exc}", file=sys.stderr)
+
+        if out_root.is_dir():
+            write_tile_catalog(out_root)
 
     shutil.rmtree(tmp_root, ignore_errors=True)
     print(f"\nRendered {rendered}, skipped {skipped}, failed {failed}. "

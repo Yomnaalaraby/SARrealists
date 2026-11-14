@@ -13,9 +13,42 @@ const LOCATIONS: Record<string, { center: [number, number]; zoom: number; pitch?
   nile_delta: { center: [31.03, 30.8], zoom: 8, pitch: 40, bearing: 0 },
 };
 
+const SITE_META: Record<string, { folder: string; letter: string }> = {
+  california: { folder: 'california', letter: 'c' },
+  himalayas: { folder: 'himalayas', letter: 'h' },
+  nile_delta: { folder: 'nile_delta', letter: 'n' },
+};
+
+// Tiles live outside the Next.js bundle (they are far too large for git).
+// Point this at the CDN/tile-server root; empty means same-origin /public.
+const TILE_BASE = (process.env.NEXT_PUBLIC_TILE_BASE_URL ?? '').replace(/\/+$/, '');
+
+type TileCatalog = { layers: Record<string, string[]> };
+const catalogCache = new Map<string, Promise<TileCatalog>>();
+
+function loadTileCatalog(site: string): Promise<TileCatalog> {
+  const cached = catalogCache.get(site);
+  if (cached) return cached;
+  const { folder, letter } = SITE_META[site];
+  const url = `${TILE_BASE}/${folder}/tiles_${letter}/catalog.json`;
+  const pending = fetch(url)
+    .then((res) => (res.ok ? (res.json() as Promise<TileCatalog>) : { layers: {} }))
+    .catch(() => ({ layers: {} }));
+  catalogCache.set(site, pending);
+  return pending;
+}
+
+function layerFor(layerId: string, polarization: string): string | null {
+  if (layerId === 'GCOV') return polarization === 'HH' ? 'hh_db' : 'hv_db';
+  if (layerId === 'RVI') return 'rvi';
+  if (layerId === 'CHANGE') return 'hv_db_change';
+  return null;
+}
+
 export default function MapComponent({ showDashboard = false }: MapComponentProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const requestTokenRef = useRef(0);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -46,36 +79,37 @@ export default function MapComponent({ showDashboard = false }: MapComponentProp
       }
     };
 
-    const handleToggleLayer = (event: Event) => {
+    const handleToggleLayer = async (event: Event) => {
       const { layerId, polarization, active, region } = (event as CustomEvent).detail;
       const map = mapRef.current;
       if (!map || !map.isStyleLoaded()) return;
 
       const sourceId = 'nisar-tiles-source';
       const layerIdMap = 'nisar-tiles-layer';
+      const token = ++requestTokenRef.current;
 
       if (map.getLayer(layerIdMap)) map.removeLayer(layerIdMap);
       if (map.getSource(sourceId)) map.removeSource(sourceId);
       if (!active) return;
 
-      // ✅ تحديد اسم الفولدر والطبقة بناءً على الهيكل الفعلي في الريبو
-      let folderName = region === 'nile_delta' ? 'nile_delta' : region;
-      let actualLayerName = '';
-      let datePath = '';
+      const site = SITE_META[region] ? region : null;
+      const actualLayerName = layerFor(layerId, polarization);
+      if (!site || !actualLayerName) return;
 
-      if (layerId === 'GCOV') {
-        actualLayerName = polarization === 'HH' ? 'hh_db' : 'hv_db';
-        datePath = region === 'himalayas' ? '20251126' : '20251124'; // تاريخ افتراضي
-      } else if (layerId === 'RVI') {
-        actualLayerName = 'rvi';
-        datePath = region === 'himalayas' ? '20251126' : ''; // فارغ إذا كان الفولدر يحتوي على التواريخ مباشرة
-      } else if (layerId === 'CHANGE') {
-        actualLayerName = 'hv_db_change';
-        datePath = region === 'california' ? '20251124_20251206' : '20251112_20251124';
+      // Dates come from the generated catalog instead of hardcoded strings,
+      // so new acquisitions appear without touching this component.
+      const catalog = await loadTileCatalog(site);
+      if (token !== requestTokenRef.current || !map.isStyleLoaded()) return;
+
+      const dates = catalog.layers?.[actualLayerName] ?? [];
+      const datePath = dates[dates.length - 1];
+      if (!datePath) {
+        console.warn(`[NISAR] No tiles for ${site}/${actualLayerName}; run scripts/render_webmercator_tiles.py`);
+        return;
       }
 
-      // ✅ بناء المسار بدقة متناهية
-      const tileUrl = `/${folderName}/tiles_${folderName === 'california' ? 'c' : folderName === 'himalayas' ? 'h' : 'n'}/${actualLayerName}/${datePath}/{z}/{x}/{y}.png`;
+      const { folder, letter } = SITE_META[site];
+      const tileUrl = `${TILE_BASE}/${folder}/tiles_${letter}/${actualLayerName}/${datePath}/{z}/{x}/{y}.png`;
 
       map.addSource(sourceId, {
         type: 'raster',
