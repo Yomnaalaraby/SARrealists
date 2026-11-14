@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -6,6 +7,19 @@ import { Satellite, BarChart3, Gamepad2, Rocket } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // The hero renders a fixed, full-viewport map underneath, so the bar stays
+  // transparent there until the user scrolls. Every other route scrolls
+  // content under the bar, so it is solid from the start.
+  const solid = pathname !== '/' || isScrolled;
 
   const links = [
     { href: '/', label: 'Home', icon: Satellite },
@@ -15,7 +29,13 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-md border-b border-white/10">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        solid
+          ? 'bg-black/80 backdrop-blur-md border-b border-white/10'
+          : 'bg-transparent border-b border-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
