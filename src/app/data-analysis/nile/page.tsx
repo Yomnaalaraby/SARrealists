@@ -79,7 +79,7 @@ const SUBSIDENCE_DATES = ['20260626','20260708','20260813','20260906'];
     // ✅ State للـ Subsidence
 const [subIdx, setSubIdx] = useState(SUBSIDENCE_DATES.length - 1);
 const [subPlaying, setSubPlaying] = useState(false);
-const [subZoom, setSubZoom] = useState(2);
+const [subZoom, setSubZoom] = useState(22);
 const [subPanX, setSubPanX] = useState(0);
 const [subPanY, setSubPanY] = useState(0);
 

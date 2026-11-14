@@ -60,7 +60,7 @@ export default function CaliforniaDataPage() {
 
   const currentPhase = FIRE_PHASES.find((p) => p.id === activePhase)!;
 
-  const [zoom, setZoom] = useState(2);   // ✅ نبدأ بتكبير كافي يشيل الحواف
+  const [zoom, setZoom] = useState(22);   // ✅ نبدأ بتكبير كافي يشيل الحواف
 const [panX, setPanX] = useState(0);
 const [panY, setPanY] = useState(0);
 
