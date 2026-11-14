@@ -272,16 +272,28 @@ export function ChatPanel() {
           aria-label={`${copy.title} — ${copy.subtitle}`}
           className="fixed bottom-4 right-4 z-50 flex max-h-[min(760px,calc(100vh-2rem))] w-[min(430px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-cyan-400/30 bg-[#06101d]/98 text-slate-100 shadow-2xl shadow-cyan-950/50 backdrop-blur-xl"
         >
-          <header className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
+         <header className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
                 <Bot size={20} />
               </span>
-              <div>
-                <h2 className="text-sm font-bold tracking-wide text-white">{copy.title}</h2>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold tracking-wide text-white">{copy.title}</h2>
+                  
+                  {/* 🚧 شارة Under Development / Beta */}
+                  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
+                    </span>
+                    <span className="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Beta</span>
+                  </div>
+                </div>
                 <p className="text-[11px] text-slate-400">{copy.subtitle}</p>
               </div>
             </div>
+            
             <div className="flex items-center gap-1">
               <button
                 type="button"
