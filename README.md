@@ -105,3 +105,7 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 `OPENAI_API_KEY` is server-only and is never exposed to the browser. Without
 it, the assistant still answers from the bundled NISAR references and marks the
 response as a grounded local answer.
+
+The landing-page map is wrapped in `MapErrorBoundary`. If Mapbox cannot start
+because the token is missing or invalid, the map area stays black but the rest
+of the page and the LUMEN assistant remain usable.
