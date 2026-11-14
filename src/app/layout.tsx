@@ -6,6 +6,10 @@ import { AiAssistant } from '@/components/ai/AiAssistant';
 export const metadata: Metadata = {
   title: 'SARrealists - NISAR Earth Observation',
   description: 'Interactive scrollytelling experience with NISAR SAR data',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.png',
+  },
 };
 
 export default function RootLayout({
