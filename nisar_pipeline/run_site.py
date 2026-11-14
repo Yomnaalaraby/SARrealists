@@ -69,6 +69,7 @@ from nisar_pipeline.layers import (
 from nisar_pipeline.plots import (
     enrich_catalog_with_human_labels,
     plot_clean_heatmaps_from_catalog,
+    plot_clean_heatmaps_from_monthly,
     plot_human_friendly_guide,
     plot_monthly_phenomenon_png,
     plot_pol_and_freq_explorer,
@@ -1197,6 +1198,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Rebuild existing text-free heatmap PNGs.",
     )
+    ap.add_argument(
+        "--from-monthly",
+        action="store_true",
+        help="Clean command fallback: crop existing labeled monthly PNGs when COGs are unavailable.",
+    )
     ap.add_argument("--config", type=Path, default=None, help="Path to custom config.yaml.")
     ap.add_argument(
         "--out-dir",
@@ -1241,11 +1247,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     site_out_dir = Path(cfg.get("out_dir", "out")) / args.site
 
     if args.cmd == "clean":
-        written = plot_clean_heatmaps_from_catalog(
-            site_out_dir,
-            force=args.force_clean,
-            max_size=args.clean_size,
-        )
+        if args.from_monthly:
+            written = plot_clean_heatmaps_from_monthly(
+                site_out_dir,
+                force=args.force_clean,
+                max_size=args.clean_size,
+            )
+        else:
+            written = plot_clean_heatmaps_from_catalog(
+                site_out_dir,
+                force=args.force_clean,
+                max_size=args.clean_size,
+            )
         logger.info("Clean heatmap export complete: %d PNG(s)", written)
         return 0
 

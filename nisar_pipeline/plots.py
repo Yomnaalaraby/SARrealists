@@ -20,7 +20,7 @@ from typing import Any, Dict, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
-
+from PIL import Image
 from nisar_pipeline.gcov import compute_affine_and_orient
 from nisar_pipeline.window import GCOVWindow
 
@@ -886,4 +886,186 @@ def plot_clean_heatmaps_from_catalog(
     catalog["updated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
     logger.info("Clean heatmaps written for %s: %d", site_out_dir.name, written)
+    return written
+
+
+def _longest_dark_run(row: np.ndarray, threshold: float = 100.0) -> int:
+    """Return the longest consecutive dark-pixel run in one image row/column."""
+    values = np.asarray(row)
+    dark = values if values.dtype == bool else values < threshold
+    changes = np.flatnonzero(np.diff(np.r_[False, dark, False]))
+    if changes.size == 0:
+        return 0
+    return int((changes[1::2] - changes[::2]).max())
+
+
+def detect_plot_area(image: Image.Image) -> tuple[int, int, int, int]:
+    """
+    Find the raster axes rectangle inside a labeled monthly matplotlib PNG.
+
+    The plot area is the largest rectangle bounded by long dark spines. The
+    colorbar is excluded by rejecting columns whose dark run spans most of the
+    full image height. Returns ``(left, top, right, bottom)`` in pixel
+    coordinates, with the spines excluded from the returned interior.
+    """
+    rgb = image.convert("RGB")
+    arr = np.asarray(rgb)
+    height, width = arr.shape[:2]
+    dark = arr.mean(axis=2) < 100.0
+
+    row_runs = [_longest_dark_run(dark[y], threshold=100.0) for y in range(height)]
+    row_candidates = [y for y, run in enumerate(row_runs) if run >= 0.45 * width]
+    row_groups: list[list[int]] = []
+    for y in row_candidates:
+        if row_groups and y <= row_groups[-1][-1] + 2:
+            row_groups[-1].append(y)
+        else:
+            row_groups.append([y])
+    row_centers = [int(np.mean(group)) for group in row_groups]
+
+    best: Optional[tuple[int, int, int, int, int]] = None
+    for i, y0 in enumerate(row_centers):
+        for y1 in row_centers[i + 1 :]:
+            box_height = y1 - y0
+            if box_height < 0.15 * height or box_height > 0.85 * height:
+                continue
+
+            col_runs = np.array(
+                [
+                    _longest_dark_run(dark[y0 : y1 + 1, x], threshold=100.0)
+                    for x in range(width)
+                ]
+            )
+            col_candidates = [
+                x for x in range(width) if col_runs[x] >= 0.60 * box_height
+            ]
+            if len(col_candidates) < 2:
+                continue
+
+            col_groups: list[list[int]] = []
+            for x in col_candidates:
+                if col_groups and x <= col_groups[-1][-1] + 2:
+                    col_groups[-1].append(x)
+                else:
+                    col_groups.append([x])
+            col_spans = [(group[0], group[-1]) for group in col_groups]
+            if len(col_spans) < 2:
+                continue
+
+            # A colorbar contributes two narrow right-hand spine groups. Exclude
+            # those groups and use the raster's right spine immediately before it.
+            is_colorbar = (
+                len(col_spans) >= 3
+                and col_spans[-1][1] > 0.65 * width
+                and (col_spans[-1][1] - col_spans[-1][0]) < 0.08 * width
+                and (col_spans[-2][1] - col_spans[-2][0]) < 0.08 * width
+            )
+            x0 = col_spans[0][0]
+            x1 = col_spans[-3][1] if is_colorbar else col_spans[-1][1]
+            box_width = x1 - x0
+            if box_width < 0.20 * width:
+                continue
+
+            area = box_width * box_height
+            if best is None or area > best[0]:
+                best = (area, x0, y0, x1, y1)
+
+    if best is None:
+        raise ValueError("Could not detect the raster axes rectangle")
+
+    _, x0, y0, x1, y1 = best
+    # Drop the one-pixel matplotlib spines.
+    return (x0 + 1, y0 + 1, x1 - 1, y1 - 1)
+
+
+def crop_monthly_to_clean(
+    monthly_png: Path,
+    out_png: Path,
+    max_size: int = 1600,
+) -> Path:
+    """Crop a labeled monthly plot down to its raster and save a clean PNG."""
+    with Image.open(monthly_png) as source:
+        image = source.convert("RGB")
+        box = detect_plot_area(image)
+        cropped = image.crop(box)
+
+    if max(cropped.size) > max_size:
+        scale = max_size / float(max(cropped.size))
+        resized = (
+            max(1, int(round(cropped.width * scale))),
+            max(1, int(round(cropped.height * scale))),
+        )
+        cropped = cropped.resize(resized, Image.Resampling.LANCZOS)
+
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    cropped.save(out_png, format="PNG", optimize=True)
+    return out_png
+
+
+def plot_clean_heatmaps_from_monthly(
+    site_out_dir: Path,
+    force: bool = False,
+    max_size: int = 1600,
+) -> int:
+    """
+    Recover text-free map overlays from existing labeled monthly PNGs.
+
+    This is the fallback for an old export that has `plots/monthly/` and a
+    catalog but no COGs. It crops each monthly image to the raster axes and
+    writes `plots/heatmap_clean/<layer>/<date>.png`, then adds
+    `heatmap_clean_pngs` to the catalog. It does not upscale low-resolution
+    monthly crops beyond their native pixel size.
+    """
+    catalog_path = site_out_dir / "catalog.json"
+    if not catalog_path.exists():
+        logger.info("No catalog at %s; skipping monthly clean crop.", catalog_path)
+        return 0
+
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    written = 0
+    for layer_id, layer in catalog.get("layers", {}).items():
+        clean_paths: list[str] = []
+        seen: set[str] = set()
+        for monthly_rel in layer.get("monthly_pngs", []):
+            monthly_path = site_out_dir / monthly_rel
+            if not monthly_path.exists():
+                continue
+            date_str = monthly_path.stem
+            if date_str in seen:
+                continue
+            seen.add(date_str)
+            out_path = (
+                site_out_dir
+                / "plots"
+                / "heatmap_clean"
+                / layer_id
+                / f"{date_str}.png"
+            )
+            if not force and out_path.exists():
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                continue
+            try:
+                crop_monthly_to_clean(
+                    monthly_path,
+                    out_path,
+                    max_size=max_size,
+                )
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                written += 1
+            except Exception as exc:
+                logger.warning(
+                    "Monthly clean crop failed for %s %s: %s",
+                    layer_id,
+                    date_str,
+                    exc,
+                )
+        if clean_paths:
+            layer["heatmap_clean_pngs"] = clean_paths
+
+    catalog["heatmap_clean_version"] = "1"
+    catalog["heatmap_clean_source"] = "monthly_crop"
+    catalog["heatmap_clean_max_size"] = int(max_size)
+    catalog["updated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
+    logger.info("Monthly clean crops written for %s: %d", site_out_dir.name, written)
     return written

@@ -56,3 +56,24 @@ Use `asf_search>=14.1.0` for current NISAR archive searches. Older pins such as
 `asf_search==8.1.0` can return zero granules for valid NISAR AOIs because NISAR
 support in the ASF client and CMR metadata has changed. The pipeline search
 code is unchanged; this is a client-version requirement.
+
+## Reusing an old export without COGs
+
+If an older Drive/GitHub export has `plots/monthly/` and `catalog.json` but no
+`cog/` folder, generate clean map overlays by cropping the labeled monthly
+images to their raster axes:
+
+```bash
+python -m nisar_pipeline.run_site clean \
+  --site california \
+  --out-dir /path/to/old/out_web \
+  --from-monthly \
+  --clean-size 1600 \
+  --force-clean
+```
+
+This writes `plots/heatmap_clean/<layer>/<date>.png` and adds
+`heatmap_clean_pngs` to the catalog. It does not upscale the old 960px monthly
+images, so recovered overlays stay at their native resolution. It cannot create
+layer/date combinations that were never generated, and blank monthly plots
+remain blank until the product is reprocessed.

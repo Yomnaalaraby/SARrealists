@@ -62,7 +62,10 @@ from nisar_pipeline.layers import (
     require_verified_layer,
 )
 from nisar_pipeline.plots import (
+    crop_monthly_to_clean,
+    detect_plot_area,
     plot_clean_heatmaps_from_catalog,
+    plot_clean_heatmaps_from_monthly,
     plot_heatmap_clean,
     plot_pol_and_freq_explorer,
 )
@@ -488,3 +491,57 @@ def test_clean_heatmaps_are_added_to_catalog(tmp_path: Path) -> None:
     clean = updated["layers"]["hh_db"]["heatmap_clean_pngs"]
     assert clean == ["plots/heatmap_clean/hh_db/20260101.png"]
     assert (tmp_path / clean[0]).exists()
+
+
+def test_monthly_png_can_be_cropped_to_a_clean_raster(tmp_path: Path) -> None:
+    """The legacy-output fallback should remove titles, axes, and colorbar."""
+    import matplotlib.pyplot as plt
+    from PIL import Image
+
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
+    ax.imshow(np.arange(100, dtype=float).reshape(10, 10), cmap="viridis")
+    ax.set_title("Labeled monthly plot")
+    ax.set_xlabel("East distance")
+    ax.set_ylabel("North distance")
+    fig.colorbar(ax.images[0], ax=ax)
+    monthly = tmp_path / "plots" / "monthly" / "hh_db" / "20260101.png"
+    monthly.parent.mkdir(parents=True)
+    fig.savefig(monthly, dpi=100)
+    plt.close(fig)
+
+    box = detect_plot_area(Image.open(monthly))
+    assert box[2] > box[0] and box[3] > box[1]
+    clean = tmp_path / "plots" / "heatmap_clean" / "hh_db" / "20260101.png"
+    crop_monthly_to_clean(monthly, clean, max_size=1600)
+    assert clean.exists()
+    assert Image.open(clean).size[0] < Image.open(monthly).size[0]
+
+
+def test_monthly_clean_fallback_updates_catalog(tmp_path: Path) -> None:
+    """Legacy exports without COGs should get heatmap_clean_pngs from monthly PNGs."""
+    import matplotlib.pyplot as plt
+
+    monthly = tmp_path / "plots" / "monthly" / "hv_db" / "20260101.png"
+    monthly.parent.mkdir(parents=True)
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
+    ax.imshow(np.arange(100, dtype=float).reshape(10, 10), cmap="gray")
+    fig.colorbar(ax.images[0], ax=ax)
+    fig.savefig(monthly, dpi=100)
+    plt.close(fig)
+    catalog = {
+        "site": "test",
+        "layers": {
+            "hv_db": {
+                "id": "hv_db",
+                "dates": ["20260101"],
+                "monthly_pngs": ["plots/monthly/hv_db/20260101.png"],
+            }
+        },
+    }
+    (tmp_path / "catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
+    written = plot_clean_heatmaps_from_monthly(tmp_path, force=True)
+    assert written == 1
+    updated = json.loads((tmp_path / "catalog.json").read_text(encoding="utf-8"))
+    assert updated["layers"]["hv_db"]["heatmap_clean_pngs"] == [
+        "plots/heatmap_clean/hv_db/20260101.png"
+    ]
