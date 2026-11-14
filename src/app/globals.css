@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import 'mapbox-gl/dist/mapbox-gl.css';
-@import 'maplibre-gl/dist/maplibre-gl.css';
 
 :root {
   --background: #ffffff;
@@ -27,51 +25,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Mapbox needs a token and WebGL. Keep the landing globe visible when either
-   is unavailable, especially in fresh worktrees that do not carry .env.local. */
-.earth-fallback {
-  position: relative;
-  overflow: hidden;
-  width: min(64vw, 700px);
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background-image: url('/earth-texture.png');
-  background-repeat: repeat-x;
-  background-size: 200% 100%;
-  box-shadow:
-    inset -70px -45px 120px rgba(0, 0, 0, 0.9),
-    inset 24px 16px 70px rgba(125, 211, 252, 0.18),
-    0 0 110px rgba(59, 130, 246, 0.22);
-  opacity: 0.42;
-  filter: saturate(0.85) brightness(0.8);
-  animation: earth-spin 32s linear infinite;
-  will-change: background-position;
-}
+@import 'mapbox-gl/dist/mapbox-gl.css';
 
-.earth-fallback::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    circle at 34% 28%,
-    rgba(255, 255, 255, 0.2),
-    transparent 38%
-  );
-  pointer-events: none;
-}
-
-@keyframes earth-spin {
-  from {
-    background-position: 0% 0%;
-  }
-  to {
-    background-position: -200% 0%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .earth-fallback {
-    animation: none;
-  }
-}
+@import 'maplibre-gl/dist/maplibre-gl.css';

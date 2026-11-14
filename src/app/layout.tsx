@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
-import { AssistantMount } from '@/components/ai/AssistantMount';
+import { AiAssistant } from '@/components/ai/AiAssistant';
 
 export const metadata: Metadata = {
   title: 'SARrealists - NISAR Earth Observation',
@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="bg-black text-white antialiased">
         <Navbar />
         {children}
-        <AssistantMount />
+        <AiAssistant />
       </body>
     </html>
   );
