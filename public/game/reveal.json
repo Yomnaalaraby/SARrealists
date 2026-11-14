@@ -231,7 +231,7 @@
       "en": "Explore the real Earth data",
       "ar": "استكشف بيانات الأرض الحقيقية"
     },
-    "route": "/dashboard?siteId={siteId}&lon={lon}&lat={lat}&zoom={zoom}&lenses={lenses}"
+    "route": "/data-analysis/{siteId}?siteId={siteId}&lon={lon}&lat={lat}&zoom={zoom}&lenses={lenses}"
   },
   "closingLine": {
     "en": "We came 100 light-years to find a home. We were already standing on it.",

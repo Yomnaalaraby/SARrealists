@@ -18,6 +18,12 @@ const QUALITY_LABEL = {
   blind: 'qualityBlind',
 } as const;
 
+const DATA_ANALYSIS_SITES: Record<string, string> = {
+  california: 'california',
+  himalaya: 'himalayas',
+  nile_delta: 'nile',
+};
+
 export function MissionReport({
   report,
   story,
@@ -38,14 +44,17 @@ export function MissionReport({
   const ending = story.endings.find((entry) => entry.id === report.endingId) ?? story.endings[0];
   const lastDecision = decisions[decisions.length - 1];
   const lastPlace = lastDecision ? reveal.places[lastDecision.missionId] : undefined;
-  const route = lastPlace
+  const siteRoute = lastPlace
+    ? DATA_ANALYSIS_SITES[lastPlace.siteId] ?? lastPlace.siteId
+    : null;
+  const route = lastPlace && siteRoute
     ? reveal.callToAction.route
-        .replaceAll('{siteId}', lastPlace.siteId)
+        .replaceAll('{siteId}', siteRoute)
         .replaceAll('{lon}', String(lastPlace.lon))
         .replaceAll('{lat}', String(lastPlace.lat))
         .replaceAll('{zoom}', String(lastPlace.zoom))
         .replaceAll('{lenses}', lastDecision?.pickedLenses.join(',') ?? '')
-    : reveal.callToAction.route;
+    : '/data-analysis';
 
   return (
     <section className="phase phase--report" aria-labelledby="report-title">

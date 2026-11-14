@@ -79,7 +79,7 @@ describe('GameApp', () => {
     expect(screen.getByRole('heading', { name: /mission report/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /explore the real earth data/i })).toHaveAttribute(
       'href',
-      expect.stringContaining('/dashboard?siteId=nile_delta'),
+      expect.stringContaining('/data-analysis/nile?siteId=nile'),
     );
   });
 });
