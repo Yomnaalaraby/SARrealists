@@ -2,27 +2,30 @@
 Human-understandable radar visualization and diagnostics module:
 1. Plain-English legend descriptors with technical units ([dB], [mm/yr]) in brackets
 2. `enrich_catalog_with_human_labels`: embeds plain-English legend stops into catalog.json
-3. `plot_pol_and_freq_explorer`: 6-panel figure comparing HH Co-Pol, HV Cross-Pol,
+3. `plot_monthly_phenomenon_png`: saves a fast standalone monthly PNG image for any
+   required phenomenon layer (`out/<site>/plots/monthly/<layer>/<YYYYMMDD>.png`)
+4. `plot_pol_and_freq_explorer`: 6-panel figure comparing HH Co-Pol, HV Cross-Pol,
    Polarimetric RGB Composite, Frequency A, Frequency B, and Dual-Frequency Difference (A - B)
-4. `plot_human_friendly_guide`: 6-panel site summary dashboard from built COGs, GeoJSONs,
+5. `plot_human_friendly_guide`: 6-panel site summary dashboard from built COGs, GeoJSONs,
    and `points.json` with plain-English colorbar labels
 """
 from __future__ import annotations
 
 import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
-
+from PIL import Image
+from nisar_pipeline.gcov import compute_affine_and_orient
 from nisar_pipeline.window import GCOVWindow
 
 logger = logging.getLogger(__name__)
 
-# Plain-English interpretation guide with technical values in brackets
 HUMAN_LAYER_SPECS: Dict[str, Dict[str, Any]] = {
     "hh_db": {
         "friendly_title": "Surface Roughness & Moisture (HH Co-Pol)",
@@ -38,26 +41,26 @@ HUMAN_LAYER_SPECS: Dict[str, Dict[str, Any]] = {
         ],
     },
     "hv_db": {
-        "friendly_title": "Vegetation & Canopy Density (HV Cross-Pol)",
-        "what_it_shows": "Dark = Bare Ground / Water | Bright = Dense Crop Canopy, Trees & Rough Ice",
+        "friendly_title": "Cross-Pol Backscatter: Crop Volume & Structures (HV)",
+        "what_it_shows": "Dark = Water / Bare Sand | Mid Green = Irrigated Crops | Darkest Green = Orchards & Rotated Village Buildings",
         "vmin": -30.0,
         "vmax": -8.0,
         "cmap": "YlGn",
         "stops": [
             (-30.0, "Water / Bare Soil [-30 dB]"),
-            (-22.0, "Sparse Shrubs / Young Crops [-22 dB]"),
-            (-15.0, "Mature Crops / Woodland [-15 dB]"),
-            (-8.0, "Dense Forest / Thick Canopy [-8 dB]"),
+            (-22.0, "Young / Sparse Crops [-22 dB]"),
+            (-15.0, "Dense Irrigated Field Crops [-15 dB]"),
+            (-8.0, "Orchards / Village Corner Bounce [-8 dB]"),
         ],
     },
     "rvi": {
         "friendly_title": "Radar Vegetation Health Index (Dual-Pol RVI)",
-        "what_it_shows": "Combines HH + HV to separate bare ground from dense plant biomass",
+        "what_it_shows": "Combines HH + HV to separate bare ground/cities from true crop biomass",
         "vmin": 0.0,
         "vmax": 1.0,
         "cmap": "YlGn",
         "stops": [
-            (0.0, "Bare Ground / Water [0.0]"),
+            (0.0, "Bare Ground / Water / Buildings [0.0]"),
             (0.35, "Light Vegetation [0.35]"),
             (0.70, "Healthy Crop Cover [0.70]"),
             (1.0, "Dense Canopy Biomass [1.0]"),
@@ -90,8 +93,8 @@ HUMAN_LAYER_SPECS: Dict[str, Dict[str, Any]] = {
         ],
     },
     "rgb_composite": {
-        "friendly_title": "Polarimetric SAR RGB Composite (R=HH, G=HV, B=RVI)",
-        "what_it_shows": "Green = Crops & Forests | Magenta/White = Cities & Bare Soil | Dark = Water",
+        "friendly_title": "Polarimetric SAR RGB Composite (Green=Crops, Magenta=Cities)",
+        "what_it_shows": "Green = Irrigated Crops & Trees | Magenta/Pink = Cities & Villages | Dark = Water",
         "vmin": 0.0,
         "vmax": 255.0,
         "cmap": "rgb",
@@ -227,6 +230,72 @@ def enrich_catalog_with_human_labels(catalog_path: Path) -> Path:
     return catalog_path
 
 
+def _rgb_chw_to_rgba_hwc(rgb_chw: np.ndarray) -> np.ndarray:
+    """Convert `(3, H, W)` uint8 array (`0` = nodata) into `(H, W, 4)` RGBA uint8 with transparent nodata."""
+    rgb_hwc = np.transpose(rgb_chw, (1, 2, 0))
+    valid = (rgb_hwc[:, :, 0] > 0) | (rgb_hwc[:, :, 1] > 0) | (rgb_hwc[:, :, 2] > 0)
+    alpha = np.where(valid, 255, 0).astype(np.uint8)[..., np.newaxis]
+    return np.concatenate([rgb_hwc, alpha], axis=-1)
+
+
+def plot_monthly_phenomenon_png(
+    arr: np.ndarray,
+    x: np.ndarray,
+    y: np.ndarray,
+    epsg: int,
+    layer_id: str,
+    date_str: str,
+    site_out_dir: Path,
+    site_title: str,
+) -> Path:
+    """
+    Save a fast standalone monthly PNG image for any phenomenon layer at:
+      `out/<site>/plots/monthly/<layer_id>/<date_str>.png`
+    Supports both 2D float32 layers and 3D `(3, H, W)` uint8 RGB composites.
+    """
+    out_png = site_out_dir / "plots" / "monthly" / layer_id / f"{date_str}.png"
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+
+    spec = HUMAN_LAYER_SPECS.get(layer_id, {})
+    friendly_title = spec.get("friendly_title", layer_id)
+    subtitle = spec.get("what_it_shows", "")
+
+    data_o, x_asc, y_desc, _ = compute_affine_and_orient(arr, x, y)
+    ext_km = [
+        float(x_asc.min()) / 1e3,
+        float(x_asc.max()) / 1e3,
+        float(y_desc.min()) / 1e3,
+        float(y_desc.max()) / 1e3,
+    ]
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6.5))
+    if data_o.ndim == 3 and data_o.shape[0] == 3:
+        rgba_hwc = _rgb_chw_to_rgba_hwc(data_o)
+        ax.imshow(rgba_hwc, extent=ext_km, origin="upper")
+    else:
+        vmin = float(spec.get("vmin", -22.0))
+        vmax = float(spec.get("vmax", 0.0))
+        cmap = str(spec.get("cmap", "viridis"))
+        im = ax.imshow(data_o, extent=ext_km, origin="upper", cmap=cmap, vmin=vmin, vmax=vmax)
+        cbar = fig.colorbar(im, ax=ax, shrink=0.82, pad=0.02)
+        if spec.get("stops"):
+            cbar.set_ticks([s[0] for s in spec["stops"]])
+            cbar.ax.set_yticklabels([s[1] for s in spec["stops"]], fontsize=8)
+
+    ax.set_title(
+        f"{friendly_title} — {date_str}\n{subtitle}",
+        fontsize=10.5,
+        fontweight="bold",
+    )
+    ax.set_xlabel(f"West <-> East Distance (km, EPSG:{epsg})")
+    ax.set_ylabel("South <-> North Distance (km)")
+    fig.suptitle(site_title, fontsize=11, fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(out_png, dpi=120)
+    plt.close(fig)
+    return out_png
+
+
 def plot_pol_and_freq_explorer(
     win: GCOVWindow,
     prod: Dict[str, Any],
@@ -234,37 +303,36 @@ def plot_pol_and_freq_explorer(
     site_title: str,
 ) -> Path:
     """
-    Save a 6-panel figure (`out/<site>/plots/pol_freq_explorer_<YYYYMMDD>.png`) showing:
-      Row 1 (Polarization Comparison):
-        1. HH Co-Pol (Surface Roughness, Moisture & Buildings)
-        2. HV Cross-Pol (Vegetation & Canopy Volume Bounce)
-        3. Combined Polarimetric RGB Composite
-      Row 2 (Dual-Frequency Split-Spectrum Comparison):
-        4. Frequency A High-Res Science Band (MHz & pixel spacing)
-        5. Frequency B Simultaneous 5 MHz Sub-Band (MHz & pixel spacing)
-        6. Dual-Frequency Difference (Freq A - Freq B)
+    Save a 6-panel figure (`out/<site>/plots/pol_freq_explorer_<YYYYMMDD>.png`).
     """
     plots_dir = site_out_dir / "plots"
     plots_dir.mkdir(parents=True, exist_ok=True)
     out_png = plots_dir / f"pol_freq_explorer_{win.date_str or 'latest'}.png"
 
-    hh_a_db = prod["layers"]["hh_db"]
-    hv_a_db = prod["layers"]["hv_db"]
-    freq_diff_db = prod["layers"]["freq_diff_db"]
-    hh_b_db = prod.get("hh_b_db")
-    rgb_hwc = np.transpose(prod["rgb"], (1, 2, 0))
+    hh_a_db, x_asc, y_desc, _ = compute_affine_and_orient(prod["layers"]["hh_db"], win.x, win.y)
+    hv_a_db, _, _, _ = compute_affine_and_orient(prod["layers"]["hv_db"], win.x, win.y)
+    freq_diff_db, _, _, _ = compute_affine_and_orient(prod["layers"]["freq_diff_db"], win.x, win.y)
+    rgb_oriented, _, _, _ = compute_affine_and_orient(prod["rgb"], win.x, win.y)
+    rgba_hwc = _rgb_chw_to_rgba_hwc(rgb_oriented)
+
+    hh_b_raw = prod.get("hh_b_db")
+    hh_b_db = (
+        compute_affine_and_orient(hh_b_raw, win.x, win.y)[0]
+        if hh_b_raw is not None
+        else None
+    )
 
     ext_km = [
-        float(win.x.min()) / 1e3,
-        float(win.x.max()) / 1e3,
-        float(win.y.min()) / 1e3,
-        float(win.y.max()) / 1e3,
+        float(x_asc.min()) / 1e3,
+        float(x_asc.max()) / 1e3,
+        float(y_desc.min()) / 1e3,
+        float(y_desc.max()) / 1e3,
     ]
 
     fig, axes = plt.subplots(2, 3, figsize=(20, 12))
 
     # Panel 1: Co-Pol (HH/VV)
-    im0 = axes[0, 0].imshow(hh_a_db, extent=ext_km, cmap="gray", vmin=-22.0, vmax=0.0)
+    im0 = axes[0, 0].imshow(hh_a_db, extent=ext_km, origin="upper", cmap="gray", vmin=-22.0, vmax=0.0)
     c0 = fig.colorbar(im0, ax=axes[0, 0], shrink=0.8)
     c0.set_ticks([-22.0, -15.0, -8.0, 0.0])
     c0.ax.set_yticklabels(
@@ -285,21 +353,21 @@ def plot_pol_and_freq_explorer(
 
     # Panel 2: Cross-Pol (HV/VH)
     if prod["has_dual_pol"]:
-        im1 = axes[0, 1].imshow(hv_a_db, extent=ext_km, cmap="YlGn", vmin=-30.0, vmax=-8.0)
+        im1 = axes[0, 1].imshow(hv_a_db, extent=ext_km, origin="upper", cmap="YlGn", vmin=-30.0, vmax=-8.0)
         c1 = fig.colorbar(im1, ax=axes[0, 1], shrink=0.8)
         c1.set_ticks([-30.0, -22.0, -15.0, -8.0])
         c1.ax.set_yticklabels(
             [
                 "Water / Bare [-30 dB]",
-                "Low Shrubs [-22 dB]",
-                "Crops / Trees [-15 dB]",
-                "Dense Canopy [-8 dB]",
+                "Sparse Crops [-22 dB]",
+                "Irrigated Crops [-15 dB]",
+                "Orchards / Villages [-8 dB]",
             ],
             fontsize=8,
         )
         axes[0, 1].set_title(
-            f"2. {prod['cross_pol_name']} Cross-Pol: Vegetation Canopy Bounce\n"
-            "(Leaves, branches & rough ice twist the radar wave)",
+            f"2. {prod['cross_pol_name']} Cross-Pol: Crop & Structure Volume Bounce\n"
+            "(Crop leaves, orchards & rotated village blocks twist the wave)",
             fontweight="bold",
             fontsize=10,
         )
@@ -315,16 +383,16 @@ def plot_pol_and_freq_explorer(
         axes[0, 1].set_title("2. Cross-Pol: Not Present in Cycle", fontweight="bold")
 
     # Panel 3: Polarimetric RGB Composite
-    axes[0, 2].imshow(rgb_hwc, extent=ext_km)
+    axes[0, 2].imshow(rgba_hwc, extent=ext_km, origin="upper")
     axes[0, 2].set_title(
-        "3. Polarimetric SAR RGB Composite (R=HH, G=HV, B=RVI)\n"
-        "Green = Vegetation | Magenta = Cities/Soil | Dark = Water",
+        "3. Polarimetric SAR RGB Composite (Urban-Filtered)\n"
+        "Green = Irrigated Crops | Magenta = Cities/Villages | Dark = Water",
         fontweight="bold",
         fontsize=10,
     )
 
     # Panel 4: Frequency A
-    im3 = axes[1, 0].imshow(hh_a_db, extent=ext_km, cmap="viridis", vmin=-22.0, vmax=0.0)
+    im3 = axes[1, 0].imshow(hh_a_db, extent=ext_km, origin="upper", cmap="viridis", vmin=-22.0, vmax=0.0)
     c3 = fig.colorbar(im3, ax=axes[1, 0], shrink=0.8)
     c3.set_ticks([-22.0, -11.0, 0.0])
     c3.ax.set_yticklabels(
@@ -340,7 +408,7 @@ def plot_pol_and_freq_explorer(
 
     # Panel 5 & 6: Frequency B and Dual-Frequency Difference (Freq A - Freq B)
     if hh_b_db is not None and np.any(np.isfinite(hh_b_db)):
-        im4 = axes[1, 1].imshow(hh_b_db, extent=ext_km, cmap="viridis", vmin=-22.0, vmax=0.0)
+        im4 = axes[1, 1].imshow(hh_b_db, extent=ext_km, origin="upper", cmap="viridis", vmin=-22.0, vmax=0.0)
         c4 = fig.colorbar(im4, ax=axes[1, 1], shrink=0.8)
         c4.set_ticks([-22.0, -11.0, 0.0])
         c4.ax.set_yticklabels(
@@ -354,7 +422,7 @@ def plot_pol_and_freq_explorer(
             fontsize=10,
         )
 
-        im5 = axes[1, 2].imshow(freq_diff_db, extent=ext_km, cmap="coolwarm", vmin=-4.0, vmax=4.0)
+        im5 = axes[1, 2].imshow(freq_diff_db, extent=ext_km, origin="upper", cmap="coolwarm", vmin=-4.0, vmax=4.0)
         c5 = fig.colorbar(im5, ax=axes[1, 2], shrink=0.8)
         c5.set_ticks([-4.0, -2.0, 0.0, 2.0, 4.0])
         c5.ax.set_yticklabels(
@@ -464,14 +532,14 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
             b = src.bounds
             ext_km = [b.left / 1e3, b.right / 1e3, b.bottom / 1e3, b.top / 1e3]
             if src.count == 3:
-                rgb_arr = np.transpose(src.read([1, 2, 3]), (1, 2, 0))
-                ax.imshow(rgb_arr, extent=ext_km)
+                rgba_arr = _rgb_chw_to_rgba_hwc(src.read([1, 2, 3]))
+                ax.imshow(rgba_arr, extent=ext_km, origin="upper")
             else:
                 arr = src.read(1)
                 vmin = spec.get("vmin", meta.get("color_range", [-25.0, 0.0])[0])
                 vmax = spec.get("vmax", meta.get("color_range", [-25.0, 0.0])[1])
                 cmap = spec.get("cmap", meta.get("colormap", "viridis"))
-                im = ax.imshow(arr, extent=ext_km, cmap=cmap, vmin=vmin, vmax=vmax)
+                im = ax.imshow(arr, extent=ext_km, origin="upper", cmap=cmap, vmin=vmin, vmax=vmax)
                 cbar = fig.colorbar(im, ax=ax, shrink=0.80, pad=0.02)
                 if spec.get("stops"):
                     cbar.set_ticks([s[0] for s in spec["stops"]])
@@ -487,7 +555,6 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
         ax.set_xlabel("West <-> East (km)")
         ax.set_ylabel("South <-> North (km)")
 
-    # Panel 4: Vectors (Glacier Velocity Arrows or Subsidence Rate) or Dual-Freq / Change
     ax_vec = ax_list[4]
     vel_geojson = site_out_dir / "vectors" / "glacier_velocity.geojson"
     sub_geojson = site_out_dir / "vectors" / "subsidence_rates.geojson"
@@ -567,7 +634,7 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
             vmin = spec.get("vmin", meta.get("color_range", [-6.0, 6.0])[0])
             vmax = spec.get("vmax", meta.get("color_range", [-6.0, 6.0])[1])
             cmap = spec.get("cmap", meta.get("colormap", "RdBu"))
-            im = ax_vec.imshow(arr, extent=ext_km, cmap=cmap, vmin=vmin, vmax=vmax)
+            im = ax_vec.imshow(arr, extent=ext_km, origin="upper", cmap=cmap, vmin=vmin, vmax=vmax)
             cbar = fig.colorbar(im, ax=ax_vec, shrink=0.80, pad=0.02)
             if spec.get("stops"):
                 cbar.set_ticks([s[0] for s in spec["stops"]])
@@ -582,7 +649,6 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
     else:
         ax_vec.axis("off")
 
-    # Panel 5: Point Time Series (points.json)
     ax_ts = ax_list[5]
     pts_path = site_out_dir / "timeseries" / "points.json"
     metric_labels = {
@@ -642,3 +708,364 @@ def plot_human_friendly_guide(site_out_dir: Path, show_inline: bool = False) -> 
     plt.close(fig)
     logger.info("Saved human-friendly guide plot: %s", guide_png)
     return guide_png
+
+
+def plot_heatmap_clean(
+    arr: np.ndarray,
+    layer_id: str,
+    date_str: str,
+    site_out_dir: Path,
+    max_size: int = 1600,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    cmap_name: Optional[str] = None,
+    dpi: int = 100,
+) -> Path:
+    """
+    Save a map-ready, text-free heatmap at:
+      `out/<site>/plots/heatmap_clean/<layer_id>/<date_str>.png`
+
+    The output contains only the raster pixels: no title, axes, ticks, labels,
+    colorbar, or padding. Nodata is transparent. The longest side is capped at
+    `max_size` pixels so the image stays practical for the browser.
+    """
+    out_png = site_out_dir / "plots" / "heatmap_clean" / layer_id / f"{date_str}.png"
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+
+    spec = HUMAN_LAYER_SPECS.get(layer_id, {})
+    raw = np.asarray(arr)
+
+    if raw.ndim == 3 and raw.shape[0] == 3:
+        rgb = np.clip(raw, 0, 255).astype(np.uint8)
+        rgba = _rgb_chw_to_rgba_hwc(rgb)
+        image = rgba
+        height, width = image.shape[:2]
+        interpolation = "nearest"
+    elif raw.ndim == 3 and raw.shape[-1] == 3:
+        rgb = np.transpose(np.clip(raw, 0, 255).astype(np.uint8), (2, 0, 1))
+        rgba = _rgb_chw_to_rgba_hwc(rgb)
+        image = rgba
+        height, width = image.shape[:2]
+        interpolation = "nearest"
+    else:
+        data = np.asarray(raw, dtype=np.float32)
+        if data.ndim != 2:
+            raise ValueError(f"Clean heatmap expects 2D or RGB data, got shape {data.shape}")
+        height, width = data.shape
+        finite = data[np.isfinite(data)]
+        if finite.size == 0:
+            raise ValueError(f"Layer {layer_id} has no finite pixels")
+        lo = float(vmin if vmin is not None else spec.get("vmin", float(finite.min())))
+        hi = float(vmax if vmax is not None else spec.get("vmax", float(finite.max())))
+        if not np.isfinite(lo) or not np.isfinite(hi) or hi <= lo:
+            lo, hi = float(finite.min()), float(finite.max())
+        if hi <= lo:
+            hi = lo + 1.0
+        cmap = plt.get_cmap(cmap_name or str(spec.get("cmap", "viridis"))).with_extremes(
+            bad=(0.0, 0.0, 0.0, 0.0)
+        )
+        image = np.ma.masked_invalid(data)
+        interpolation = "nearest"
+
+    if height < 1 or width < 1:
+        raise ValueError(f"Layer {layer_id} has invalid shape {height}x{width}")
+
+    # Always render to the requested web size; large COGs are downscaled and
+    # small source rasters are upscaled with nearest-neighbor pixels.
+    scale = float(max_size) / float(max(height, width))
+    target_w = max(1, int(round(width * scale)))
+    target_h = max(1, int(round(height * scale)))
+
+    fig = plt.figure(figsize=(target_w / dpi, target_h / dpi), dpi=dpi, frameon=False)
+    ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
+    ax.set_axis_off()
+    if image.ndim == 2:
+        ax.imshow(
+            image,
+            origin="upper",
+            aspect="auto",
+            interpolation=interpolation,
+            cmap=cmap,
+            vmin=lo,
+            vmax=hi,
+        )
+    else:
+        ax.imshow(image, origin="upper", aspect="auto", interpolation=interpolation)
+    fig.patch.set_alpha(0.0)
+    fig.savefig(
+        out_png,
+        dpi=dpi,
+        transparent=True,
+        pad_inches=0.0,
+        bbox_inches=None,
+    )
+    plt.close(fig)
+    return out_png
+
+
+def _find_cog_for_date(cog_files: list[str], date_str: str, index: int) -> Optional[str]:
+    """Find the COG belonging to a catalog date, tolerating pair-tag filenames."""
+    by_stem = {Path(path).stem: path for path in cog_files}
+    if date_str in by_stem:
+        return by_stem[date_str]
+    for path in cog_files:
+        if date_str in Path(path).stem:
+            return path
+    if 0 <= index < len(cog_files):
+        return cog_files[index]
+    return None
+
+
+def plot_clean_heatmaps_from_catalog(
+    site_out_dir: Path,
+    force: bool = False,
+    max_size: int = 1600,
+) -> int:
+    """
+    Read every cataloged COG and create a clean map-ready PNG beside the catalog.
+
+    Adds `heatmap_clean_pngs` to each layer. This is intentionally a catalog
+    post-process so it works for GCOV, GUNW, GOFF, and SME2 layers without
+    changing each scientific product builder.
+    """
+    catalog_path = site_out_dir / "catalog.json"
+    if not catalog_path.exists():
+        logger.info("No catalog at %s; skipping clean heatmaps.", catalog_path)
+        return 0
+
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    layers = catalog.get("layers", {})
+    written = 0
+    for layer_id, layer in layers.items():
+        dates = layer.get("dates", [])
+        cog_files = layer.get("cog_files", [])
+        if not dates or not cog_files:
+            continue
+        clean_paths: list[str] = []
+        vmin_vmax = layer.get("color_range") or [None, None]
+        vmin = float(vmin_vmax[0]) if vmin_vmax and vmin_vmax[0] is not None else None
+        vmax = float(vmin_vmax[1]) if len(vmin_vmax) > 1 and vmin_vmax[1] is not None else None
+        cmap_name = layer.get("colormap")
+        for index, date_str in enumerate(dates):
+            cog_rel = _find_cog_for_date(cog_files, date_str, index)
+            if not cog_rel:
+                continue
+            cog_path = site_out_dir / cog_rel
+            if not cog_path.exists():
+                logger.debug("Missing COG for clean heatmap: %s", cog_path)
+                continue
+            out_path = site_out_dir / "plots" / "heatmap_clean" / layer_id / f"{date_str}.png"
+            if not force and out_path.exists():
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                continue
+            try:
+                with rasterio.open(cog_path) as src:
+                    if src.count >= 3:
+                        arr = src.read([1, 2, 3], masked=True).filled(0).astype(np.uint8)
+                    else:
+                        arr = src.read(1, masked=True).filled(np.nan).astype(np.float32)
+                plot_heatmap_clean(
+                    arr=arr,
+                    layer_id=layer_id,
+                    date_str=date_str,
+                    site_out_dir=site_out_dir,
+                    max_size=max_size,
+                    vmin=vmin,
+                    vmax=vmax,
+                    cmap_name=cmap_name,
+                )
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                written += 1
+            except Exception as exc:  # pragma: no cover - depends on real COGs
+                logger.warning("Clean heatmap failed for %s %s: %s", layer_id, date_str, exc)
+        if clean_paths:
+            layer["heatmap_clean_pngs"] = clean_paths
+
+    catalog["heatmap_clean_version"] = "1"
+    catalog["heatmap_clean_max_size"] = int(max_size)
+    catalog["updated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
+    logger.info("Clean heatmaps written for %s: %d", site_out_dir.name, written)
+    return written
+
+
+def _longest_dark_run(row: np.ndarray, threshold: float = 100.0) -> int:
+    """Return the longest consecutive dark-pixel run in one image row/column."""
+    values = np.asarray(row)
+    dark = values if values.dtype == bool else values < threshold
+    changes = np.flatnonzero(np.diff(np.r_[False, dark, False]))
+    if changes.size == 0:
+        return 0
+    return int((changes[1::2] - changes[::2]).max())
+
+
+def detect_plot_area(image: Image.Image) -> tuple[int, int, int, int]:
+    """
+    Find the raster axes rectangle inside a labeled monthly matplotlib PNG.
+
+    The plot area is the largest rectangle bounded by long dark spines. The
+    colorbar is excluded by rejecting columns whose dark run spans most of the
+    full image height. Returns ``(left, top, right, bottom)`` in pixel
+    coordinates, with the spines excluded from the returned interior.
+    """
+    rgb = image.convert("RGB")
+    arr = np.asarray(rgb)
+    height, width = arr.shape[:2]
+    dark = arr.mean(axis=2) < 100.0
+
+    row_runs = [_longest_dark_run(dark[y], threshold=100.0) for y in range(height)]
+    row_candidates = [y for y, run in enumerate(row_runs) if run >= 0.45 * width]
+    row_groups: list[list[int]] = []
+    for y in row_candidates:
+        if row_groups and y <= row_groups[-1][-1] + 2:
+            row_groups[-1].append(y)
+        else:
+            row_groups.append([y])
+    row_centers = [int(np.mean(group)) for group in row_groups]
+
+    best: Optional[tuple[int, int, int, int, int]] = None
+    for i, y0 in enumerate(row_centers):
+        for y1 in row_centers[i + 1 :]:
+            box_height = y1 - y0
+            if box_height < 0.15 * height or box_height > 0.85 * height:
+                continue
+
+            col_runs = np.array(
+                [
+                    _longest_dark_run(dark[y0 : y1 + 1, x], threshold=100.0)
+                    for x in range(width)
+                ]
+            )
+            col_candidates = [
+                x for x in range(width) if col_runs[x] >= 0.60 * box_height
+            ]
+            if len(col_candidates) < 2:
+                continue
+
+            col_groups: list[list[int]] = []
+            for x in col_candidates:
+                if col_groups and x <= col_groups[-1][-1] + 2:
+                    col_groups[-1].append(x)
+                else:
+                    col_groups.append([x])
+            col_spans = [(group[0], group[-1]) for group in col_groups]
+            if len(col_spans) < 2:
+                continue
+
+            # A colorbar contributes two narrow right-hand spine groups. Exclude
+            # those groups and use the raster's right spine immediately before it.
+            is_colorbar = (
+                len(col_spans) >= 3
+                and col_spans[-1][1] > 0.65 * width
+                and (col_spans[-1][1] - col_spans[-1][0]) < 0.08 * width
+                and (col_spans[-2][1] - col_spans[-2][0]) < 0.08 * width
+            )
+            x0 = col_spans[0][0]
+            x1 = col_spans[-3][1] if is_colorbar else col_spans[-1][1]
+            box_width = x1 - x0
+            if box_width < 0.20 * width:
+                continue
+
+            area = box_width * box_height
+            if best is None or area > best[0]:
+                best = (area, x0, y0, x1, y1)
+
+    if best is None:
+        raise ValueError("Could not detect the raster axes rectangle")
+
+    _, x0, y0, x1, y1 = best
+    # Drop the one-pixel matplotlib spines.
+    return (x0 + 1, y0 + 1, x1 - 1, y1 - 1)
+
+
+def crop_monthly_to_clean(
+    monthly_png: Path,
+    out_png: Path,
+    max_size: int = 1600,
+) -> Path:
+    """Crop a labeled monthly plot down to its raster and save a clean PNG."""
+    with Image.open(monthly_png) as source:
+        image = source.convert("RGB")
+        box = detect_plot_area(image)
+        cropped = image.crop(box)
+
+    if max(cropped.size) > max_size:
+        scale = max_size / float(max(cropped.size))
+        resized = (
+            max(1, int(round(cropped.width * scale))),
+            max(1, int(round(cropped.height * scale))),
+        )
+        cropped = cropped.resize(resized, Image.Resampling.LANCZOS)
+
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    cropped.save(out_png, format="PNG", optimize=True)
+    return out_png
+
+
+def plot_clean_heatmaps_from_monthly(
+    site_out_dir: Path,
+    force: bool = False,
+    max_size: int = 1600,
+) -> int:
+    """
+    Recover text-free map overlays from existing labeled monthly PNGs.
+
+    This is the fallback for an old export that has `plots/monthly/` and a
+    catalog but no COGs. It crops each monthly image to the raster axes and
+    writes `plots/heatmap_clean/<layer>/<date>.png`, then adds
+    `heatmap_clean_pngs` to the catalog. It does not upscale low-resolution
+    monthly crops beyond their native pixel size.
+    """
+    catalog_path = site_out_dir / "catalog.json"
+    if not catalog_path.exists():
+        logger.info("No catalog at %s; skipping monthly clean crop.", catalog_path)
+        return 0
+
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    written = 0
+    for layer_id, layer in catalog.get("layers", {}).items():
+        clean_paths: list[str] = []
+        seen: set[str] = set()
+        for monthly_rel in layer.get("monthly_pngs", []):
+            monthly_path = site_out_dir / monthly_rel
+            if not monthly_path.exists():
+                continue
+            date_str = monthly_path.stem
+            if date_str in seen:
+                continue
+            seen.add(date_str)
+            out_path = (
+                site_out_dir
+                / "plots"
+                / "heatmap_clean"
+                / layer_id
+                / f"{date_str}.png"
+            )
+            if not force and out_path.exists():
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                continue
+            try:
+                crop_monthly_to_clean(
+                    monthly_path,
+                    out_path,
+                    max_size=max_size,
+                )
+                clean_paths.append(str(out_path.relative_to(site_out_dir)))
+                written += 1
+            except Exception as exc:
+                logger.warning(
+                    "Monthly clean crop failed for %s %s: %s",
+                    layer_id,
+                    date_str,
+                    exc,
+                )
+        if clean_paths:
+            layer["heatmap_clean_pngs"] = clean_paths
+
+    catalog["heatmap_clean_version"] = "1"
+    catalog["heatmap_clean_source"] = "monthly_crop"
+    catalog["heatmap_clean_max_size"] = int(max_size)
+    catalog["updated_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
+    logger.info("Monthly clean crops written for %s: %d", site_out_dir.name, written)
+    return written

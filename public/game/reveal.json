@@ -1,0 +1,240 @@
+{
+  "version": "v1",
+  "places": {
+    "m1-smoke": {
+      "name": {
+        "en": "California, USA",
+        "ar": "كاليفورنيا، الولايات المتحدة"
+      },
+      "siteId": "california",
+      "lon": -118.5,
+      "lat": 34.07,
+      "zoom": 10
+    },
+    "m2-glacier": {
+      "name": {
+        "en": "Himalaya, Asia",
+        "ar": "الهيمالايا، آسيا"
+      },
+      "siteId": "himalaya",
+      "lon": 79.09,
+      "lat": 30.95,
+      "zoom": 10
+    },
+    "m3-delta": {
+      "name": {
+        "en": "Nile Delta, Egypt",
+        "ar": "دلتا النيل، مصر"
+      },
+      "siteId": "nile_delta",
+      "lon": 31.0,
+      "lat": 30.5,
+      "zoom": 8
+    },
+    "m4-foundations": {
+      "name": {
+        "en": "Nile Delta coast, Egypt",
+        "ar": "ساحل دلتا النيل، مصر"
+      },
+      "siteId": "nile_delta",
+      "lon": 31.2,
+      "lat": 31.1,
+      "zoom": 10
+    }
+  },
+  "beats": [
+    {
+      "id": "carbon-signature",
+      "text": {
+        "en": "LUMEN flags a carbon pulse that does not fit an empty world. The burn scars, melting ice, and sinking delta share one pattern.",
+        "ar": "يرصد لومِن نبضة كربون لا تناسب عالماً خالياً. آثار الحريق والجليد الذائب والدلتا الغارقة تشترك في نمط واحد."
+      }
+    },
+    {
+      "id": "star-fix",
+      "text": {
+        "en": "The navigation log says 100 light-years. The star fix says otherwise. The folded jump brought the ship back to its starting point.",
+        "ar": "يقول سجل الملاحة إن المسافة 100 سنة ضوئية. لكن تحديد النجوم يقول غير ذلك. أعادت القفزة المطوية السفينة إلى نقطة انطلاقها."
+      }
+    },
+    {
+      "id": "same-world",
+      "text": {
+        "en": "The planet is Earth. The crew never found a replacement; they came home the long way.",
+        "ar": "الكوكب هو الأرض. لم يجد الطاقم بديلاً؛ بل عادوا إلى الديار من الطريق الطويل."
+      },
+      "source": {
+        "title": "NASA NISAR mission",
+        "url": "https://nisar.jpl.nasa.gov/"
+      }
+    },
+    {
+      "id": "california",
+      "text": {
+        "en": "Sector 4 is California. The smoke came from wildfires; the burn scar is real.",
+        "ar": "القطاع 4 هو كاليفورنيا. جاء الدخان من حرائق غابات؛ أثر الحريق حقيقي."
+      },
+      "placeId": "m1-smoke"
+    },
+    {
+      "id": "himalaya",
+      "text": {
+        "en": "Sector 9 is the Himalaya. The moving ice is a real glacier, studied pass by pass.",
+        "ar": "القطاع 9 هو الهيمالايا. الجليد المتحرك نهر جليدي حقيقي، يُدرس مروراً بعد مرور."
+      },
+      "placeId": "m2-glacier"
+    },
+    {
+      "id": "nile",
+      "text": {
+        "en": "Sectors 2 and 7 are the Nile Delta. The wet fields and sinking ground are real.",
+        "ar": "القطاعان 2 و7 هما دلتا النيل. الحقول الرطبة والأرض الهابطة حقيقية."
+      },
+      "placeId": "m3-delta",
+      "source": {
+        "title": "NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/"
+      }
+    },
+    {
+      "id": "no-planet-b",
+      "text": {
+        "en": "DIO looks at the archive. There is no Planet B. There is only the one world they were sent to save.",
+        "ar": "ينظر ديو إلى الأرشيف. لا يوجد كوكب بديل. هناك فقط العالم الواحد الذي أُرسلوا لإنقاذه."
+      }
+    }
+  ],
+  "crewRoleToRealWorld": [
+    {
+      "role": "geologist",
+      "user": {
+        "en": "Geologists and land-use planners",
+        "ar": "الجيولوجيون ومخططو استخدام الأراضي"
+      },
+      "decides": {
+        "en": "Where to build and which slopes need ground checks.",
+        "ar": "أين نبني وأي المنحدرات تحتاج فحوصاً ميدانية."
+      },
+      "source": {
+        "title": "NASA NISAR data products",
+        "url": "https://nisar.jpl.nasa.gov/data/"
+      }
+    },
+    {
+      "role": "agronomist",
+      "user": {
+        "en": "Farmers and agricultural extension teams",
+        "ar": "المزارعون وفرق الإرشاد الزراعي"
+      },
+      "decides": {
+        "en": "When to plant, irrigate, or wait for wet fields to drain.",
+        "ar": "متى نزرع أو نروي أو ننتظر تصريف الحقول الرطبة."
+      },
+      "source": {
+        "title": "NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/"
+      }
+    },
+    {
+      "role": "medic",
+      "user": {
+        "en": "Public-health and flood-response teams",
+        "ar": "فرق الصحة العامة والاستجابة للفيضانات"
+      },
+      "decides": {
+        "en": "Where to stage supplies and which communities to reach first.",
+        "ar": "أين نجهّز الإمدادات وأي المجتمعات نصل إليها أولاً."
+      },
+      "source": {
+        "title": "NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/"
+      }
+    },
+    {
+      "role": "engineer",
+      "user": {
+        "en": "Civil engineers and infrastructure planners",
+        "ar": "المهندسون المدنيون ومخططو البنية التحتية"
+      },
+      "decides": {
+        "en": "Where roads, buildings, and flood defenses are safe to site.",
+        "ar": "أين يكون موقع الطرق والمباني ودفاعات الفيضان آمناً."
+      },
+      "source": {
+        "title": "NASA NISAR data products",
+        "url": "https://nisar.jpl.nasa.gov/data/"
+      }
+    },
+    {
+      "role": "pilot",
+      "user": {
+        "en": "Emergency aviation and logistics crews",
+        "ar": "فرق الطيران اللوجستي والطوارئ"
+      },
+      "decides": {
+        "en": "Which route is visible and safe when smoke or cloud blocks the view.",
+        "ar": "أي مسار مرئي وآمن عندما يحجب الدخان أو السحاب الرؤية."
+      },
+      "source": {
+        "title": "ASF NISAR data",
+        "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/"
+      }
+    },
+    {
+      "role": "glaciologist",
+      "user": {
+        "en": "Glaciologists and water-resource managers",
+        "ar": "علماء الجليديات ومديرو موارد المياه"
+      },
+      "decides": {
+        "en": "How fast ice is moving and what that means for downstream water.",
+        "ar": "ما سرعة حركة الجليد وماذا تعني لمياه المصب."
+      },
+      "source": {
+        "title": "NASA NISAR science",
+        "url": "https://nisar.jpl.nasa.gov/science/"
+      }
+    },
+    {
+      "role": "hydrologist",
+      "user": {
+        "en": "Water authorities and flood forecasters",
+        "ar": "سلطات المياه ومتنبئو الفيضانات"
+      },
+      "decides": {
+        "en": "Where water is standing, where it may spread, and which fields to protect.",
+        "ar": "أين تقف المياه، وأين قد تنتشر، وأي الحقول نحمي."
+      },
+      "source": {
+        "title": "ASF NISAR data",
+        "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/"
+      }
+    },
+    {
+      "role": "cook",
+      "user": {
+        "en": "Food-security and supply teams",
+        "ar": "فرق الأمن الغذائي والإمداد"
+      },
+      "decides": {
+        "en": "How much harvest to expect and where to store reserves.",
+        "ar": "كم حصاداً نتوقع وأين نخزن الاحتياطيات."
+      },
+      "source": {
+        "title": "NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/"
+      }
+    }
+  ],
+  "callToAction": {
+    "label": {
+      "en": "Explore the real Earth data",
+      "ar": "استكشف بيانات الأرض الحقيقية"
+    },
+    "route": "/dashboard?siteId={siteId}&lon={lon}&lat={lat}&zoom={zoom}&lenses={lenses}"
+  },
+  "closingLine": {
+    "en": "We came 100 light-years to find a home. We were already standing on it.",
+    "ar": "قطعنا 100 سنة ضوئية بحثاً عن وطن. كنا نقف عليه بالفعل."
+  }
+}

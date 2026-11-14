@@ -45,7 +45,10 @@ export function useNISARCatalog(siteId: SiteId): UseNISARCatalogReturn {
         
         if (!cancelled) {
           setCatalog(data);
-          setCurrentTimestamp(data.default_timestamp);
+          const initialLayer = data.layers.rgb_composite ?? Object.values(data.layers)[0];
+          setCurrentTimestamp(
+            initialLayer?.dates?.[initialLayer.dates.length - 1] ?? data.default_timestamp,
+          );
           setLoading(false);
         }
       } catch (err) {
@@ -65,10 +68,22 @@ export function useNISARCatalog(siteId: SiteId): UseNISARCatalogReturn {
     ? Object.values(catalog.layers) 
     : [];
   
-  const availableTimestamps = catalog?.timestamps ?? [];
-
   // 3. الطبقة الحالية
   const currentLayer = catalog?.layers[currentLayerId] ?? null;
+  // A layer may have pair-tag dates (for example 20251124_20261026) that are
+  // intentionally not in the global single-date timestamp list. Drive the
+  // selector from the selected layer so every option has an image.
+  const availableTimestamps = currentLayer?.dates?.length
+    ? currentLayer.dates
+    : (catalog?.timestamps ?? []);
+
+  const selectLayer = (layerId: string) => {
+    setCurrentLayerId(layerId);
+    const nextLayer = catalog?.layers[layerId];
+    if (nextLayer?.dates?.length) {
+      setCurrentTimestamp(nextLayer.dates[nextLayer.dates.length - 1]);
+    }
+  };
 
   // 4. دالة بناء رابط Tile ديناميكياً
   const getTileUrl = (layerId: string, timestamp: string): string | null => {
@@ -97,7 +112,7 @@ export function useNISARCatalog(siteId: SiteId): UseNISARCatalogReturn {
     availableTimestamps,
     loading,
     error,
-    setLayerId: setCurrentLayerId,
+    setLayerId: selectLayer,
     setTimestamp: setCurrentTimestamp,
     getTileUrl,
     getVectorUrl,

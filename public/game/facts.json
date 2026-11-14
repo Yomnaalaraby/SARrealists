@@ -1,0 +1,32 @@
+{
+  "version": "v1",
+  "facts": [
+    {
+      "id": "nisar-name",
+      "claim": { "en": "NISAR is the NASA-ISRO Synthetic Aperture Radar mission.", "ar": "نيسار هو مهمة الرادار ذي الفتحة الاصطناعية المشتركة بين ناسا وإيسرو." },
+      "value": "NASA-ISRO Synthetic Aperture Radar",
+      "source": { "title": "NASA NISAR mission", "url": "https://nisar.jpl.nasa.gov/" },
+      "status": "verified"
+    },
+    {
+      "id": "radar-cloud",
+      "claim": { "en": "Radar sends its own signal, so it can image through cloud, smoke, and darkness.", "ar": "يرسل الرادار إشارته الخاصة، لذا يمكنه التصوير عبر السحاب والدخان والظلام." },
+      "value": "Active sensing, day/night and all-weather capability",
+      "source": { "title": "ASF NISAR data", "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/" },
+      "status": "verified"
+    },
+    {
+      "id": "dielectric",
+      "claim": { "en": "Liquid water raises the dielectric constant of the surface, which changes the radar return.", "ar": "يرفع الماء السائل ثابت العزل الكهربائي للسطح، فيتغيّر الارتداد الراداري." },
+      "value": "Dielectric sensitivity to water",
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" },
+      "status": "verified"
+    },
+    {
+      "id": "revisit",
+      "claim": { "en": "PLACEHOLDER: NISAR's repeat cycle and data latency must be confirmed from the mission source before shipping.", "ar": "نص مؤقت: يجب تأكيد دورة التكرار وزمن وصول بيانات نيسار من مصدر المهمة قبل النشر." },
+      "value": "TODO: needs source (repeat cycle and latency)",
+      "status": "todo"
+    }
+  ]
+}
