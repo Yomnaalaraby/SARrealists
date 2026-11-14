@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { t } from '../i18n';
 import type { Language } from '../types';
 import { PixelButton } from './ui';
@@ -9,6 +10,7 @@ const STORAGE_KEY = 'captain-dio:music-muted';
 
 export function GameMusic({ language }: { language: Language }) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const pathname = usePathname();
   const [muted, setMuted] = useState(false);
 
   useEffect(() => {
@@ -21,11 +23,23 @@ export function GameMusic({ language }: { language: Language }) {
 
   useEffect(() => {
     const audio = audioRef.current;
+    return () => {
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.3;
     audio.muted = muted;
-    if (muted) {
+    if (muted || pathname !== '/game') {
       audio.pause();
+      if (pathname !== '/game') {
+        audio.currentTime = 0;
+      }
       return;
     }
 
@@ -49,7 +63,7 @@ export function GameMusic({ language }: { language: Language }) {
       window.removeEventListener('pointerdown', onGesture);
       window.removeEventListener('keydown', onGesture);
     };
-  }, [muted]);
+  }, [muted, pathname]);
 
   const toggle = () => {
     setMuted((current) => {
