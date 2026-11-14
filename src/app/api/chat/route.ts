@@ -9,6 +9,8 @@ import {
   type ChatResponse,
 } from '@/ai/types';
 
+export const maxDuration = 60;
+
 const ACTION_BLOCK = /```json_actions\s*([\s\S]*?)```/i;
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 20;
