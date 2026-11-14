@@ -282,7 +282,7 @@ export default function BeyondPage() {
           className="mt-16 text-center border-t border-slate-800 pt-8"
         >
           <p className="text-slate-500 text-sm">
-            Powered by NASA & ISRO NISAR Mission Data • Built for the Space Apps Challenge 2024
+            Powered by NASA & ISRO NISAR Mission Data • Built for the Space Apps Challenge 2026
           </p>
         </motion.div>
       </div>

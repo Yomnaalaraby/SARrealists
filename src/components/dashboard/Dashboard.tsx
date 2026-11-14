@@ -11,6 +11,7 @@ interface DashboardProps {
 
 export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [currentRegion, setCurrentRegion] = useState('california');
   const [activeLayers, setActiveLayers] = useState({
     GCOV: true,
     GUNW: false,
@@ -20,28 +21,52 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
   const [polarization, setPolarization] = useState<'HH' | 'HV'>('HV');
 
   const regions = [
-    { id: 'california', name: 'California', icon: Flame, color: 'red', coords: [-119.4179, 36.7783] },
-    { id: 'himalayas', name: 'Himalayas', icon: Snowflake, color: 'cyan', coords: [85, 28] },
-    { id: 'delta', name: 'Nile Delta', icon: Wheat, color: 'green', coords: [31.0, 30.5] },
+    { id: 'california', name: 'California', icon: Flame, color: 'red' },
+    { id: 'himalayas', name: 'Himalayas', icon: Snowflake, color: 'cyan' },
+    { id: 'delta', name: 'Nile Delta', icon: Wheat, color: 'green' },
   ];
 
-  const layers = [
-    { id: 'GCOV', name: 'GCOV (Backscatter)', description: 'Radar backscatter data' },
-    { id: 'GUNW', name: 'GUNW (InSAR)', description: 'Interferometric data' },
-    { id: 'GOFF', name: 'GOFF (Velocity)', description: 'Glacier velocity data' },
-    { id: 'SME2', name: 'SME2 (Soil Moisture)', description: 'Soil moisture estimates' },
-  ];
+  // ✅ الأزرار تتغير حسب المنطقة
+  const getAvailableLayers = () => {
+    const layers = [
+      { id: 'GCOV', name: 'GCOV (Backscatter)', description: 'Radar backscatter data' },
+    ];
+
+    if (currentRegion === 'california') {
+      layers.push({ id: 'GUNW', name: 'GUNW (Subsidence)', description: 'Ground displacement (InSAR)' });
+    } else if (currentRegion === 'himalayas') {
+      layers.push({ id: 'GOFF', name: 'GOFF (Velocity)', description: 'Glacier velocity data' });
+    } else if (currentRegion === 'delta') {
+      layers.push({ id: 'GUNW', name: 'GUNW (Subsidence)', description: 'Coastal subsidence' });
+      layers.push({ id: 'SME2', name: 'SME2 (Soil Moisture)', description: 'Root-zone soil moisture' });
+    }
+
+    return layers;
+  };
+
+  const handleRegionJump = (regionId: string) => {
+    setCurrentRegion(regionId);
+    onRegionJump(regionId);
+    
+    // إعادة تعيين الطبقات للمنطقة الجديدة
+    setActiveLayers({ GCOV: true, GUNW: false, GOFF: false, SME2: false });
+  };
 
   const toggleLayer = (layerId: string) => {
     setActiveLayers((prev) => ({
       ...prev,
       [layerId]: !prev[layerId as keyof typeof prev],
     }));
+
+    // ⏸️ الـ event dispatch جاهز لحد ما الـ tiles تترفع
+    // window.dispatchEvent(new CustomEvent('toggleNisarLayer', {
+    //   detail: { layerId, polarization, active: !activeLayers[layerId as keyof typeof activeLayers], region: currentRegion }
+    // }));
   };
 
   return (
     <div className="relative w-full h-screen">
-      {/* زر إغلاق الـ Dashboard */}
+      {/* زر إغلاق */}
       <button
         onClick={onClose}
         className="absolute top-9.5 right-4 z-50 w-10 h-10 bg-black/80 backdrop-blur-md rounded-lg border border-white/20 flex items-center justify-center text-white hover:bg-red-600/80 transition-all cursor-pointer"
@@ -50,16 +75,14 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
         <X className="w-5 h-5" />
       </button>
 
-      {/* Sidebar - تم إزالة overflow-y-auto من هنا */}
+      {/* Sidebar */}
       <motion.div
         initial={false}
         animate={{ width: sidebarOpen ? 320 : 0 }}
         className="absolute left-0 top-0 bottom-0 z-20 bg-black/90 backdrop-blur-md border-r border-white/10 overflow-y-auto"
       >
-        {/* الحاوية الداخلية هي التي تدير الـ flex والـ overflow */}
-        <div className="w-80 h-full flex flex-col overflow-y-auto ">
-          
-          {/* Header - ثابت */}
+        <div className="w-80 h-full flex flex-col overflow-y-auto">
+          {/* Header */}
           <div className="p-6 border-b border-white/10 shrink-0">
             <h2 className="text-xl font-bold text-white mb-1">Mission Control</h2>
             <p className="text-xs text-gray-400">Free-Roam Exploration Mode</p>
@@ -77,8 +100,12 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
                 return (
                   <button
                     key={region.id}
-                    onClick={() => onRegionJump(region.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer bg-${region.color}-600/10 hover:bg-${region.color}-600/20 border border-${region.color}-500/20`}
+                    onClick={() => handleRegionJump(region.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
+                      currentRegion === region.id
+                        ? `bg-${region.color}-600/30 border border-${region.color}-500/50`
+                        : `bg-${region.color}-600/10 hover:bg-${region.color}-600/20 border border-${region.color}-500/20`
+                    }`}
                   >
                     <Icon className={`w-5 h-5 text-${region.color}-400`} />
                     <span className="text-sm font-medium text-white">{region.name}</span>
@@ -88,14 +115,14 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
             </div>
           </div>
 
-          {/* Layer Toggles - هذا الجزء هو الذي سيحتوي على السكرول الخاص به إذا كان طويلاً */}
-          <div className="p-6 border-b border-white/10 max-h-80 overflow-y-auto shrink-0">
+          {/* Layer Toggles */}
+          <div className="p-6 border-b border-white/10 shrink-0">
             <h3 className="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
               <Layers className="w-4 h-4" />
-              Data Layers
+              Data Layers ({currentRegion})
             </h3>
             <div className="space-y-2">
-              {layers.map((layer) => (
+              {getAvailableLayers().map((layer) => (
                 <div
                   key={layer.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10"
@@ -146,7 +173,7 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
             </div>
           </div>
 
-          {/* Call-to-Action - ثابت في الأسفل */}
+          {/* CTA */}
           <div className="p-6 border-t border-white/10 shrink-0 mt-auto mb-5">
             <Link href="/beyond">
               <button className="w-full mb-5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-purple-600/30">
