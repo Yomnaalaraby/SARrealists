@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Map, Flame, Snowflake, Wheat, Layers, Eye, EyeOff, ChevronLeft, ChevronRight, Rocket, X } from 'lucide-react';
+import { Map, Flame, Snowflake, Wheat, Layers, Eye, EyeOff, ChevronLeft, ChevronRight, Rocket, X, Wrench } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardProps {
@@ -25,7 +25,6 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
     { id: 'nile_delta', name: 'Nile Delta', icon: Wheat, color: 'green' },
   ];
 
-  // ✅ الأزرار تتغير حسب المنطقة والبيانات المتاحة فعلياً في الـ Tiles
   const getAvailableLayers = () => {
     const layers = [
       { id: 'GCOV', name: 'GCOV (Backscatter)', description: polarization === 'HV' ? 'Volume scattering (Canopy)' : 'Surface bounce' },
@@ -52,7 +51,6 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
     setActiveLayers((prev) => {
       const newState = !prev[layerId as keyof typeof prev];
       
-      // إرسال الأمر للخريطة
       window.dispatchEvent(new CustomEvent('toggleNisarLayer', {
         detail: { 
           layerId, 
@@ -81,9 +79,22 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
         className="absolute left-0 top-0 bottom-0 z-20 bg-black/90 backdrop-blur-md border-r border-white/10 overflow-y-auto"
       >
         <div className="w-80 h-full flex flex-col overflow-y-auto">
+          
+          {/* ✅ HEADER مع مؤشر Under Development الأنيق */}
           <div className="p-6 border-b border-white/10 shrink-0">
-            <h2 className="text-xl font-bold text-white mb-1">Mission Control</h2>
-            <p className="text-xs text-gray-400">Free-Roam Exploration Mode</p>
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-xl font-bold text-white">Mission Control</h2>
+              
+              {/* 🚧 Badge: Under Development */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                </span>
+                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Under Dev</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400">Free-Roam Exploration Mode (Beta)</p>
           </div>
 
           <div className="p-6 border-b border-white/10 shrink-0">
@@ -142,7 +153,6 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
                     key={pol}
                     onClick={() => {
                       setPolarization(pol);
-                      // إعادة تشغيل الطبقة النشطة لتحديث الـ polarization
                       const activeLayer = Object.entries(activeLayers).find(([_, isActive]) => isActive)?.[0];
                       if (activeLayer === 'GCOV') {
                         window.dispatchEvent(new CustomEvent('toggleNisarLayer', {

@@ -45,9 +45,9 @@ export default function HeroSection() {
 
   return (
     <section
-      ref={ref}
-      className="h-screen w-full flex flex-col items-center justify-center relative z-10 pointer-events-none"
-    >
+  ref={ref}
+  className="h-screen w-full flex flex-col items-center justify-center relative z-10 pointer-events-none pb-28 md:pb-36"
+>
       {/* توهج خفيف ورا العنوان — بيوصل الإحساس إن الأرض "بتنبض" */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px]" />

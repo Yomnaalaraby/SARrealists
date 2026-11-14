@@ -68,7 +68,7 @@ const LAKE_DATES = ['20251126_20261109'];
 
 const VELOCITY_DATES = [
   '20251126_20251126','20251208_20251208','20260101_20260101',
-  '20260206_20260206','20260314_20260314','20260407_20260407',
+  '20260314_20260314','20260407_20260407',
   '20260501_20260501','20260606_20260606','20260712_20260712',
   '20260817_20260817','20260910_20260910','20261004_20261004'
 ];
@@ -157,75 +157,84 @@ export default function HimalayasDataPage() {
               className="space-y-6"
             >
               {/* Frequency Visualizer */}
-              <div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-cyan-500/20">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
-                    <span className="bg-cyan-600 text-xs px-2 py-1 rounded text-white">LEVEL 1</span>
-                    Wavelength Determines Penetration
-                  </h2>
-                  <span className={`text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
-                    freqMode === 'L-Band' 
-                      ? 'bg-cyan-600/20 text-cyan-300 border border-cyan-500/30' 
-                      : 'bg-slate-600/20 text-slate-300 border border-slate-500/30'
-                  }`}>
-                    {freqMode === 'L-Band' ? 'L-Band • 24 cm' : 'S-Band • ~10 cm'}
-                  </span>
-                </div>
+           {/* Frequency Visualizer */}
+<div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-cyan-500/20">
+  {/* Header */}
+  <div className="flex items-center justify-between mb-5">
+    <h2 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
+      <span className="bg-cyan-600 text-xs px-2 py-1 rounded text-white">LEVEL 1</span>
+      Wavelength Determines Penetration
+    </h2>
+    <span className={`text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
+      freqMode === 'L-Band' 
+        ? 'bg-cyan-600/20 text-cyan-300 border border-cyan-500/30' 
+        : 'bg-slate-600/20 text-slate-300 border border-slate-500/30'
+    }`}>
+      {freqMode === 'L-Band' ? 'L-Band • 24 cm' : 'S-Band • ~10 cm'}
+    </span>
+  </div>
 
-                <div className="relative h-80 rounded-xl overflow-hidden border border-cyan-500/20 mb-4 bg-white">
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage: `url(${plotUrl('himalayas', freqMode === 'L-Band' ? 'freq_diff_db' : 'pol_ratio_db', '20261109')})`,
-                      backgroundSize: `${152 + freqZoom * 6}% ${125 + freqZoom * 6}%`,
-                      backgroundPosition: `${45 + freqPanX}% ${50 + freqPanY}%`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundColor: '#ffffff',
-                      transition: 'background-image 0.5s ease, background-size 0.2s, background-position 0.2s',
-                    }}
-                  />
-                  <span className="absolute top-2 left-2 text-[10px] text-white font-mono bg-black/70 px-2 py-1 rounded z-10">
-                    {freqMode === 'L-Band' ? 'Freq A − Freq B (dB)' : 'HV/HH Ratio (dB)'}
-                  </span>
+  {/* ✅ Layout جنباً إلى جنب */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    
+    {/* 🖼️ الشمال: الصورة */}
+    <div className="relative rounded-xl overflow-hidden border border-cyan-500/20 bg-white shadow-inner">
+      <div className="aspect-[4/3] w-full p-2">
+        <img
+          src={plotUrl('himalayas', freqMode === 'L-Band' ? 'freq_diff_db' : 'pol_ratio_db', '20261109')}
+          alt={freqMode === 'L-Band' ? 'Frequency Split-Spectrum Difference' : 'HV/HH Polarization Ratio'}
+          className="w-full h-full object-contain"
+        />
+      </div>
+      <span className="absolute top-2 left-2 text-[10px] text-white font-mono bg-black/70 backdrop-blur-sm px-2 py-1 rounded z-10">
+        {freqMode === 'L-Band' ? 'Freq A − Freq B (dB)' : 'HV/HH Ratio (dB)'}
+      </span>
+    </div>
 
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-full px-2 py-1">
-                    <button onClick={() => setFreqZoom(z => z - 1)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">−</button>
-                    <button onClick={() => setFreqZoom(z => z + 1)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">+</button>
-                    <div className="w-px h-4 bg-white/30 mx-1" />
-                    <button onClick={() => setFreqPanX(x => x - 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">←</button>
-                    <button onClick={() => setFreqPanY(y => y - 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">↑</button>
-                    <button onClick={() => setFreqPanY(y => y + 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">↓</button>
-                    <button onClick={() => setFreqPanX(x => x + 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">→</button>
-                    <div className="w-px h-4 bg-white/30 mx-1" />
-                    <button onClick={() => { setFreqZoom(0); setFreqPanX(0); setFreqPanY(0); }} className="w-6 h-6 text-white text-[10px] font-bold hover:bg-white/20 rounded-full cursor-pointer">⟲</button>
-                  </div>
-                </div>
+    {/* 📝 اليمين: الأزرار + الشرح */}
+    <div className="flex flex-col gap-4">
+      {/* أزرار التبديل */}
+      <div className="flex flex-col gap-2">
+        <button
+          onClick={() => setFreqMode('L-Band')}
+          className={`w-full px-4 py-3 rounded-lg text-sm font-bold transition-all cursor-pointer text-left flex items-center gap-3 ${
+            freqMode === 'L-Band' 
+              ? 'bg-cyan-600 text-white shadow-lg' 
+              : 'bg-black/30 text-gray-400 hover:bg-cyan-900/40'
+          }`}
+        >
+          <span className={`w-2 h-2 rounded-full ${freqMode === 'L-Band' ? 'bg-white' : 'bg-cyan-500/50'}`} />
+          L-Band (24 cm) — Deep Penetration
+        </button>
+        <button
+          onClick={() => setFreqMode('S-Band')}
+          className={`w-full px-4 py-3 rounded-lg text-sm font-bold transition-all cursor-pointer text-left flex items-center gap-3 ${
+            freqMode === 'S-Band' 
+              ? 'bg-slate-600 text-white shadow-lg' 
+              : 'bg-black/30 text-gray-400 hover:bg-slate-900/40'
+          }`}
+        >
+          <span className={`w-2 h-2 rounded-full ${freqMode === 'S-Band' ? 'bg-white' : 'bg-slate-500/50'}`} />
+          S-Band (~10 cm) — Surface Reflection
+        </button>
+      </div>
 
-                <div className="flex gap-4 mb-4">
-                  <button
-                    onClick={() => setFreqMode('L-Band')}
-                    className={`flex-1 px-4 py-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-                      freqMode === 'L-Band' ? 'bg-cyan-600 text-white' : 'bg-black/30 text-gray-400 hover:bg-cyan-900/40'
-                    }`}
-                  >
-                    L-Band (Deep Penetration)
-                  </button>
-                  <button
-                    onClick={() => setFreqMode('S-Band')}
-                    className={`flex-1 px-4 py-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-                      freqMode === 'S-Band' ? 'bg-slate-600 text-white' : 'bg-black/30 text-gray-400 hover:bg-slate-900/40'
-                    }`}
-                  >
-                    S-Band (Surface Reflection)
-                  </button>
-                </div>
+      {/* الشرح العلمي */}
+      <div className="bg-black/30 p-4 rounded-lg text-sm text-gray-200 leading-relaxed border-l-4 border-cyan-500 flex-1">
+        {freqMode === 'L-Band' 
+          ? "The 24 cm L-Band wavelength penetrates deep into the ice and snowpack, revealing internal crevasses and glacier thickness hidden from optical sensors. In the map above, RED areas show where L-band (Freq A) produces stronger backscatter than Freq B — indicating deep ice penetration."
+          : "The ~10 cm S-Band wavelength reflects off the outer surface layer, making it highly sensitive to surface roughness and fresh snow accumulation. The HV/HH ratio map above shows where canopy volume scattering dominates (HIGH values) versus flat surface bounce (LOW values)."}
+      </div>
 
-                <div className="bg-black/30 p-4 rounded-lg text-sm text-gray-200 leading-relaxed border-l-4 border-cyan-500">
-                  {freqMode === 'L-Band' 
-                    ? "The 24 cm L-Band wavelength penetrates deep into the ice and snowpack, revealing internal crevasses and glacier thickness hidden from optical sensors. In the map above, RED areas show where L-band (Freq A) produces stronger backscatter than Freq B — indicating deep ice penetration."
-                    : "The ~10 cm S-Band wavelength reflects off the outer surface layer, making it highly sensitive to surface roughness and fresh snow accumulation. The HV/HH ratio map above shows where canopy volume scattering dominates (HIGH values) versus flat surface bounce (LOW values)."}
-                </div>
-              </div>
+      {/* 💡 معلومة إضافية */}
+      <div className="bg-cyan-600/10 border border-cyan-500/20 rounded-lg p-3">
+        <p className="text-xs text-cyan-300 leading-relaxed">
+          <strong>💡 Why it matters:</strong> The 14 cm difference between L-band and S-band completely changes what NISAR can "see" — from surface snow (S) to buried crevasses (L).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
               {/* GLOF Phases */}
               <div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-cyan-500/20">
@@ -346,78 +355,65 @@ export default function HimalayasDataPage() {
   </div>
 </div>
 
+               
                 {/* Velocity */}
-                <div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-blue-400 flex items-center gap-2">
-                      <Compass className="w-5 h-5" /> Glacier Velocity (GOFF)
-                    </h2>
-                    <button
-                      onClick={() => setVelPlaying(!velPlaying)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        velPlaying 
-                          ? 'bg-red-600 text-white' 
-                          : 'bg-blue-600/20 text-blue-300 hover:bg-blue-600/40 border border-blue-500/30'
-                      }`}
-                    >
-                      {velPlaying ? '⏸ Pause' : '▶ Play Timeline'}
-                    </button>
-                  </div>
+<div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20">
+  <div className="flex items-center justify-between mb-4">
+    <h2 className="text-xl font-bold text-blue-400 flex items-center gap-2">
+      <Compass className="w-5 h-5" /> Glacier Velocity (GOFF)
+    </h2>
+    <button
+      onClick={() => setVelPlaying(!velPlaying)}
+      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+        velPlaying 
+          ? 'bg-red-600 text-white' 
+          : 'bg-blue-600/20 text-blue-300 hover:bg-blue-600/40 border border-blue-500/30'
+      }`}
+    >
+      {velPlaying ? '⏸ Pause' : '▶ Play Timeline'}
+    </button>
+  </div>
 
-                  <div className="relative h-72 rounded-xl overflow-hidden border border-blue-500/20 mb-4 bg-white">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundImage: `url(${plotUrl('himalayas', 'velocity_m_yr', VELOCITY_DATES[velIdx])})`,
-                        backgroundSize: `${152 + velZoom * 6}% ${125 + velZoom * 6}%`,
-                        backgroundPosition: `${45 + velPanX}% ${50 + velPanY}%`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: '#ffffff',
-                      }}
-                    />
-                    <span className="absolute top-2 right-2 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded z-10">
-                      {prettyDate(VELOCITY_DATES[velIdx].split('_')[0])}
-                    </span>
-                    <span className="absolute top-2 left-2 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded z-10">
-                      {velIdx + 1} / {VELOCITY_DATES.length}
-                    </span>
+  {/* 🖼️ الصورة كاملة — كونتينر متناسب */}
+  <div className="relative rounded-xl overflow-hidden border border-blue-500/20 mb-4 bg-white shadow-inner max-w-3xl mx-auto">
+    <div className="aspect-[16/10] w-full p-2">
+      <img
+        key={VELOCITY_DATES[velIdx]} // ✅ key force re-render مع transition
+        src={plotUrl('himalayas', 'velocity_m_yr', VELOCITY_DATES[velIdx])}
+        alt={`Glacier Velocity — ${prettyDate(VELOCITY_DATES[velIdx].split('_')[0])}`}
+        className="w-full h-full object-contain transition-opacity duration-500"
+      />
+    </div>
+    <span className="absolute top-2 right-2 text-xs text-white font-mono bg-black/70 backdrop-blur-sm px-2 py-1 rounded z-10">
+      {prettyDate(VELOCITY_DATES[velIdx].split('_')[0])}
+    </span>
+    <span className="absolute top-2 left-2 text-xs text-white font-mono bg-black/70 backdrop-blur-sm px-2 py-1 rounded z-10">
+      {velIdx + 1} / {VELOCITY_DATES.length}
+    </span>
+  </div>
 
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-full px-2 py-1">
-                      <button onClick={() => setVelZoom(z => z - 1)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">−</button>
-                      <button onClick={() => setVelZoom(z => z + 1)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">+</button>
-                      <div className="w-px h-4 bg-white/30 mx-1" />
-                      <button onClick={() => setVelPanX(x => x - 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">←</button>
-                      <button onClick={() => setVelPanY(y => y - 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">↑</button>
-                      <button onClick={() => setVelPanY(y => y + 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">↓</button>
-                      <button onClick={() => setVelPanX(x => x + 2)} className="w-6 h-6 text-white text-xs font-bold hover:bg-white/20 rounded-full cursor-pointer">→</button>
-                      <div className="w-px h-4 bg-white/30 mx-1" />
-                      <button onClick={() => { setVelZoom(0); setVelPanX(0); setVelPanY(0); }} className="w-6 h-6 text-white text-[10px] font-bold hover:bg-white/20 rounded-full cursor-pointer">⟲</button>
-                    </div>
-                  </div>
+  {/* أزرار التواريخ */}
+  <div className="flex gap-1.5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    {VELOCITY_DATES.map((date, i) => (
+      <button
+        key={date}
+        onClick={() => { setVelPlaying(false); setVelIdx(i); }}
+        className={`flex-shrink-0 px-2.5 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+          i === velIdx 
+            ? 'bg-blue-600 text-white shadow-lg scale-105' 
+            : 'bg-gray-800/60 text-gray-400 hover:bg-gray-700'
+        }`}
+      >
+        {prettyDate(date.split('_')[0]).replace(/,.*/, '')}
+      </button>
+    ))}
+  </div>
 
-                  <div className="flex gap-1.5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {VELOCITY_DATES.map((date, i) => (
-                      <button
-                        key={date}
-                        onClick={() => { setVelPlaying(false); setVelIdx(i); }}
-                        className={`flex-shrink-0 px-2.5 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                          i === velIdx 
-                            ? 'bg-blue-600 text-white shadow-lg scale-105' 
-                            : 'bg-gray-800/60 text-gray-400 hover:bg-gray-700'
-                        }`}
-                      >
-                        {prettyDate(date.split('_')[0]).replace(/,.*/, '')}
-                      </button>
-                    ))}
-                  </div>
-
-                  <p className="text-xs text-gray-400 mt-3 text-center">
-                    <span className="text-yellow-400 font-bold">Yellow</span> = Fast glacier tongue (150 m/yr) | 
-                    <span className="text-purple-400 font-bold"> Purple</span> = Slow ice creep (0-50 m/yr)
-                  </p>
-
-
-                </div>
+  <p className="text-xs text-gray-400 mt-3 text-center">
+    <span className="text-yellow-400 font-bold">Yellow</span> = Fast glacier tongue (150 m/yr) | 
+    <span className="text-purple-400 font-bold"> Purple</span> = Slow ice creep (0-50 m/yr)
+  </p>
+</div>
               </div>
 
               {/* Physics Explanation */}

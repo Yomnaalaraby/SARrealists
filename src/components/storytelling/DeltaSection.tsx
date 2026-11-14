@@ -17,12 +17,7 @@ const DELTA_DIALOGUE: DialogueLine[] = [
 ];
 
 // ===== Agriculture Timeline =====
-const AGRICULTURE_TIMELINE = [
-  { month: prettyDate('20251216'), label: 'Winter Wheat', imageUrl: plotUrl('nile', 'hv_db', '20251216'), description: '...' },
-  { month: prettyDate('20260626'), label: 'Summer Prep', imageUrl: plotUrl('nile', 'soil_moisture', '20260626'), description: '...' },
-  { month: prettyDate('20260825'), label: 'Peak Irrigation', imageUrl: plotUrl('nile', 'soil_moisture', '20260825'), description: '...' },
-  { month: prettyDate('20261024'), label: 'Harvest Season', imageUrl: plotUrl('nile', 'rgb_composite', '20261024'), description: '...' },
-];
+
 
 const COASTAL_SUBSIDENCE_TIMELINE = [
   { month: prettyDate('20260626'), label: 'Baseline', imageUrl: plotUrl('nile', 'vert_disp_mm', '20260626'), description: '...' },
@@ -92,11 +87,7 @@ export default function DeltaSection() {
             className="space-y-6"
           >
             {/* Agriculture Timeline */}
-            <Timeline
-              title="Agricultural Cycle Timeline"
-              images={AGRICULTURE_TIMELINE}
-              theme="agriculture"
-            />
+            
 
             {/* Coastal Subsidence Timeline */}
             <Timeline

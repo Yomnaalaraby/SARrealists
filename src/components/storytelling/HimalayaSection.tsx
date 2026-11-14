@@ -26,7 +26,6 @@ const GLOF_TIMELINE = [
 
 const VELOCITY_TIMELINE = [
   { month: prettyDate('20251126'), label: 'Baseline Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20251126_20251126'), description: '...' },
-  { month: prettyDate('20260206'), label: 'Winter Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20260206_20260206'), description: '...' },
   { month: prettyDate('20260501'), label: 'Monsoon Flow', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20260501_20260501'), description: '...' },
   { month: prettyDate('20261004'), label: 'Post-Monsoon', imageUrl: plotUrl('himalayas', 'velocity_m_yr', '20261004_20261004'), description: '...' },
 ];

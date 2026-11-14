@@ -128,12 +128,14 @@ const [panY, setPanY] = useState(0);
                   Smoke Penetration: Optical vs NISAR
                 </h2>
                 <CompareSlider
-                  beforeImage="https://static01.nyt.com/images/2020/08/28/us/28fires-smoke01alt/merlin_175974066_e1961b7a-d369-4cc1-be39-f98986d5a2e0-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
-                  afterImage={heatmapUrl('california', 'hv_db', '20260228')}
-                  afterFit="contain"
-                  beforeLabel="Optical — Blinded by Smoke"
-                  afterLabel="NISAR Radar — Sees Through"
-                />
+  beforeImage="https://static01.nyt.com/images/2020/08/28/us/28fires-smoke01alt/merlin_175974066_e1961b7a-d369-4cc1-be39-f98986d5a2e0-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
+  afterImage={heatmapUrl('california', 'hv_db', '20260228')}
+  afterFit="cover"
+  afterZoom={3.2}              // ✅ زوم كافي يشيل العنوان والـ colorbar
+  afterPosition="70% 90%"      // ✅ مركز على المنطقة الخضرا
+  beforeLabel="Optical — Blinded by Smoke"
+  afterLabel="NISAR Radar — Sees Through"
+/>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -69,7 +69,7 @@ const itemVariants: Variants = {
 // --- 3. Main Page Component ---
 export default function BeyondPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-fuchsia-500/30">
+    <div className="min-h-screen pt-10 bg-slate-950 text-slate-100 selection:bg-fuchsia-500/30">
       {/* Background Gradient Ambience */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl" />
@@ -281,9 +281,7 @@ export default function BeyondPage() {
           transition={{ delay: 0.6 }}
           className="mt-16 text-center border-t border-slate-800 pt-8"
         >
-          <p className="text-slate-500 text-sm">
-            Powered by NASA & ISRO NISAR Mission Data • Built for the Space Apps Challenge 2026
-          </p>
+          
         </motion.div>
       </div>
     </div>
