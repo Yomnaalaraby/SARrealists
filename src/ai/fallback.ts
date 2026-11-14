@@ -8,6 +8,47 @@ import type {
   RetrievedChunk,
 } from './types';
 
+export type FallbackReason = 'not-configured' | 'provider-error' | 'timeout' | 'empty-answer';
+
+function fallbackIntro(
+  reason: FallbackReason,
+  ctx: ChatRequest['clickContext'],
+  language: 'en' | 'ar',
+): string {
+  if (language === 'ar') {
+    if (reason === 'provider-error') {
+      return ctx
+        ? `أعاد مزوّد الذكاء الاصطناعي خطأ، لذلك هذا ملخص محلي للنقطة المحددة (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
+        : 'أعاد مزوّد الذكاء الاصطناعي خطأ، لذلك هذا ملخص محلي من المعرفة المرفقة.';
+    }
+    if (reason === 'timeout') {
+      return ctx
+        ? `انتهت مهلة مزوّد الذكاء الاصطناعي، لذلك هذا ملخص محلي للنقطة المحددة (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
+        : 'انتهت مهلة مزوّد الذكاء الاصطناعي، لذلك هذا ملخص محلي من المعرفة المرفقة.';
+    }
+    if (reason === 'empty-answer') {
+      return ctx
+        ? `لم يُرجع مزوّد الذكاء الاصطناعي نصاً، لذلك هذا ملخص محلي للنقطة المحددة (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
+        : 'لم يُرجع مزوّد الذكاء الاصطناعي نصاً، لذلك هذا ملخص محلي من المعرفة المرفقة.';
+    }
+    return ctx
+      ? `لم يتم تكوين خدمة الذكاء الاصطناعي بعد، لذلك هذا ملخص محلي للنقطة المحددة (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
+      : 'لم يتم تكوين خدمة الذكاء الاصطناعي بعد، لذلك هذا ملخص محلي من المعرفة المرفقة.';
+  }
+
+  const reasonText =
+    reason === 'provider-error'
+      ? 'The AI provider returned an error'
+      : reason === 'timeout'
+        ? 'The AI provider timed out'
+        : reason === 'empty-answer'
+          ? 'The AI provider returned no text'
+          : 'The AI service is not configured yet';
+  return ctx
+    ? `${reasonText}, so this is a local grounded summary for the selected point (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
+    : `${reasonText}, so this is a local grounded summary from the bundled NISAR references.`;
+}
+
 function valueLines(request: ChatRequest): string[] {
   const ctx = request.clickContext;
   if (!ctx) return [];
@@ -23,6 +64,7 @@ function fallbackBody(
   request: ChatRequest,
   chunks: RetrievedChunk[],
   language: 'en' | 'ar',
+  reason: FallbackReason,
 ): string {
   const persona = PERSONAS[request.persona];
   const ctx = request.clickContext;
@@ -35,9 +77,7 @@ function fallbackBody(
   const values = valueLines(request);
 
   if (language === 'ar') {
-    const intro = ctx
-      ? `لم يتم تكوين خدمة الذكاء الاصطناعي بعد، لذلك هذا ملخص محلي للنقطة المحددة (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
-      : 'لم يتم تكوين خدمة الذكاء الاصطناعي بعد، لذلك هذا ملخص محلي من المعرفة المرفقة.';
+    const intro = fallbackIntro(reason, ctx, language);
     const personaLine =
       request.persona === 'decision_maker'
         ? 'الخلاصة: هذه ملاحظات بحثية للرصد، وليست أمراً تشغيلياً أو شهادة سلامة.'
@@ -59,9 +99,7 @@ function fallbackBody(
     ].filter(Boolean).join('\n');
   }
 
-  const intro = ctx
-    ? `The AI service is not configured yet, so this is a local grounded summary for the selected point (${ctx.lon.toFixed(3)}, ${ctx.lat.toFixed(3)}).`
-    : 'The AI service is not configured yet, so this is a local grounded summary from the bundled NISAR references.';
+  const intro = fallbackIntro(reason, ctx, language);
   const personaLine =
     request.persona === 'decision_maker'
       ? 'Bottom line: treat this as a research observation for monitoring, not an operational order or a safety certification.'
@@ -85,9 +123,10 @@ export function createFallbackResponse(
   request: ChatRequest,
   chunks: RetrievedChunk[],
   prompts: BuiltPrompts,
+  reason: FallbackReason = 'not-configured',
 ): ChatResponse {
   const sources: CitedSource[] = sourcesForChunks(chunks);
-  const body = fallbackBody(request, chunks, prompts.language);
+  const body = fallbackBody(request, chunks, prompts.language, reason);
   const answer = body.endsWith(prompts.confidenceTag)
     ? body
     : `${body}\n\n${prompts.confidenceTag}`;

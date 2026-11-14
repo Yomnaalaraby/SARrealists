@@ -23,6 +23,7 @@ type ProviderConfig = {
   timeoutMs: number;
   reasoningEffort?: string;
   isGemini: boolean;
+  warning?: string;
 };
 
 function cleanEnvValue(value: string | undefined): string | undefined {
@@ -33,17 +34,21 @@ function cleanEnvValue(value: string | undefined): string | undefined {
 function resolveProviderConfig(): ProviderConfig {
   const openaiKey = cleanEnvValue(process.env.OPENAI_API_KEY);
   const geminiKey = cleanEnvValue(process.env.GEMINI_API_KEY) || cleanEnvValue(process.env.GOOGLE_API_KEY);
-  const apiKey = openaiKey || geminiKey;
-  const keySource = openaiKey
-    ? 'OPENAI_API_KEY'
-    : cleanEnvValue(process.env.GEMINI_API_KEY)
-      ? 'GEMINI_API_KEY'
-      : cleanEnvValue(process.env.GOOGLE_API_KEY)
-        ? 'GOOGLE_API_KEY'
-        : 'none';
-  const keyLooksGemini = Boolean(apiKey && /^AIza[0-9A-Za-z_-]{20,}$/.test(apiKey));
   const explicitBase = (cleanEnvValue(process.env.OPENAI_BASE_URL) || cleanEnvValue(process.env.OPENAI_API_BASE) || '')
     .replace(/\/$/, '');
+  const openaiKeyLooksProxy = Boolean(openaiKey?.startsWith('key_'));
+  const preferGemini = Boolean(geminiKey && (!openaiKey || (openaiKeyLooksProxy && !explicitBase)));
+  const apiKey = preferGemini ? geminiKey : openaiKey || geminiKey;
+  const keySource = preferGemini
+    ? 'GEMINI_API_KEY'
+    : openaiKey
+      ? 'OPENAI_API_KEY'
+      : cleanEnvValue(process.env.GEMINI_API_KEY)
+        ? 'GEMINI_API_KEY'
+        : cleanEnvValue(process.env.GOOGLE_API_KEY)
+          ? 'GOOGLE_API_KEY'
+          : 'none';
+  const keyLooksGemini = Boolean(apiKey && /^AIza[0-9A-Za-z_-]{20,}$/.test(apiKey));
   const isGemini = Boolean(
     explicitBase.includes('generativelanguage.googleapis.com') || keyLooksGemini,
   );
@@ -54,6 +59,16 @@ function resolveProviderConfig(): ProviderConfig {
     : isGemini
       ? 'gemini-2.0-flash'
       : 'gpt-4o-mini';
+  let warning: string | undefined;
+  if (!apiKey) {
+    warning = 'No provider key is configured. Add GEMINI_API_KEY or OPENAI_API_KEY to .env and restart the server.';
+  } else if (openaiKeyLooksProxy && !explicitBase && !geminiKey) {
+    warning = 'OPENAI_API_KEY looks like a Manus proxy key, but OPENAI_BASE_URL is missing. Set OPENAI_BASE_URL or use GEMINI_API_KEY.';
+  } else if (openaiKeyLooksProxy && geminiKey && !explicitBase) {
+    warning = 'Using GEMINI_API_KEY because OPENAI_API_KEY looks like a Manus proxy key without OPENAI_BASE_URL.';
+  } else if (isGemini && modelIsOpenAiOnly) {
+    warning = `OPENAI_MODEL=${configuredModel} is OpenAI-only; using gemini-2.0-flash for the Gemini key.`;
+  }
   return {
     apiKey,
     keySource,
@@ -65,6 +80,7 @@ function resolveProviderConfig(): ProviderConfig {
     timeoutMs: Number(process.env.OPENAI_TIMEOUT_MS) || 90_000,
     reasoningEffort: cleanEnvValue(process.env.OPENAI_REASONING_EFFORT),
     isGemini,
+    warning,
   };
 }
 
@@ -79,6 +95,7 @@ export async function GET() {
     model: provider.model,
     timeoutMs: provider.timeoutMs,
     reasoningEffort: provider.reasoningEffort ?? null,
+    warning: provider.warning ?? null,
   });
 }
 
@@ -166,7 +183,7 @@ export async function POST(request: Request) {
 
   const provider = resolveProviderConfig();
   if (!provider.apiKey) {
-    return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+    return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts, 'not-configured'));
   }
   const { apiKey, baseUrl, model, timeoutMs, reasoningEffort } = provider;
 
@@ -199,7 +216,7 @@ export async function POST(request: Request) {
         model,
         detail: detail.slice(0, 700),
       });
-      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts, 'provider-error'));
     }
 
     const data = (await completion.json()) as {
@@ -213,7 +230,7 @@ export async function POST(request: Request) {
         model,
         detail: JSON.stringify(data.error).slice(0, 700),
       });
-      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts, 'empty-answer'));
     }
     const rawAnswer = data.choices?.[0]?.message?.content;
     if (!rawAnswer || !rawAnswer.trim()) {
@@ -223,7 +240,7 @@ export async function POST(request: Request) {
         model,
         choices: data.choices?.length ?? 0,
       });
-      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+      return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts, 'provider-error'));
     }
 
     const { answer, actions } = splitActions(rawAnswer);
@@ -237,12 +254,18 @@ export async function POST(request: Request) {
       ),
     );
   } catch (error) {
+    const isTimeout =
+      error instanceof Error &&
+      (error.name === 'TimeoutError' || /timed? ?out|aborted due to timeout/i.test(error.message));
     console.error('Chat completion request failed:', {
       provider: provider.isGemini ? 'gemini' : 'openai-compatible',
       baseUrl,
       model,
+      isTimeout,
       error,
     });
-    return NextResponse.json(createFallbackResponse(chatRequest, chunks, prompts));
+    return NextResponse.json(
+      createFallbackResponse(chatRequest, chunks, prompts, isTimeout ? 'timeout' : 'provider-error'),
+    );
   }
 }
