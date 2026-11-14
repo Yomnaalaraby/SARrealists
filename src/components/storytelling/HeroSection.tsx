@@ -3,7 +3,6 @@
 import { useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { PlayButton } from '@/game/components/PlayButton';
 
 // نفس ستايل الـ badges اللي في CaliforniaSection عشان التناسق
 const HERO_SPECS = ['L-BAND 24 CM', 'S-BAND 10 CM', '12-DAY REPEAT', '240 KM SWATH'];
@@ -109,10 +108,6 @@ export default function HeroSection() {
             But NISAR sees the Earth's pulse.
           </motion.span>
         </motion.p>
-
-        <motion.div variants={itemVariants} className="mt-8">
-          <PlayButton />
-        </motion.div>
       </motion.div>
 
       {/* زرار السكرول — متسابك زي ما هو */}
