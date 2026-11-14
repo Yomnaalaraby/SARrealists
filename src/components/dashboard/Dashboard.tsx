@@ -175,7 +175,7 @@ export default function Dashboard({ onRegionJump, onClose }: DashboardProps) {
             <Link href="/beyond">
               <button className="w-full mb-5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-purple-600/30">
                 <Rocket className="w-5 h-5" />
-                <span>Explore Beyond 2025</span>
+                <span>Explore Beyond 2026</span>
               </button>
             </Link>
           </div>

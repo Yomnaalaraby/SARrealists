@@ -111,7 +111,7 @@
     },
     {
       "id": "optical",
-      "name": { "en": "Optical camera (decoy)", "ar": "كاميرا بصرية (طُعم)" },
+      "name": { "en": "Optical camera", "ar": "كاميرا بصرية" },
       "measures": {
         "en": "Reflected sunlight in visible and near-infrared bands.",
         "ar": "ضوء الشمس المنعكس في النطاقات المرئية وتحت الحمراء القريبة."
