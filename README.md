@@ -40,7 +40,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 The story-driven NISAR game is playable at `/game`. Its specification is in
 [`docs/GAME_PROMPT_V2.md`](docs/GAME_PROMPT_V2.md). The landing hero also links
 to it with a **Play Captain DIO** button. The current readiness and asset audit
-is in [`docs/GAME_AUDIT.md`](docs/GAME_AUDIT.md).
+is in [`docs/GAME_AUDIT.md`](docs/GAME_AUDIT.md). The saved story treatment and
+map/data-explorer plan are in [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ```bash
 npm run dev              # play at http://localhost:3000/game
