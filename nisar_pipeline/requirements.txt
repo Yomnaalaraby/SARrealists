@@ -1,4 +1,4 @@
-asf_search==8.1.0
+asf_search>=14.1.0
 h5py==3.12.1
 fsspec==2024.10.0
 aiohttp==3.11.10

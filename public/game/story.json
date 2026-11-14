@@ -1,0 +1,207 @@
+{
+  "version": "v1",
+  "ship": {
+    "en": "Aurelia Dawn",
+    "ar": "فجر أوريليا"
+  },
+  "planet": {
+    "en": "Aurelia",
+    "ar": "أوريليا"
+  },
+  "captain": {
+    "en": "Captain DIO",
+    "ar": "الكابتن ديو"
+  },
+  "ai": {
+    "en": "LUMEN",
+    "ar": "لومِن"
+  },
+  "crew": [
+    {
+      "role": "geologist",
+      "name": {
+        "en": "Dr. Sana Qadir",
+        "ar": "د. سناء قادر"
+      },
+      "title": {
+        "en": "Geologist",
+        "ar": "جيولوجية"
+      }
+    },
+    {
+      "role": "agronomist",
+      "name": {
+        "en": "Tomas Reyes",
+        "ar": "توماس رييس"
+      },
+      "title": {
+        "en": "Agronomist",
+        "ar": "مهندس زراعي"
+      }
+    },
+    {
+      "role": "medic",
+      "name": {
+        "en": "Dr. Imani Cole",
+        "ar": "د. إيماني كول"
+      },
+      "title": {
+        "en": "Medic",
+        "ar": "طبيبة"
+      }
+    },
+    {
+      "role": "engineer",
+      "name": {
+        "en": "Ravi Menon",
+        "ar": "رافي مينون"
+      },
+      "title": {
+        "en": "Engineer",
+        "ar": "مهندس"
+      }
+    },
+    {
+      "role": "pilot",
+      "name": {
+        "en": "Jules Park",
+        "ar": "جولز بارك"
+      },
+      "title": {
+        "en": "Pilot",
+        "ar": "طيارة"
+      }
+    },
+    {
+      "role": "glaciologist",
+      "name": {
+        "en": "Dr. Elin Varga",
+        "ar": "د. إلين فارغا"
+      },
+      "title": {
+        "en": "Glaciologist",
+        "ar": "عالمة جليديات"
+      }
+    },
+    {
+      "role": "hydrologist",
+      "name": {
+        "en": "Nadia Haddad",
+        "ar": "نادية حداد"
+      },
+      "title": {
+        "en": "Hydrologist",
+        "ar": "عالمة هيدرولوجيا"
+      }
+    },
+    {
+      "role": "cook",
+      "name": {
+        "en": "Pietro Russo",
+        "ar": "بيترو روسو"
+      },
+      "title": {
+        "en": "Cook",
+        "ar": "طبّاخ"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "pathfinder",
+      "title": {
+        "en": "The Pathfinder",
+        "ar": "الرائد"
+      },
+      "text": {
+        "en": "DIO logs a clean mission. Then LUMEN speaks: “The star fix is wrong. Aurelia is Earth.” The crew is healthy. The warning is not.",
+        "ar": "يسجّل ديو مهمة نظيفة. ثم يقول لومِن: «تحديد النجوم خطأ. أوريليا هي الأرض». الطاقم بخير. لكن التحذير ليس كذلك."
+      },
+      "minHealthy": 8,
+      "minBestDecisions": 4
+    },
+    {
+      "id": "guardian",
+      "title": {
+        "en": "The Guardian",
+        "ar": "الحامي"
+      },
+      "text": {
+        "en": "Most of the crew is healthy. They did not conquer Aurelia; they learned to read it. The final fix points home.",
+        "ar": "معظم الطاقم بخير. لم يغزوا أوريليا؛ بل تعلّموا قراءتها. التحديد الأخير يشير إلى الديار."
+      },
+      "minHealthy": 6,
+      "minBestDecisions": 3
+    },
+    {
+      "id": "survivor",
+      "title": {
+        "en": "The Survivor",
+        "ar": "الناجي"
+      },
+      "text": {
+        "en": "The colony survives, but the injured list is long. LUMEN’s last image is Earth, and the cost of ignoring its warnings.",
+        "ar": "تنجو المستعمرة، لكن قائمة المصابين طويلة. آخر صورة لدى لومِن هي الأرض، وثمن تجاهل تحذيراتها."
+      },
+      "minHealthy": 4,
+      "minBestDecisions": 2
+    },
+    {
+      "id": "lumen-protocol",
+      "title": {
+        "en": "LUMEN Protocol",
+        "ar": "بروتوكول لومِن"
+      },
+      "text": {
+        "en": "Too many crew are down. LUMEN takes command and completes the survey. Its final message is simple: there is no Planet B.",
+        "ar": "كثير من الطاقم خارج الخدمة. يتولى لومِن القيادة ويكمل المسح. رسالته الأخيرة بسيطة: لا يوجد كوكب بديل."
+      },
+      "minHealthy": 0,
+      "minBestDecisions": 0
+    }
+  ],
+  "intro": [
+    {
+      "speaker": "captain",
+      "text": {
+        "en": "Crew, the log says 100 light-years. The Aurelia Dawn is finally down.",
+        "ar": "أيها الطاقم، يقول السجل إننا قطعنا 100 سنة ضوئية. هبطت فجر أوريليا أخيراً."
+      }
+    },
+    {
+      "speaker": "ai",
+      "text": {
+        "en": "No human signals on the surface. I detect a carbon pulse, active fires, moving ice, and unstable ground.",
+        "ar": "لا إشارات بشرية على السطح. أرصد نبضة كربون وحرائق نشطة وجليداً متحركاً وأرضاً غير مستقرة."
+      }
+    },
+    {
+      "speaker": "medic",
+      "text": {
+        "en": "If the planet is empty, why does it look like it is under stress?",
+        "ar": "إن كان الكوكب خالياً، فلماذا يبدو تحت ضغط؟"
+      }
+    },
+    {
+      "speaker": "agronomist",
+      "text": {
+        "en": "A world can be empty and still be in trouble. We need eyes on it before anyone steps outside.",
+        "ar": "يمكن أن يكون العالم خالياً ومع ذلك في خطر. نحتاج عيوناً عليه قبل أن يخرج أحد."
+      }
+    },
+    {
+      "speaker": "captain",
+      "text": {
+        "en": "LUMEN, give the team the radar briefing. We do this carefully.",
+        "ar": "لومِن، أعطِ الفريق إحاطة الرادار. سنفعل هذا بحذر."
+      }
+    },
+    {
+      "speaker": "ai",
+      "text": {
+        "en": "Two lenses per pass. Learn to see what dust and smoke hide.",
+        "ar": "عدستان لكل مرور. تعلّموا رؤية ما يخفيه الغبار والدخان."
+      }
+    }
+  ]
+}

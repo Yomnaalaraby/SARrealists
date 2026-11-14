@@ -7,7 +7,7 @@ interface CompareSliderProps {
   beforeLabel: string;
   afterLabel: string;
   beforeEffect?: boolean;   // blur + دخان (للسحب/الغيوم)
-  afterCrop?: string;       // قص حواف matplotlib من صورة NISAR
+  afterFit?: 'crop' | 'contain'; // clean heatmaps use full-bleed contain
 }
 
 export default function CompareSlider({
@@ -16,7 +16,7 @@ export default function CompareSlider({
   beforeLabel,
   afterLabel,
   beforeEffect = false,
-  afterCrop,
+  afterFit = 'crop',
 }: CompareSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,8 +44,8 @@ export default function CompareSlider({
           className="w-full h-full"
           style={{
             backgroundImage: `url(${afterImage})`,
-            backgroundSize: '350% auto',      // ✅ تكبير عشان الـ colorbar يطلع بره
-            backgroundPosition: '30% center', // ✅ إزاحة عشان المحاور الشمال تطلع بره
+            backgroundSize: afterFit === 'contain' ? '100% 100%' : '350% auto',
+            backgroundPosition: afterFit === 'contain' ? 'center' : '30% center',
             backgroundRepeat: 'no-repeat',
           }}
         />

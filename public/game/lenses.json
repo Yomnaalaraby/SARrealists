@@ -1,0 +1,131 @@
+{
+  "version": "v1",
+  "lenses": [
+    {
+      "id": "brightness",
+      "name": { "en": "Surface brightness change", "ar": "تغيّر سطوع السطح" },
+      "measures": {
+        "en": "Change in HH/HV radar backscatter between two acquisitions.",
+        "ar": "تغيّر الارتداد الراداري HH/HV بين عمليتي رصد."
+      },
+      "teaches": {
+        "en": "Vegetation loss, burn scars, and structure change show up as brightness shifts.",
+        "ar": "فقدان الغطاء النباتي وآثار الحرائق وتغيّر المنشآت تظهر كتحوّلات في السطوع."
+      },
+      "limits": {
+        "en": "Roughness and moisture both affect brightness, so a change is not automatically damage.",
+        "ar": "الخشونة والرطوبة تؤثران معاً في السطوع، لذا ليس كل تغيّر ضرراً."
+      },
+      "source": { "title": "NASA NISAR data products", "url": "https://nisar.jpl.nasa.gov/data/" },
+      "icon": "brightness"
+    },
+    {
+      "id": "water",
+      "name": { "en": "Water and flood map", "ar": "خريطة المياه والفيضانات" },
+      "measures": {
+        "en": "Dark HH backscatter from smooth open water and bright returns from flooded vegetation.",
+        "ar": "ارتداد HH داكن من المياه الهادئة وارتداد ساطع من النباتات المغمورة."
+      },
+      "teaches": {
+        "en": "Open water usually looks dark, while flooded vegetation can look bright.",
+        "ar": "المياه المفتوحة تبدو عادة داكنة، بينما قد تبدو النباتات المغمورة ساطعة."
+      },
+      "limits": {
+        "en": "Wind roughens water and can make it look bright, so dark pixels are not the whole story.",
+        "ar": "الرياح تخشّن سطح الماء وقد تجعله يبدو ساطعاً، لذا البكسلات الداكنة ليست القصة كاملة."
+      },
+      "source": { "title": "ASF NISAR data", "url": "https://asf.alaska.edu/data-sets/sar-data-sets/nisar/" },
+      "icon": "water"
+    },
+    {
+      "id": "moisture",
+      "name": { "en": "Soil moisture", "ar": "رطوبة التربة" },
+      "measures": {
+        "en": "L-band sensitivity to water in the top layer of soil.",
+        "ar": "حساسية النطاق L للمياه في الطبقة العليا من التربة."
+      },
+      "teaches": {
+        "en": "The dielectric constant rises with water content, changing the radar return.",
+        "ar": "يرتفع ثابت العزل الكهربائي مع محتوى الماء، فيتغيّر الارتداد الراداري."
+      },
+      "limits": {
+        "en": "Vegetation cover and surface roughness can mask the soil-moisture signal.",
+        "ar": "الغطاء النباتي وخشونة السطح قد يحجبان إشارة رطوبة التربة."
+      },
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" },
+      "icon": "moisture"
+    },
+    {
+      "id": "motion",
+      "name": { "en": "Ground motion", "ar": "حركة الأرض" },
+      "measures": {
+        "en": "Interferometric phase change between repeat passes, in millimetres to centimetres.",
+        "ar": "تغيّر طور التداخل بين مرورات متكررة، من المليمترات إلى السنتيمترات."
+      },
+      "teaches": {
+        "en": "Slow sinking, creep, and uplift can be measured over a consistent baseline.",
+        "ar": "يمكن قياس الهبوط والزحف والارتفاع البطيء عبر خط أساس متسق."
+      },
+      "limits": {
+        "en": "A short record has limited confidence, and vegetation or water can destroy coherence.",
+        "ar": "السجل القصير ثقته محدودة، وقد يدمر الغطاء النباتي أو الماء التماسك."
+      },
+      "source": { "title": "NASA NISAR data products", "url": "https://nisar.jpl.nasa.gov/data/" },
+      "icon": "motion"
+    },
+    {
+      "id": "stability",
+      "name": { "en": "Surface stability", "ar": "استقرار السطح" },
+      "measures": {
+        "en": "Interferometric coherence: how consistently the surface scattered between passes.",
+        "ar": "تماسك التداخل: مدى ثبات ارتداد السطح بين المرورات."
+      },
+      "teaches": {
+        "en": "Low coherence flags surfaces that changed, moved, or lost their scattering structure.",
+        "ar": "التماسك المنخفض يكشف أسطحاً تغيّرت أو تحركت أو فقدت بنيتها المبعثرة."
+      },
+      "limits": {
+        "en": "Coherence also drops over vegetation and water, even without a hazard.",
+        "ar": "ينخفض التماسك أيضاً فوق النباتات والماء حتى دون خطر."
+      },
+      "source": { "title": "NASA NISAR data products", "url": "https://nisar.jpl.nasa.gov/data/" },
+      "icon": "stability"
+    },
+    {
+      "id": "iceflow",
+      "name": { "en": "Ice flow", "ar": "تدفق الجليد" },
+      "measures": {
+        "en": "Pixel-offset tracking of moving ice between repeat acquisitions.",
+        "ar": "تتبّع إزاحة البكسلات للجليد المتحرك بين عمليات رصد متكررة."
+      },
+      "teaches": {
+        "en": "Glacier speed and flow direction can be tracked from repeat imagery.",
+        "ar": "يمكن تتبّع سرعة الأنهار الجليدية واتجاه تدفقها من صور متكررة."
+      },
+      "limits": {
+        "en": "Slow motion needs a longer baseline, and surface melting can confuse feature tracking.",
+        "ar": "الحركة البطيئة تحتاج خط أساس أطول، وقد يربك ذوبان السطح تتبّع المعالم."
+      },
+      "source": { "title": "NASA NISAR science", "url": "https://nisar.jpl.nasa.gov/science/" },
+      "icon": "iceflow"
+    },
+    {
+      "id": "optical",
+      "name": { "en": "Optical camera (decoy)", "ar": "كاميرا بصرية (طُعم)" },
+      "measures": {
+        "en": "Reflected sunlight in visible and near-infrared bands.",
+        "ar": "ضوء الشمس المنعكس في النطاقات المرئية وتحت الحمراء القريبة."
+      },
+      "teaches": {
+        "en": "Optical imagery is intuitive but needs daylight and a clear view.",
+        "ar": "الصور البصرية بديهية لكنها تحتاج ضوء النهار ومساراً صافياً."
+      },
+      "limits": {
+        "en": "Smoke, cloud, and darkness block the view; an empty image is not an empty hazard.",
+        "ar": "الدخان والسحاب والظلام تحجب الرؤية؛ الصورة الفارغة لا تعني غياب الخطر."
+      },
+      "source": { "title": "NASA Earthdata", "url": "https://www.earthdata.nasa.gov/" },
+      "icon": "optical"
+    }
+  ]
+}

@@ -1,0 +1,1266 @@
+{
+  "version": "v1",
+  "missions": [
+    {
+      "id": "m1-smoke",
+      "siteId": "sector-4",
+      "title": {
+        "en": "Smoke over the landing basin",
+        "ar": "دخان فوق حوض الهبوط"
+      },
+      "briefing": {
+        "en": "DIO: After 100 light-years, the Aurelia Dawn is finally down. Imani: The smoke is too thick for a visual approach. Tomas: If the basin is wet, the ground may move under the lander. LUMEN: Two passes remain. Choose two lenses before we commit.",
+        "ar": "ديو: بعد 100 سنة ضوئية، هبطت فجر أوريليا أخيراً. إيماني: الدخان كثيف جداً للهبوط البصري. توماس: إن كان الحوض رطباً فقد تتحرك الأرض تحت المركبة. لومِن: تبقّى مروران. اختر عدستين قبل أن نلتزم."
+      },
+      "alias": "Aurelia, Sector 4",
+      "data": {
+        "dates": [
+          "2026-03-04",
+          "2026-05-15"
+        ],
+        "track": 13,
+        "direction": "DESCENDING",
+        "pixelMeters": 30,
+        "passes": 2,
+        "baselineDays": 72,
+        "confidence": "low"
+      },
+      "relevance": {
+        "brightness": "essential",
+        "water": "helpful",
+        "moisture": "irrelevant",
+        "motion": "irrelevant",
+        "stability": "irrelevant",
+        "iceflow": "irrelevant",
+        "optical": "misleading"
+      },
+      "lensResults": {
+        "brightness": {
+          "status": "clear",
+          "caption": {
+            "en": "The burn scar is brighter than the intact canopy.",
+            "ar": "أثر الحريق أكثر سطوعاً من الغطاء السليم."
+          },
+          "visual": {
+            "kind": "pair",
+            "images": [
+              "game/img/m1-smoke_brightness_a.png",
+              "game/img/m1-smoke_brightness_b.png"
+            ],
+            "alt": {
+              "en": "Illustration: two radar brightness images of a smoky basin.",
+              "ar": "رسم توضيحي: صورتا سطوع راداري لحوض مغطى بالدخان."
+            },
+            "labels": [
+              {
+                "en": "Before",
+                "ar": "قبل"
+              },
+              {
+                "en": "After",
+                "ar": "بعد"
+              }
+            ]
+          }
+        },
+        "optical": {
+          "status": "blind",
+          "caption": {
+            "en": "Smoke completely blocks the optical view.",
+            "ar": "الدخان يحجب الرؤية البصرية تماماً."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m1-smoke_optical_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: an optical image obscured by smoke.",
+              "ar": "رسم توضيحي: صورة بصرية يحجبها الدخان."
+            }
+          }
+        },
+        "water": {
+          "status": "weak",
+          "caption": {
+            "en": "A dark patch could be water or a shadow.",
+            "ar": "قد تكون البقعة الداكنة ماءً أو ظلاً."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m1-smoke_water_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a dark radar patch near the landing basin.",
+              "ar": "رسم توضيحي: بقعة رادارية داكنة قرب حوض الهبوط."
+            }
+          }
+        },
+        "moisture": {
+          "status": "blind",
+          "caption": {
+            "en": "No usable soil-moisture signal at this look angle.",
+            "ar": "لا توجد إشارة رطوبة تربة صالحة عند زاوية النظر هذه."
+          }
+        },
+        "motion": {
+          "status": "blind",
+          "caption": {
+            "en": "One pair is not enough to measure motion.",
+            "ar": "زوج واحد لا يكفي لقياس الحركة."
+          }
+        },
+        "stability": {
+          "status": "blind",
+          "caption": {
+            "en": "The surface lost coherence in the smoke-affected area.",
+            "ar": "فقد السطح تماسكه في المنطقة المتأثرة بالدخان."
+          }
+        },
+        "iceflow": {
+          "status": "blind",
+          "caption": {
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
+          }
+        }
+      },
+      "decisions": [
+        "go",
+        "delay",
+        "reroute"
+      ],
+      "bestDecision": "reroute",
+      "outcomes": {
+        "strong": {
+          "go": {
+            "injuredRoles": [
+              "pilot"
+            ],
+            "text": {
+              "en": "The crew lands safely, but the pilot is injured clearing debris.",
+              "ar": "يهبط الطاقم بأمان، لكن الطيارة تُصاب أثناء إزالة الحطام."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You wait for a clearer pass. No one is hurt; the expedition loses time.",
+              "ar": "تنتظر مروراً أوضح. لا أحد يُصاب، لكن البعثة تخسر وقتاً."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You reroute to the burn-scar edge. The crew is safe.",
+              "ar": "تعيد المسار إلى حافة أثر الحريق. الطاقم بأمان."
+            }
+          }
+        },
+        "partial": {
+          "go": {
+            "injuredRoles": [
+              "pilot",
+              "geologist"
+            ],
+            "text": {
+              "en": "The smoke hides a gully; the pilot and geologist are injured.",
+              "ar": "يخفي الدخان وادياً؛ تُصاب الطيارة والجيولوجية."
+            }
+          },
+          "delay": {
+            "injuredRoles": [
+              "engineer"
+            ],
+            "text": {
+              "en": "Delay helps, but the engineer is hurt repairing the lander.",
+              "ar": "التأجيل يساعد، لكن المهندس يُصاب أثناء إصلاح المركبة."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "geologist"
+            ],
+            "text": {
+              "en": "The reroute is safer, though the geologist twists an ankle.",
+              "ar": "المسار الجديد أكثر أماناً، لكن الجيولوجية تلتوي كاحلها."
+            }
+          }
+        },
+        "blind": {
+          "go": {
+            "injuredRoles": [
+              "pilot",
+              "medic"
+            ],
+            "text": {
+              "en": "With no usable signal, the landing damages the lander; the pilot and medic are injured.",
+              "ar": "دون إشارة صالحة، يضر الهبوط بالمركبة؛ تُصاب الطيارة والطبيبة."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "engineer"
+            ],
+            "text": {
+              "en": "You reroute blindly; the engineer is injured.",
+              "ar": "تغيّر المسار على غير هدى؛ يُصاب المهندس."
+            }
+          }
+        }
+      },
+      "realityCheck": {
+        "explain": {
+          "en": "Radar sends its own signal, so smoke does not block it. A burn scar changes surface roughness and can appear brighter or darker than intact vegetation.",
+          "ar": "يرسل الرادار إشارته الخاصة، لذا لا يحجبه الدخان. يغيّر أثر الحريق خشونة السطح وقد يظهر أسطع أو أغمق من الغطاء السليم."
+        },
+        "limits": {
+          "en": "Brightness alone cannot separate damage from moisture or roughness change. A second lens or a later pass helps.",
+          "ar": "السطوع وحده لا يفصل الضرر عن تغيّر الرطوبة أو الخشونة. عدسة ثانية أو مرور لاحق يساعدان."
+        },
+        "benefit": {
+          "en": "Emergency planners and land-use teams use change maps to prioritize ground checks.",
+          "ar": "يستخدم مخططو الطوارئ وفرق استخدام الأراضي خرائط التغيّر لترتيب الفحوص الميدانية."
+        },
+        "source": {
+          "title": "NASA NISAR data products",
+          "url": "https://nisar.jpl.nasa.gov/data/"
+        }
+      },
+      "crewHints": {
+        "pilot": {
+          "text": {
+            "en": "I cannot see through this smoke. My eyes say no, even if the instruments disagree.",
+            "ar": "لا أرى عبر هذا الدخان. عيناي تقولان لا، حتى لو اختلفت الأجهزة."
+          },
+          "suggestsLens": "optical",
+          "reliability": "biased"
+        },
+        "engineer": {
+          "text": {
+            "en": "The pad needs flat, stable ground. A brightness change may show the burn edge.",
+            "ar": "تحتاج منصة الهبوط أرضاً مستوية وثابتة. قد يُظهر تغيّر السطوع حافة الحريق."
+          },
+          "suggestsLens": "brightness",
+          "reliability": "good"
+        },
+        "medic": {
+          "text": {
+            "en": "If there is water in the basin, I need to know before we set down.",
+            "ar": "إن كانت هناك مياه في الحوض، عليّ أن أعرف قبل الهبوط."
+          },
+          "suggestsLens": "water",
+          "reliability": "wrong"
+        }
+      },
+      "hints": [
+        {
+          "en": "Ask LUMEN which lens can see through smoke, and which one can see the wet ground.",
+          "ar": "اسأل لومِن أي عدسة ترى عبر الدخان، وأيها ترى الأرض الرطبة."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "captain",
+          "text": {
+            "en": "After 100 light-years, the Aurelia Dawn is finally down.",
+            "ar": "بعد 100 سنة ضوئية، هبطت فجر أوريليا أخيراً."
+          }
+        },
+        {
+          "speaker": "medic",
+          "text": {
+            "en": "The smoke is too thick for a visual approach.",
+            "ar": "الدخان كثيف جداً للهبوط البصري."
+          }
+        },
+        {
+          "speaker": "agronomist",
+          "text": {
+            "en": "If the basin is wet, the ground may move under the lander.",
+            "ar": "إن كان الحوض رطباً فقد تتحرك الأرض تحت المركبة."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses before we commit.",
+            "ar": "تبقّى مروران. اختر عدستين قبل أن نلتزم."
+          }
+        }
+      ]
+    },
+    {
+      "id": "m2-glacier",
+      "siteId": "sector-9",
+      "title": {
+        "en": "The moving glacier",
+        "ar": "النهر الجليدي المتحرك"
+      },
+      "briefing": {
+        "en": "Elin: The glacier above camp is moving faster than the archive predicts. Ravi: The ridge route is the only way to the drill site. Jules: Cloud is closing in. LUMEN: Three passes remain. Choose two lenses before the route is committed.",
+        "ar": "إلين: يتحرك النهر الجليدي فوق المخيم أسرع مما يتوقع الأرشيف. رافي: طريق الحافة هو السبيل الوحيد إلى موقع الحفر. جولز: السحاب يقترب. لومِن: تبقّت ثلاثة مرورات. اختر عدستين قبل تثبيت المسار."
+      },
+      "alias": "Aurelia, Sector 9",
+      "data": {
+        "dates": [
+          "2026-01-25",
+          "2026-03-26"
+        ],
+        "track": 120,
+        "direction": "DESCENDING",
+        "pixelMeters": 30,
+        "passes": 3,
+        "baselineDays": 60,
+        "confidence": "medium"
+      },
+      "relevance": {
+        "brightness": "helpful",
+        "water": "irrelevant",
+        "moisture": "irrelevant",
+        "motion": "irrelevant",
+        "stability": "helpful",
+        "iceflow": "essential",
+        "optical": "irrelevant"
+      },
+      "lensResults": {
+        "iceflow": {
+          "status": "clear",
+          "caption": {
+            "en": "The glacier tongue has moved between the two passes.",
+            "ar": "تحرّك لسان النهر الجليدي بين المرورين."
+          },
+          "visual": {
+            "kind": "pair",
+            "images": [
+              "game/img/m2-glacier_iceflow_a.png",
+              "game/img/m2-glacier_iceflow_b.png"
+            ],
+            "alt": {
+              "en": "Illustration: two radar views of a glacier tongue.",
+              "ar": "رسم توضيحي: منظران راداريان للسان نهر جليدي."
+            },
+            "labels": [
+              {
+                "en": "January",
+                "ar": "يناير"
+              },
+              {
+                "en": "March",
+                "ar": "مارس"
+              }
+            ]
+          }
+        },
+        "brightness": {
+          "status": "clear",
+          "caption": {
+            "en": "The debris-covered ice edge has a different brightness.",
+            "ar": "لحافة الجليد المغطاة بالحطام سطوع مختلف."
+          },
+          "visual": {
+            "kind": "pair",
+            "images": [
+              "game/img/m2-glacier_brightness_a.png",
+              "game/img/m2-glacier_brightness_b.png"
+            ],
+            "alt": {
+              "en": "Illustration: two radar brightness views of a glacier edge.",
+              "ar": "رسم توضيحي: منظرا سطوع راداري لحافة نهر جليدي."
+            }
+          }
+        },
+        "stability": {
+          "status": "clear",
+          "caption": {
+            "en": "Coherence falls where the surface is changing.",
+            "ar": "ينخفض التماسك حيث يتغيّر السطح."
+          },
+          "visual": {
+            "kind": "chart",
+            "series": {
+              "unit": "coherence",
+              "label": {
+                "en": "Coherence",
+                "ar": "التماسك"
+              },
+              "points": [
+                {
+                  "date": "2026-01-25",
+                  "value": 0.86
+                },
+                {
+                  "date": "2026-02-18",
+                  "value": 0.72
+                },
+                {
+                  "date": "2026-03-26",
+                  "value": 0.58
+                }
+              ]
+            },
+            "alt": {
+              "en": "Illustration: a coherence time series for the glacier surface.",
+              "ar": "رسم توضيحي: سلسلة زمنية لتماسك سطح النهر الجليدي."
+            }
+          }
+        },
+        "optical": {
+          "status": "blind",
+          "caption": {
+            "en": "Cloud covers the ridge in the optical image.",
+            "ar": "يغطي السحاب الحافة في الصورة البصرية."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m2-glacier_optical_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: an optical image covered by cloud.",
+              "ar": "رسم توضيحي: صورة بصرية يغطيها السحاب."
+            }
+          }
+        },
+        "motion": {
+          "status": "weak",
+          "caption": {
+            "en": "The short baseline gives a noisy motion estimate.",
+            "ar": "خط الأساس القصير يعطي تقدير حركة مشوشاً."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m2-glacier_motion_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a noisy radar motion estimate.",
+              "ar": "رسم توضيحي: تقدير حركة راداري مشوش."
+            }
+          }
+        },
+        "water": {
+          "status": "blind",
+          "caption": {
+            "en": "No open water is visible in this sector.",
+            "ar": "لا تظهر مياه مفتوحة في هذا القطاع."
+          }
+        },
+        "moisture": {
+          "status": "blind",
+          "caption": {
+            "en": "Ice and snow dominate the surface signal.",
+            "ar": "يسيطر الجليد والثلج على إشارة السطح."
+          }
+        }
+      },
+      "decisions": [
+        "go",
+        "delay",
+        "reroute"
+      ],
+      "bestDecision": "go",
+      "outcomes": {
+        "strong": {
+          "go": {
+            "injuredRoles": [],
+            "text": {
+              "en": "The route is safe. The crew reaches the ridge and returns before dark.",
+              "ar": "الطريق آمن. يصل الطاقم إلى الحافة ويعود قبل الظلام."
+            }
+          },
+          "delay": {
+            "injuredRoles": [
+              "engineer"
+            ],
+            "text": {
+              "en": "The delay costs a pass, but the engineer is injured on the exposed slope.",
+              "ar": "يكلف التأجيل مروراً، لكن المهندس يُصاب على المنحدر المكشوف."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "pilot"
+            ],
+            "text": {
+              "en": "The longer route is safe, but the pilot is injured scouting it.",
+              "ar": "المسار الأطول آمن، لكن الطيارة تُصاب أثناء استطلاعه."
+            }
+          }
+        },
+        "partial": {
+          "go": {
+            "injuredRoles": [
+              "glaciologist"
+            ],
+            "text": {
+              "en": "The route holds, but the glaciologist is injured on unstable ice.",
+              "ar": "يصمد الطريق، لكن عالمة الجليديات تُصاب على جليد غير مستقر."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You wait for another pass. No one is hurt, but time is lost.",
+              "ar": "تنتظر مروراً آخر. لا أحد يُصاب، لكن الوقت يضيع."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "engineer"
+            ],
+            "text": {
+              "en": "The reroute avoids the tongue, but the engineer is injured.",
+              "ar": "يتجنب المسار الجديد اللسان، لكن المهندس يُصاب."
+            }
+          }
+        },
+        "blind": {
+          "go": {
+            "injuredRoles": [
+              "glaciologist",
+              "pilot"
+            ],
+            "text": {
+              "en": "Without flow data, the ice gives way; the glaciologist and pilot are injured.",
+              "ar": "دون بيانات التدفق، ينهار الجليد؛ تُصاب عالمة الجليديات والطيارة."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "glaciologist"
+            ],
+            "text": {
+              "en": "The blind reroute crosses a crevasse field; the glaciologist is injured.",
+              "ar": "يعبر المسار الجديد حقل شقوق جليدية؛ تُصاب عالمة الجليديات."
+            }
+          }
+        }
+      },
+      "realityCheck": {
+        "explain": {
+          "en": "Repeat radar passes let us track glacier motion. Slow flow needs a longer baseline, and coherence tells us where the surface changed.",
+          "ar": "تتيح مرورات الرادار المتكررة تتبّع حركة النهر الجليدي. الحركة البطيئة تحتاج خط أساس أطول، ويخبرنا التماسك أين تغيّر السطح."
+        },
+        "limits": {
+          "en": "A two-pass record cannot separate seasonal speed-up from a long-term trend. More passes build confidence.",
+          "ar": "سجل من مرورين لا يفصل بين تسارع موسمي واتجاه طويل الأمد. المرورات الأكثر تبني الثقة."
+        },
+        "benefit": {
+          "en": "Glaciologists and water managers use flow and mass-change estimates to plan downstream water supplies.",
+          "ar": "يستخدم علماء الجليديات ومديرو المياه تقديرات التدفق وتغيّر الكتلة لتخطيط إمدادات المياه في المصب."
+        },
+        "source": {
+          "title": "NASA NISAR data products",
+          "url": "https://nisar.jpl.nasa.gov/data/"
+        }
+      },
+      "crewHints": {
+        "glaciologist": {
+          "text": {
+            "en": "The ice is moving. Ice flow is the direct measurement here; brightness is only a second look.",
+            "ar": "الجليد يتحرك. تدفق الجليد هو القياس المباشر هنا؛ السطوع مجرد نظرة ثانية."
+          },
+          "suggestsLens": "iceflow",
+          "reliability": "good"
+        },
+        "engineer": {
+          "text": {
+            "en": "Coherence will tell us which ice is stable enough to cross.",
+            "ar": "سيخبرنا التماسك أي الجليد ثابت بما يكفي للعبور."
+          },
+          "suggestsLens": "stability",
+          "reliability": "good"
+        },
+        "pilot": {
+          "text": {
+            "en": "Cloud is closing. Optical should give me a clean view of the ridge.",
+            "ar": "السحاب يقترب. يفترض أن تعطيني الصورة البصرية رؤية واضحة للحافة."
+          },
+          "suggestsLens": "optical",
+          "reliability": "biased"
+        }
+      },
+      "hints": [
+        {
+          "en": "Flow is the direct question for a moving glacier. Coherence tells you where the measurement can be trusted.",
+          "ar": "الحركة هي السؤال المباشر للنهر الجليدي المتحرك. يخبرك التماسك أين يمكن الوثوق بالقياس."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "glaciologist",
+          "text": {
+            "en": "The glacier above camp is moving faster than the archive predicts.",
+            "ar": "يتحرك النهر الجليدي فوق المخيم أسرع مما يتوقع الأرشيف."
+          }
+        },
+        {
+          "speaker": "engineer",
+          "text": {
+            "en": "The ridge route is the only way to the drill site.",
+            "ar": "طريق الحافة هو السبيل الوحيد إلى موقع الحفر."
+          }
+        },
+        {
+          "speaker": "pilot",
+          "text": {
+            "en": "Cloud is closing in. I need a route I can fly.",
+            "ar": "السحاب يقترب. أحتاج مساراً يمكنني الطيران فيه."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Three passes remain. Choose two lenses before the route is committed.",
+            "ar": "تبقّت ثلاثة مرورات. اختر عدستين قبل تثبيت المسار."
+          }
+        }
+      ]
+    },
+    {
+      "id": "m3-delta",
+      "siteId": "sector-2",
+      "title": {
+        "en": "Fields in the delta",
+        "ar": "حقول في الدلتا"
+      },
+      "briefing": {
+        "en": "Tomas: The delta soil looks rich, but the river is already high. Nadia: If the fields are saturated, the next pass could flood them. Imani: We cannot move a whole settlement twice. LUMEN: Two passes remain. Choose two lenses before planting.",
+        "ar": "توماس: تبدو تربة الدلتا خصبة، لكن النهر مرتفع بالفعل. نادية: إن تشبّعت الحقول فقد يغمرها المرور التالي. إيماني: لا يمكننا نقل مستوطنة كاملة مرتين. لومِن: تبقّى مروران. اختر عدستين قبل الزراعة."
+      },
+      "alias": "Aurelia, Sector 2",
+      "data": {
+        "dates": [
+          "2026-07-20",
+          "2026-08-25"
+        ],
+        "track": 56,
+        "direction": "ASCENDING",
+        "pixelMeters": 30,
+        "passes": 2,
+        "baselineDays": 36,
+        "confidence": "medium"
+      },
+      "relevance": {
+        "brightness": "helpful",
+        "water": "essential",
+        "moisture": "essential",
+        "motion": "irrelevant",
+        "stability": "irrelevant",
+        "iceflow": "irrelevant",
+        "optical": "irrelevant"
+      },
+      "lensResults": {
+        "moisture": {
+          "status": "clear",
+          "caption": {
+            "en": "Wet soil is brighter in the L-band return.",
+            "ar": "التربة الرطبة أكثر سطوعاً في ارتداد النطاق L."
+          },
+          "visual": {
+            "kind": "pair",
+            "images": [
+              "game/img/m3-delta_moisture_a.png",
+              "game/img/m3-delta_moisture_b.png"
+            ],
+            "alt": {
+              "en": "Illustration: two soil-moisture views of delta fields.",
+              "ar": "رسم توضيحي: منظرا رطوبة تربة لحقول الدلتا."
+            }
+          }
+        },
+        "water": {
+          "status": "clear",
+          "caption": {
+            "en": "Open water is dark; flooded vegetation stays bright.",
+            "ar": "المياه المفتوحة داكنة؛ النباتات المغمورة تبقى ساطعة."
+          },
+          "visual": {
+            "kind": "pair",
+            "images": [
+              "game/img/m3-delta_water_a.png",
+              "game/img/m3-delta_water_b.png"
+            ],
+            "alt": {
+              "en": "Illustration: two radar water maps of a river delta.",
+              "ar": "رسم توضيحي: خريطتا مياه راداريتان لدلتا نهر."
+            }
+          }
+        },
+        "brightness": {
+          "status": "clear",
+          "caption": {
+            "en": "Field edges and bare soil show a brightness change.",
+            "ar": "تُظهر حدود الحقول والتربة العارية تغيّراً في السطوع."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m3-delta_brightness_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a radar brightness view of farm fields.",
+              "ar": "رسم توضيحي: منظر سطوع راداري لحقول زراعية."
+            }
+          }
+        },
+        "optical": {
+          "status": "blind",
+          "caption": {
+            "en": "Haze hides the fields in the optical image.",
+            "ar": "يخفي الضباب الحقول في الصورة البصرية."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m3-delta_optical_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: an optical image obscured by haze.",
+              "ar": "رسم توضيحي: صورة بصرية يحجبها الضباب."
+            }
+          }
+        },
+        "stability": {
+          "status": "weak",
+          "caption": {
+            "en": "Coherence is low over the wet fields.",
+            "ar": "التماسك منخفض فوق الحقول الرطبة."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m3-delta_stability_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a low-coherence radar view of wet fields.",
+              "ar": "رسم توضيحي: منظر تماسك منخفض لحقول رطبة."
+            }
+          }
+        },
+        "motion": {
+          "status": "blind",
+          "caption": {
+            "en": "The short record cannot resolve slow settlement.",
+            "ar": "السجل القصير لا يحلّ الهبوط البطيء."
+          }
+        },
+        "iceflow": {
+          "status": "blind",
+          "caption": {
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
+          }
+        }
+      },
+      "decisions": [
+        "go",
+        "delay",
+        "reroute"
+      ],
+      "bestDecision": "reroute",
+      "outcomes": {
+        "strong": {
+          "go": {
+            "injuredRoles": [
+              "agronomist"
+            ],
+            "text": {
+              "en": "The fields are planted, but the agronomist is injured in a flooded ditch.",
+              "ar": "تُزرع الحقول، لكن المهندس الزراعي يُصاب في خندق مغمور."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You wait for the flood peak to pass. No one is hurt; planting is late.",
+              "ar": "تنتظر مرور ذروة الفيضان. لا أحد يُصاب؛ الزراعة متأخرة."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You move the fields to higher ground. The harvest is safe.",
+              "ar": "تنقل الحقول إلى أرض أعلى. الحصاد آمن."
+            }
+          }
+        },
+        "partial": {
+          "go": {
+            "injuredRoles": [
+              "hydrologist"
+            ],
+            "text": {
+              "en": "The wet patch floods; the hydrologist is injured.",
+              "ar": "تغمر البقعة الرطبة؛ تُصاب عالمة الهيدرولوجيا."
+            }
+          },
+          "delay": {
+            "injuredRoles": [
+              "cook"
+            ],
+            "text": {
+              "en": "The delay helps, but the cook is injured moving stores.",
+              "ar": "يساعد التأجيل، لكن الطبّاخ يُصاب أثناء نقل المؤن."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [],
+            "text": {
+              "en": "The reroute is safer, though the fields are smaller.",
+              "ar": "المسار الجديد أكثر أماناً، لكن الحقول أصغر."
+            }
+          }
+        },
+        "blind": {
+          "go": {
+            "injuredRoles": [
+              "hydrologist",
+              "cook"
+            ],
+            "text": {
+              "en": "Without water or moisture maps, the flood catches the crew; the hydrologist and cook are injured.",
+              "ar": "دون خرائط المياه والرطوبة، ي مفاجئ الفيضان الطاقم؛ تُصاب عالمة الهيدرولوجيا والطبّاخ."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "agronomist"
+            ],
+            "text": {
+              "en": "The blind reroute crosses a soft bank; the agronomist is injured.",
+              "ar": "يعبر المسار الجديد ضفة رخوة؛ يُصاب المهندس الزراعي."
+            }
+          }
+        }
+      },
+      "realityCheck": {
+        "explain": {
+          "en": "Radar is sensitive to water because liquid water raises the dielectric constant. Smooth open water usually looks dark, while wet soil and flooded vegetation can look bright.",
+          "ar": "الرادار حساس للماء لأن الماء السائل يرفع ثابت العزل الكهربائي. المياه المفتوحة الهادئة تبدو عادة داكنة، بينما قد تبدو التربة الرطبة والنباتات المغمورة ساطعة."
+        },
+        "limits": {
+          "en": "Wind, vegetation, and shallow water can confuse a simple water map. Pair it with moisture or a later pass.",
+          "ar": "الرياح والنباتات والمياه الضحلة قد تربك خريطة المياه البسيطة. اقرنها بالرطوبة أو بمرور لاحق."
+        },
+        "benefit": {
+          "en": "Farmers, water authorities, and flood responders use wetness and flood maps to choose crops and protect settlements.",
+          "ar": "يستخدم المزارعون وسلطات المياه وفرق الاستجابة للفيضانات خرائط الرطوبة والفيضان لاختيار المحاصيل وحماية المستوطنات."
+        },
+        "source": {
+          "title": "NASA NISAR data products",
+          "url": "https://nisar.jpl.nasa.gov/data/"
+        }
+      },
+      "crewHints": {
+        "agronomist": {
+          "text": {
+            "en": "Soil moisture tells us what can be planted now. Water shows where not to plant.",
+            "ar": "تخبرنا رطوبة التربة بما يمكن زراعته الآن. يُظهر الماء أين لا نزرع."
+          },
+          "suggestsLens": "moisture",
+          "reliability": "good"
+        },
+        "hydrologist": {
+          "text": {
+            "en": "The flood map is the direct check for standing water.",
+            "ar": "خريطة الفيضان هي الفحص المباشر للمياه الراكدة."
+          },
+          "suggestsLens": "water",
+          "reliability": "good"
+        },
+        "cook": {
+          "text": {
+            "en": "If the fields are bright, the food stores should be fine.",
+            "ar": "إن كانت الحقول ساطعة، فمخزون الطعام سيكون بخير."
+          },
+          "suggestsLens": "brightness",
+          "reliability": "biased"
+        }
+      },
+      "hints": [
+        {
+          "en": "Water and moisture answer different questions: where water stands, and how wet the soil is.",
+          "ar": "الماء والرطوبة يجيبان عن سؤالين مختلفين: أين تقف المياه، وما مدى رطوبة التربة."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "agronomist",
+          "text": {
+            "en": "The delta soil looks rich, but the river is already high.",
+            "ar": "تبدو تربة الدلتا خصبة، لكن النهر مرتفع بالفعل."
+          }
+        },
+        {
+          "speaker": "hydrologist",
+          "text": {
+            "en": "If the fields are saturated, the next pass could flood them.",
+            "ar": "إن تشبّعت الحقول فقد يغمرها المرور التالي."
+          }
+        },
+        {
+          "speaker": "medic",
+          "text": {
+            "en": "We cannot move a whole settlement twice.",
+            "ar": "لا يمكننا نقل مستوطنة كاملة مرتين."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses before planting.",
+            "ar": "تبقّى مروران. اختر عدستين قبل الزراعة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "m4-foundations",
+      "siteId": "sector-7",
+      "title": {
+        "en": "Soft ground",
+        "ar": "أرض رخوة"
+      },
+      "briefing": {
+        "en": "Ravi: The first permanent building needs ground that will not move. Sana: The surface looks flat, but flat is not stable. DIO: We have one chance to site this foundation. LUMEN: Two passes remain. Choose two lenses.",
+        "ar": "رافي: يحتاج أول مبنى دائم إلى أرض لا تتحرك. سناء: السطح يبدو مستوياً، لكن الاستواء ليس ثباتاً. ديو: لدينا فرصة واحدة لاختيار موقع الأساس. لومِن: تبقّى مروران. اختر عدستين."
+      },
+      "alias": "Aurelia, Sector 7",
+      "data": {
+        "dates": [
+          "2026-08-25",
+          "2026-10-24"
+        ],
+        "track": 34,
+        "direction": "DESCENDING",
+        "pixelMeters": 30,
+        "passes": 2,
+        "baselineDays": 60,
+        "confidence": "low"
+      },
+      "relevance": {
+        "brightness": "irrelevant",
+        "water": "irrelevant",
+        "moisture": "irrelevant",
+        "motion": "essential",
+        "stability": "helpful",
+        "iceflow": "irrelevant",
+        "optical": "misleading"
+      },
+      "lensResults": {
+        "motion": {
+          "status": "clear",
+          "caption": {
+            "en": "The ground is sinking faster than the surrounding area.",
+            "ar": "تهبط الأرض أسرع من المنطقة المحيطة."
+          },
+          "visual": {
+            "kind": "chart",
+            "series": {
+              "unit": "mm/yr",
+              "label": {
+                "en": "Vertical motion",
+                "ar": "الحركة الرأسية"
+              },
+              "points": [
+                {
+                  "date": "2026-08-25",
+                  "value": -8.2
+                },
+                {
+                  "date": "2026-09-30",
+                  "value": -11.4
+                },
+                {
+                  "date": "2026-10-24",
+                  "value": -14.1
+                }
+              ]
+            },
+            "alt": {
+              "en": "Illustration: a vertical ground-motion time series.",
+              "ar": "رسم توضيحي: سلسلة زمنية للحركة الرأسية للأرض."
+            }
+          }
+        },
+        "stability": {
+          "status": "weak",
+          "caption": {
+            "en": "Coherence is patchy over the soft ground.",
+            "ar": "التماسك متقطّع فوق الأرض الرخوة."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m4-foundations_stability_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a patchy coherence view of soft ground.",
+              "ar": "رسم توضيحي: منظر تماسك متقطّع لأرض رخوة."
+            }
+          }
+        },
+        "optical": {
+          "status": "blind",
+          "caption": {
+            "en": "The optical image looks clear, but it cannot show motion.",
+            "ar": "تبدو الصورة البصرية واضحة، لكنها لا تُظهر الحركة."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m4-foundations_optical_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a clear optical image of flat ground.",
+              "ar": "رسم توضيحي: صورة بصرية واضحة لأرض مستوية."
+            }
+          }
+        },
+        "moisture": {
+          "status": "blind",
+          "caption": {
+            "en": "The surface is too dry for a usable moisture signal.",
+            "ar": "السطح جاف جداً لإشارة رطوبة صالحة."
+          }
+        },
+        "water": {
+          "status": "weak",
+          "caption": {
+            "en": "A small dark patch may be shallow water.",
+            "ar": "قد تكون بقعة داكنة صغيرة مياهاً ضحلة."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m4-foundations_water_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a small dark radar patch on flat ground.",
+              "ar": "رسم توضيحي: بقعة رادارية داكنة صغيرة على أرض مستوية."
+            }
+          }
+        },
+        "brightness": {
+          "status": "clear",
+          "caption": {
+            "en": "The surface looks unchanged in brightness.",
+            "ar": "يبدو السطح بلا تغيّر في السطوع."
+          },
+          "visual": {
+            "kind": "single",
+            "images": [
+              "game/img/m4-foundations_brightness_a.png"
+            ],
+            "alt": {
+              "en": "Illustration: a radar brightness view of flat ground.",
+              "ar": "رسم توضيحي: منظر سطوع راداري لأرض مستوية."
+            }
+          }
+        },
+        "iceflow": {
+          "status": "blind",
+          "caption": {
+            "en": "No ice is visible in this sector.",
+            "ar": "لا يظهر جليد في هذا القطاع."
+          }
+        }
+      },
+      "decisions": [
+        "go",
+        "delay",
+        "reroute"
+      ],
+      "bestDecision": "delay",
+      "outcomes": {
+        "strong": {
+          "go": {
+            "injuredRoles": [
+              "engineer"
+            ],
+            "text": {
+              "en": "The building goes up, but the engineer is injured when the foundation shifts.",
+              "ar": "يُبنى المبنى، لكن المهندس يُصاب عندما ينزاح الأساس."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You delay and collect another pass. The extra data confirms the sinking ground; no one is hurt.",
+              "ar": "تؤجل وتجمع مروراً آخر. تؤكد البيانات الإضافية هبوط الأرض؛ لا أحد يُصاب."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "geologist"
+            ],
+            "text": {
+              "en": "You move to firmer ground, but the geologist is injured surveying the new site.",
+              "ar": "تنتقل إلى أرض أثبت، لكن الجيولوجية تُصاب أثناء مسح الموقع الجديد."
+            }
+          }
+        },
+        "partial": {
+          "go": {
+            "injuredRoles": [
+              "engineer",
+              "pilot"
+            ],
+            "text": {
+              "en": "The foundation cracks; the engineer and pilot are injured.",
+              "ar": "يتشقق الأساس؛ يُصاب المهندس والطيارة."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "The delay is the right call. No one is hurt, though the schedule slips.",
+              "ar": "التأجيل هو القرار الصحيح. لا أحد يُصاب، لكن الجدول يتأخر."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "geologist"
+            ],
+            "text": {
+              "en": "The new site is better, but the geologist is injured on the way.",
+              "ar": "الموقع الجديد أفضل، لكن الجيولوجية تُصاب في الطريق."
+            }
+          }
+        },
+        "blind": {
+          "go": {
+            "injuredRoles": [
+              "engineer",
+              "geologist"
+            ],
+            "text": {
+              "en": "Without motion data, the foundation fails; the engineer and geologist are injured.",
+              "ar": "دون بيانات الحركة، يفشل الأساس؛ يُصاب المهندس والجيولوجية."
+            }
+          },
+          "delay": {
+            "injuredRoles": [],
+            "text": {
+              "en": "You delay and lose time, but the crew is unhurt.",
+              "ar": "تؤجل وتخسر وقتاً، لكن الطاقم لم يُصب."
+            }
+          },
+          "reroute": {
+            "injuredRoles": [
+              "pilot"
+            ],
+            "text": {
+              "en": "The blind reroute is no better; the pilot is injured.",
+              "ar": "المسار الجديد على غير هدى ليس أفضل؛ تُصاب الطيارة."
+            }
+          }
+        }
+      },
+      "realityCheck": {
+        "explain": {
+          "en": "Interferometry compares the phase of repeat passes. A consistent baseline can reveal millimetres to centimetres of sinking, but a short record has limited confidence.",
+          "ar": "يقارن التداخل طور المرورات المتكررة. يمكن لخط أساس متسق كشف هبوط من المليمترات إلى السنتيمترات، لكن السجل القصير ثقته محدودة."
+        },
+        "limits": {
+          "en": "Two passes cannot separate seasonal settling from a long-term trend. Delay is a legitimate engineering decision when data maturity is low.",
+          "ar": "مروران لا يفصلان بين هبوط موسمي واتجاه طويل الأمد. التأجيل قرار هندسي مشروع عندما تكون نضج البيانات منخفضاً."
+        },
+        "benefit": {
+          "en": "Civil engineers and planners use motion maps to site roads, buildings, and flood defenses.",
+          "ar": "يستخدم المهندسون المدنيون والمخططون خرائط الحركة لاختيار مواقع الطرق والمباني ودفاعات الفيضان."
+        },
+        "source": {
+          "title": "NASA NISAR data products",
+          "url": "https://nisar.jpl.nasa.gov/data/"
+        }
+      },
+      "crewHints": {
+        "geologist": {
+          "text": {
+            "en": "Motion is the direct question for a foundation. Stability tells us where the measurement is trustworthy.",
+            "ar": "الحركة هي السؤال المباشر للأساس. يخبرنا التثبيت أين يمكن الوثوق بالقياس."
+          },
+          "suggestsLens": "motion",
+          "reliability": "good"
+        },
+        "engineer": {
+          "text": {
+            "en": "I would trust a longer record. A delay is cheaper than a cracked foundation.",
+            "ar": "سأثق بسجل أطول. التأجيل أرخص من أساس متشقق."
+          },
+          "suggestsLens": "stability",
+          "reliability": "good"
+        },
+        "pilot": {
+          "text": {
+            "en": "The optical image looks perfectly flat. Let us build.",
+            "ar": "تبدو الصورة البصرية مستوية تماماً. لِنبنِ هنا."
+          },
+          "suggestsLens": "optical",
+          "reliability": "biased"
+        }
+      },
+      "hints": [
+        {
+          "en": "A short motion record is a warning, not a verdict. More passes build confidence.",
+          "ar": "سجل الحركة القصير تحذير وليس حكماً نهائياً. مزيد من المرورات يبني الثقة."
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "engineer",
+          "text": {
+            "en": "The first permanent building needs ground that will not move.",
+            "ar": "يحتاج أول مبنى دائم إلى أرض لا تتحرك."
+          }
+        },
+        {
+          "speaker": "geologist",
+          "text": {
+            "en": "The surface looks flat, but flat is not stable.",
+            "ar": "السطح يبدو مستوياً، لكن الاستواء ليس ثباتاً."
+          }
+        },
+        {
+          "speaker": "captain",
+          "text": {
+            "en": "We have one chance to site this foundation.",
+            "ar": "لدينا فرصة واحدة لاختيار موقع الأساس."
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": {
+            "en": "Two passes remain. Choose two lenses.",
+            "ar": "تبقّى مروران. اختر عدستين."
+          }
+        }
+      ]
+    }
+  ]
+}

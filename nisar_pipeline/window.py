@@ -184,14 +184,11 @@ def align_grid_to_target_coords(
 ) -> np.ndarray:
     """
     Align a 2D linear-power array `(src_y, src_x)` onto `(target_y, target_x)`
-    using separable linear interpolation where valid and nearest-neighbor fallback
-    at NaN boundaries. Preserves float32 and NaN nodata.
+    using nearest-neighbor index mapping. Preserves float32 and NaN nodata.
     """
     if len(src_x) == 0 or len(src_y) == 0:
         return np.full((len(target_y), len(target_x)), np.nan, dtype=np.float32)
 
-    # Fast nearest-index mapping along X and Y (handles coarser Frequency B -> Frequency A cleanly
-    # without smearing NaN borders across valid pixels)
     ix = np.argmin(np.abs(src_x[np.newaxis, :] - target_x[:, np.newaxis]), axis=1)
     iy = np.argmin(np.abs(src_y[np.newaxis, :] - target_y[:, np.newaxis]), axis=1)
     return src_arr[np.ix_(iy, ix)].astype(np.float32, copy=False)
@@ -266,14 +263,11 @@ def load_gcov_window(
     date_str: Optional[str] = None,
     file_name: Optional[str] = None,
     load_freq_b: bool = True,
+    load_incidence_angle: bool = False,
 ) -> GCOVWindow:
     """
     Stream only the AOI window from a NISAR GCOV HDF5 file, mask invalid/nonpositive
     and layover/shadow pixels in linear power, and multilook.
-
-    Also streams `/science/LSAR/GCOV/grids/frequencyB` when present (`load_freq_b=True`),
-    multilooks in linear power, and aligns it onto `frequencyA`'s UTM grid so dual-frequency
-    split-spectrum differences (`freq_diff_db`) can be computed.
     """
     active_bands = [b for b in ("LSAR", "SSAR") if f"/science/{b}" in h5] or ["LSAR"]
 
@@ -339,9 +333,12 @@ def load_gcov_window(
 
     x_win = coord_mean(x_full[slice_x], looks)
     y_win = coord_mean(y_full[slice_y], looks)
-    inc_win = _read_interpolated_incidence_angle(h5, x_win, y_win)
+    inc_win = (
+        _read_interpolated_incidence_angle(h5, x_win, y_win)
+        if load_incidence_angle
+        else None
+    )
 
-    # Stream simultaneous Frequency B (if present and not already used as fallback)
     freq_b_pols: Dict[str, np.ndarray] = {}
     freq_b_mhz: Optional[float] = None
     dx_b: Optional[float] = None
@@ -356,7 +353,6 @@ def load_gcov_window(
 
             sy_b, sx_b, _ = bbox_to_utm_slices(xb_full, yb_full, bbox_lonlat, epsg)
             looks_b = max(1, int(round(looks * (dx_a / max(5.0, dx_b)))))
-            # Ensure looks_b does not exceed the sliced window dimensions
             win_h_b = sy_b.stop - sy_b.start
             win_w_b = sx_b.stop - sx_b.start
             looks_b = max(1, min(looks_b, win_h_b, win_w_b))

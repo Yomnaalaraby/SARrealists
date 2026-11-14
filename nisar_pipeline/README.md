@@ -1,3 +1,79 @@
 # NASA-ISRO NISAR Geospatial Preprocessing Pipeline
 
 Stream-first Python pipeline that pulls AOI windows from ~7 GB NISAR L2/L3 HDF5 granules on ASF DAAC without downloading whole files, computes calibrated radar products in native UTM, and exports lightweight Cloud-Optimized GeoTIFFs, Zarr stacks, and JSON catalogs for web visualization.
+
+## Map-ready clean heatmaps
+
+The pipeline keeps the labeled `plots/monthly/` figures for reports and QA, and
+adds text-free overlays at `plots/heatmap_clean/<layer>/<date>.png`. These have
+no title, axes, colorbar, labels, or padding, and they use transparent nodata.
+
+Build directly into the web export and generate clean images after the COGs exist:
+
+```bash
+python -m nisar_pipeline.run_site build \
+  --site nile_delta --products GCOV GUNW SME2 --monthly \
+  --out-dir out_web --clean-size 1600
+
+python -m nisar_pipeline.run_site clean \
+  --site nile_delta --out-dir out_web --clean-size 1600 --force-clean
+```
+
+`clean` is a catalog post-process: it reads `cog_files` for every layer and adds
+`heatmap_clean_pngs` to `catalog.json`. It works for GCOV, GUNW, GOFF, and SME2
+without regenerating the scientific products. The web map prefers
+`heatmap_clean_pngs` and falls back to `monthly_pngs` for older catalogs.
+
+## Faster processing
+
+For the interactive map, XYZ tiles are optional because the viewer uses the
+clean PNG overlays. Skip the most expensive exports during a Colab run:
+
+```bash
+python -m nisar_pipeline.run_site build \
+  --site nile_delta --products GCOV GUNW SME2 --monthly \
+  --out-dir out_web --skip-tiles --clean-size 1200 --looks 2 --max-dates 12
+```
+
+Use `--skip-zarr` too if you do not need the Zarr stacks. Keep the default
+(no skip flags) when you need XYZ tiles for a future tile-based map or the
+Zarr stacks for downstream analysis.
+
+## Full monthly GCOV layer set
+
+In `--monthly` mode the pipeline selects one best acquisition per calendar
+month and exports all six GCOV map layers for every selected month:
+
+`hh_db`, `hv_db`, `rvi`, `pol_ratio_db`, `freq_diff_db`, and `rgb_composite`.
+
+`hv_db`, `rvi`, and `pol_ratio_db` are NaN gaps when cross-pol is unavailable;
+`freq_diff_db` is skipped when the granule has no dual-frequency sub-band.
+All other layers are still written for that month.
+
+## ASF Search version
+
+Use `asf_search>=14.1.0` for current NISAR archive searches. Older pins such as
+`asf_search==8.1.0` can return zero granules for valid NISAR AOIs because NISAR
+support in the ASF client and CMR metadata has changed. The pipeline search
+code is unchanged; this is a client-version requirement.
+
+## Reusing an old export without COGs
+
+If an older Drive/GitHub export has `plots/monthly/` and `catalog.json` but no
+`cog/` folder, generate clean map overlays by cropping the labeled monthly
+images to their raster axes:
+
+```bash
+python -m nisar_pipeline.run_site clean \
+  --site california \
+  --out-dir /path/to/old/out_web \
+  --from-monthly \
+  --clean-size 1600 \
+  --force-clean
+```
+
+This writes `plots/heatmap_clean/<layer>/<date>.png` and adds
+`heatmap_clean_pngs` to the catalog. It does not upscale the old 960px monthly
+images, so recovered overlays stay at their native resolution. It cannot create
+layer/date combinations that were never generated, and blank monthly plots
+remain blank until the product is reprocessed.

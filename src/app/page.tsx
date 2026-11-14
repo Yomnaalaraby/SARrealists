@@ -1,6 +1,7 @@
 'use client';
 import { useState, useCallback } from 'react';
 import MapComponent from '@/components/map/MapComponent';
+import MapErrorBoundary from '@/components/map/MapErrorBoundary';
 import HeroSection from '@/components/storytelling/HeroSection';
 import CaliforniaSection from '@/components/storytelling/CaliforniaSection';
 import HimalayaSection from '@/components/storytelling/HimalayaSection';
@@ -19,7 +20,9 @@ export default function Home() {
       // ✅ أضفت pt-16 هنا
       <main className="relative w-full h-screen bg-black overflow-hidden pt-16">
         <div className="fixed inset-0 z-0">
-          <MapComponent showDashboard={true} />
+          <MapErrorBoundary>
+            <MapComponent showDashboard={true} />
+          </MapErrorBoundary>
         </div>
         <Dashboard 
           onRegionJump={handleRegionJump} 
@@ -33,7 +36,9 @@ export default function Home() {
     // ✅ أضفت pt-16 هنا كمان
     <main className="relative w-full bg-black pt-16">
       <div className="fixed inset-0 z-0">
-        <MapComponent showDashboard={false} />
+        <MapErrorBoundary>
+          <MapComponent showDashboard={false} />
+        </MapErrorBoundary>
       </div>
 
       <div className="relative z-10 w-full">
@@ -51,8 +56,8 @@ export default function Home() {
               End of Journey
             </h2>
             <p className="text-gray-400 mb-8 text-lg">
-              You've explored California, the Himalayas, and the Nile Delta. 
-              Now it's time to explore the globe freely with NISAR data.
+              You&apos;ve explored California, the Himalayas, and the Nile Delta. 
+              Now it&apos;s time to explore the globe freely with NISAR data.
             </p>
             <button
               onClick={() => setShowDashboard(true)}
