@@ -15,6 +15,7 @@ import { AcademyBriefing } from './components/AcademyBriefing';
 import { Briefing } from './components/Briefing';
 import { DecisionPanel } from './components/DecisionPanel';
 import { EarthReveal } from './components/EarthReveal';
+import { GameMusic } from './components/GameMusic';
 import { LanguageToggle } from './components/LanguageToggle';
 import { LensCodex } from './components/LensCodex';
 import { LensPicker } from './components/LensPicker';
@@ -217,6 +218,7 @@ export function GameApp() {
         </span>
       </div>
       <div className="game-header__actions">
+        <GameMusic language={language} />
         <PixelButton variant="ghost" onClick={() => setCodexOpen(true)}>
           {t(language, 'codex')}
         </PixelButton>

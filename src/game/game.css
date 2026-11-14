@@ -1279,3 +1279,18 @@
     justify-content: center;
   }
 }
+
+.music-toggle {
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.music-toggle[aria-pressed='false'] {
+  opacity: 0.65;
+}
+
+@media (max-width: 560px) {
+  .game-header__actions .music-toggle {
+    display: inline-flex;
+  }
+}
