@@ -60,7 +60,8 @@ Game foundation and playable route:
 - `public/game/` — `story.json`, `lenses.json`, `missions.json`,
   `reveal.json`, `facts.json`, and 22 generated pixel-art mission images
 - `scripts/generate_game_images.py` — deterministic 160×90 pixel-art generator
-  using the shared in-game palette
+  using the shared in-game palette. The resulting PNGs are committed to the
+  repository, so running the generator is optional.
 - `scripts/validate_content.ts` — CLI validator
 - `src/game/art/` — palette, original sprite data, seeded 160×90 scenes, canvas components
 - `src/game/components/` — cutscene, academy, briefing, crew bar, lens picker/results,
