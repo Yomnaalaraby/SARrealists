@@ -23,6 +23,7 @@ export function CrewAvatar({
       viewBox="0 0 24 30"
       width={size}
       height={size * 1.25}
+      preserveAspectRatio="none"
       role="img"
       aria-hidden="true"
       style={{ opacity: injured ? 0.55 : 1, filter: injured ? 'grayscale(0.75)' : undefined }}
@@ -51,7 +52,7 @@ export function CrewAvatar({
 
 function CaptainPortrait({ size }: { size: number }) {
   return (
-    <svg viewBox="0 0 32 40" width={size} height={size * 1.25} role="img" aria-hidden="true">
+    <svg viewBox="0 0 32 40" width={size} height={size * 1.25} preserveAspectRatio="none" role="img" aria-hidden="true">
       <rect x="5" y="3" width="22" height="7" fill="#f2c14e" />
       <rect x="7" y="5" width="18" height="3" fill="#1b2438" />
       <rect x="8" y="10" width="16" height="9" fill="#c98d5a" />
@@ -71,7 +72,7 @@ function CaptainPortrait({ size }: { size: number }) {
 
 function AiPortrait({ size }: { size: number }) {
   return (
-    <svg viewBox="0 0 32 40" width={size} height={size * 1.25} role="img" aria-hidden="true">
+    <svg viewBox="0 0 32 40" width={size} height={size * 1.25} preserveAspectRatio="none" role="img" aria-hidden="true">
       <rect x="14" y="1" width="4" height="5" fill="#7de2d1" />
       <rect x="4" y="6" width="24" height="24" rx="2" fill="#17283a" />
       <rect x="7" y="9" width="18" height="18" rx="1" fill="#0c1520" />
