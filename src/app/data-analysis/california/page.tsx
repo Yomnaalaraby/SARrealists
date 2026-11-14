@@ -125,14 +125,14 @@ const [panY, setPanY] = useState(0);
               <div className="bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-red-500/20">
                 <h2 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
                   <span className="bg-red-600 text-xs px-2 py-1 rounded text-white">LEVEL 1</span>
-                  Smoke Penetration: Optical vs NISAR
+                  Wildfire Change: NISAR Before vs After
                 </h2>
                 <CompareSlider
-                  beforeImage="https://static01.nyt.com/images/2020/08/28/us/28fires-smoke01alt/merlin_175974066_e1961b7a-d369-4cc1-be39-f98986d5a2e0-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
-                  afterImage={heatmapUrl('california', 'hv_db', '20260228')}
+                  beforeImage={heatmapUrl('california', 'hv_db', '20260228')}
+                  afterImage={heatmapUrl('california', 'hv_db', '20260324')}
                   afterFit="contain"
-                  beforeLabel="Optical — Blinded by Smoke"
-                  afterLabel="NISAR Radar — Sees Through"
+                  beforeLabel="NISAR Baseline — Feb 2026"
+                  afterLabel="NISAR After — Mar 2026"
                 />
               </div>
 

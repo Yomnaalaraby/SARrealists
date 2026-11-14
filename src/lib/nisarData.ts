@@ -39,8 +39,7 @@ export function plotUrl(site: keyof typeof SITES, layer: string, date: string): 
 
 /** Text-free, map-ready heatmap (preferred for overlays and comparisons). */
 export function heatmapUrl(site: keyof typeof SITES, layer: string, date: string): string {
-  // ✅ التغيير هنا: من heatmap_clean إلى monthly عشان الملفات موجودة هناك فعلياً
-  return `${BASE}/${SITES[site].folder}/plots/monthly/${layer}/${date}.png`;
+  return `${BASE}/${SITES[site].folder}/plots/heatmap_clean/${layer}/${date}.png`;
 }
 
 /** يبني رابط vector GeoJSON */

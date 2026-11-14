@@ -7,7 +7,7 @@ import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, AreaChart, Area
 } from 'recharts';
-import { plotUrl, prettyDate } from '@/lib/nisarData';
+import { heatmapUrl, prettyDate } from '@/lib/nisarData';
 import { jsonUrl } from '@/lib/nisarData';
 const AGRI_PHASES = [
     {
@@ -298,7 +298,7 @@ useEffect(() => {
     <div
       className="absolute inset-0"
       style={{
-        backgroundImage: `url(${plotUrl('nile', 'vert_disp_mm', SUBSIDENCE_DATES[subIdx])})`,
+        backgroundImage: `url(${heatmapUrl('nile', 'vert_disp_mm', SUBSIDENCE_DATES[subIdx])})`,
         backgroundSize: `${130 + subZoom * 8}% ${118 + subZoom * 8}%`,
         backgroundPosition: `${42 + subPanX}% ${50 + subPanY}%`,
         backgroundRepeat: 'no-repeat',
