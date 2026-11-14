@@ -780,6 +780,10 @@
   border: 1px solid rgba(242, 246, 255, 0.16);
 }
 
+.chart__svg--pixel {
+  image-rendering: pixelated;
+}
+
 .decision-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
