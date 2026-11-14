@@ -32,7 +32,7 @@ clean PNG overlays. Skip the most expensive exports during a Colab run:
 ```bash
 python -m nisar_pipeline.run_site build \
   --site nile_delta --products GCOV GUNW SME2 --monthly \
-  --out-dir out_web --skip-tiles --clean-size 1200
+  --out-dir out_web --skip-tiles --clean-size 1200 --looks 2 --max-dates 12
 ```
 
 Use `--skip-zarr` too if you do not need the Zarr stacks. Keep the default

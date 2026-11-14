@@ -1155,6 +1155,12 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["GCOV", "GUNW", "GOFF", "SME2"],
     )
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("W", "S", "E", "N"))
+    ap.add_argument(
+        "--looks",
+        type=int,
+        default=None,
+        help="Override multilook factor (lower is faster; e.g. 2 for preview, 4 for quality).",
+    )
     ap.add_argument("--start", help="Override ISO start date (YYYY-MM-DD).")
     ap.add_argument("--end", help="Override ISO end date (YYYY-MM-DD).")
     ap.add_argument("--track", type=int, help="Filter by pathNumber / track.")
@@ -1213,6 +1219,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     site_cfg = cfg["sites"][args.site]
     if args.bbox:
         site_cfg["bbox"] = list(args.bbox)
+    if args.looks is not None:
+        site_cfg["looks"] = int(args.looks)
     bbox = site_cfg["bbox"]
     start = args.start or site_cfg.get("start", "2025-07-30")
     end = args.end or site_cfg.get(
